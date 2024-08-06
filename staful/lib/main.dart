@@ -59,10 +59,10 @@ class MyWidget extends StatelessWidget {
               Column(
                 children: [
                   SizedBox(
-                    height: 40,
+                    height: 42,
                     child: TextFormField(
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                       ),
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
@@ -83,10 +83,10 @@ class MyWidget extends StatelessWidget {
                     height: 10,
                   ),
                   SizedBox(
-                    height: 40,
+                    height: 42,
                     child: TextFormField(
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                       ),
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
@@ -115,7 +115,7 @@ class MyWidget extends StatelessWidget {
                       Expanded(
                         child: Container(
                           alignment: Alignment.center,
-                          height: 45,
+                          height: 48,
                           decoration: BoxDecoration(
                             color: const Color(subColor),
                             borderRadius: BorderRadius.circular(3),
