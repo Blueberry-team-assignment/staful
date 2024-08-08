@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:staful/constants/constants.dart';
+import 'package:staful/utils/form_validators.dart';
 
 class TextInputWidget extends StatefulWidget {
   final String placeHoler;
   final ValueChanged<String> onChanged;
+  final String? errorText;
+  final String? Function(String?)? validator;
 
   const TextInputWidget({
     super.key,
     required this.placeHoler,
     required this.onChanged,
+    this.errorText,
+    this.validator,
   });
 
   @override
@@ -18,6 +22,7 @@ class TextInputWidget extends StatefulWidget {
 
 class _TextInputWidgetState extends State<TextInputWidget> {
   final inputController = TextEditingController();
+  String? errorText;
 
   @override
   void initState() {
@@ -34,6 +39,9 @@ class _TextInputWidgetState extends State<TextInputWidget> {
 
   void onInputChanged() {
     widget.onChanged(inputController.text);
+    setState(() {
+      errorText = widget.validator?.call(inputController.text);
+    });
   }
 
   @override
@@ -43,6 +51,7 @@ class _TextInputWidgetState extends State<TextInputWidget> {
       style: const TextStyle(
         fontSize: 14,
       ),
+      validator: widget.validator,
       decoration: InputDecoration(
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
@@ -53,11 +62,13 @@ class _TextInputWidgetState extends State<TextInputWidget> {
               'lib/assets/icon_clear.svg',
             ),
           ),
-          border: const OutlineInputBorder(
+          border: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Color(subColor),
+            color: Theme.of(context).colorScheme.secondary,
           )),
           hintText: widget.placeHoler,
+          errorText: errorText,
+          errorMaxLines: 2,
           contentPadding: const EdgeInsets.symmetric(
             vertical: 5,
             horizontal: 15,

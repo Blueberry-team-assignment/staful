@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:staful/constants/constants.dart';
+import 'package:staful/utils/form_validators.dart';
 import 'package:staful/screens/join_screen.dart';
+import 'package:staful/widgets/submit_button_widget.dart';
 import 'package:staful/widgets/text_input_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -43,13 +44,13 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 150,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "간단한 직원관리",
                       style: TextStyle(
                         fontSize: 32,
@@ -57,11 +58,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Text(
                       "STAFull",
-                      style: TextStyle(
-                          fontFamily: "MainFont",
-                          color: Color(mainColor),
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w900,
+                          ),
                     ),
                   ],
                 ),
@@ -94,40 +95,15 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 40,
             ),
-            Column(
+            SubmitButtonWidget(isEnabled: isLoginButtonEnabled, text: "로그인"),
+            const SizedBox(
+              height: 15,
+            ),
+            const Row(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Color(
-                              isLoginButtonEnabled ? mainColor : subColor),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        child: const Text(
-                          "로그인",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Row(
-                  children: [
-                    Text("아이디 찾기"),
-                    Text(("  |  ")),
-                    Text("비밀번호 찾기"),
-                  ],
-                )
+                Text("아이디 찾기"),
+                Text(("  |  ")),
+                Text("비밀번호 찾기"),
               ],
             ),
             const SizedBox(
@@ -156,8 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const JoinScreen(),
                         // fullscreenDialog: true,
