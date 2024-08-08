@@ -1,12 +1,24 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:staful/utils/form_validators.dart';
-
 import 'package:staful/screens/login_screen.dart';
 
-void main() {
-  runApp(const MyWidget());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('ko', 'KR'),
+      ],
+      path: 'lib/assets/translations',
+      child: const MyWidget(),
+    ),
+  );
 }
 
 class MyWidget extends StatefulWidget {
@@ -20,6 +32,9 @@ class _MyWidgetState extends State<MyWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       theme: ThemeData(
         useMaterial3: true,
         textTheme: const TextTheme(
