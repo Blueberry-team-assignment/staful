@@ -1,0 +1,25 @@
+{
+  "translation": {
+    "calendar": "Calendar",
+    "staff": "Staff",
+    "wage": "Wage",
+    "settings": "Settings",
+    "id": "ID",
+    "password": "Password",
+    "login": "Login",
+    "logout": "Logout",
+    "loginWithGoogle": "Login with Google",
+    "notuser": "Create an account and start STAFull",
+    "signup": "Sign Up",
+    "userInfo": "User Info",
+    "storeInfo": "Store Info",
+    "usedId": "ID already in use",
+    "notMatchPw": "Passwords do not match",
+    "typeyourpw": "Enter your password",
+    "typeyourpw2": "Re-enter your password",
+    "storeName": "Store Name",
+    "ownerName": "Owner's Name",
+    "openingDate": "Opening Date",
+    "loginLine": "Staff in Your Hands"
+  }
+}

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:staful/utils/form_validators.dart';
+import 'package:staful/widgets/calendar_widget.dart';
 import 'package:staful/widgets/submit_button_widget.dart';
 import 'package:staful/widgets/text_input_widget.dart';
 
@@ -20,6 +21,13 @@ class _JoinScreenState extends State<JoinScreen> {
   bool isStoreOwnerNameInputFilled = false;
   bool isOpenDateInputFilled = false;
 
+  final idInputController = TextEditingController();
+  final pwInputController = TextEditingController();
+  final pwConfirmInputController = TextEditingController();
+  final storeNameInputController = TextEditingController();
+  final storeOwnerNameInputController = TextEditingController();
+  final openDateInputController = TextEditingController();
+
   bool get isSubmitButtonEnabled =>
       isIdInputFilled &&
       isPwInputFilled &&
@@ -30,54 +38,82 @@ class _JoinScreenState extends State<JoinScreen> {
 
   void handleIdInputChanged(String text) {
     setState(() {
-      isIdInputFilled = text.isNotEmpty;
+      // isIdInputFilled = text.isNotEmpty;
     });
   }
 
   void handlePwInputChanged(String text) {
     setState(() {
-      isPwInputFilled = text.isNotEmpty;
+      // isPwInputFilled = text.isNotEmpty;
     });
   }
 
   void handlePwConfirmInputChanged(String text) {
     setState(() {
-      isPwConfirmInputFilled = text.isNotEmpty;
+      // isPwConfirmInputFilled = text.isNotEmpty;
     });
   }
 
   void handleStoreNameInputChanged(String text) {
     setState(() {
-      isStoreNameInputFilled = text.isNotEmpty;
+      // isStoreNameInputFilled = text.isNotEmpty;
     });
   }
 
   void handleStoreOwnerNameInputChanged(String text) {
     setState(() {
-      isStoreOwnerNameInputFilled = text.isNotEmpty;
+      // isStoreOwnerNameInputFilled = text.isNotEmpty;
     });
   }
 
   void handleOpenDateInputChanged(String text) {
     setState(() {
-      isOpenDateInputFilled = text.isNotEmpty;
+      // isOpenDateInputFilled = text.isNotEmpty;
     });
+  }
+
+  void clearAllInputs() {
+    final controllers = [
+      idInputController,
+      pwInputController,
+      pwConfirmInputController,
+      storeNameInputController,
+      storeOwnerNameInputController,
+      openDateInputController
+    ];
+
+    for (var controller in controllers) {
+      controller.clear();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    const double inputGap = 12;
+
+    Future<void> showCalendar() async {
+      final date = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now(),
+      );
+
+      if (date != null) {
+        openDateInputController.text = date.toString().split(" ")[0];
+      }
+    }
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 30,
+          vertical: 100,
         ),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 100,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -99,35 +135,60 @@ class _JoinScreenState extends State<JoinScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "기본 정보",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "기본 정보",
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: clearAllInputs,
+                              child: const Text(
+                                "모두 지우기",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: inputGap,
                         ),
                         TextInputWidget(
-                          placeHoler: "아이디를 입력하세요.",
+                          label: "아이디",
+                          placeHolder: "아이디를 입력하세요.",
                           onChanged: handleIdInputChanged,
-                          validator: validateId,
+                          errorText: validateId(idInputController.text),
+                          controller: idInputController,
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: inputGap,
                         ),
                         TextInputWidget(
-                          placeHoler: "비밀번호를 입력하세요.",
+                          label: "비밀번호",
+                          placeHolder: "비밀번호를 입력하세요.",
                           onChanged: handlePwInputChanged,
-                          validator: validatePw,
+                          errorText: validatePw(pwInputController.text),
+                          controller: pwInputController,
+                          shouldObscureText: true,
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: inputGap,
                         ),
                         TextInputWidget(
-                          placeHoler: "비밀번호를 다시 한번 입력하세요.",
+                          label: "비밀번호 확인",
+                          placeHolder: "비밀번호를 다시 한번 입력하세요.",
                           onChanged: handlePwConfirmInputChanged,
-                          validator: validatePw,
+                          errorText: arePasswordsMatching(
+                              pwInputController.text,
+                              pwConfirmInputController.text),
+                          controller: pwConfirmInputController,
+                          shouldObscureText: true,
                         )
                       ],
                     ),
@@ -150,28 +211,41 @@ class _JoinScreenState extends State<JoinScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: inputGap,
                         ),
                         TextInputWidget(
-                          placeHoler: "매장명",
+                          label: "매장명",
+                          placeHolder: "매장명을 입력하세요.",
                           onChanged: handleStoreNameInputChanged,
-                          validator: validateName,
+                          errorText:
+                              validateStoreName(storeNameInputController.text),
+                          controller: storeNameInputController,
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: inputGap,
                         ),
                         TextInputWidget(
-                          placeHoler: "사장님 이름",
+                          label: "사장님 이름",
+                          placeHolder: "이름을 입력하세요.",
                           onChanged: handleStoreOwnerNameInputChanged,
-                          validator: validateName,
+                          errorText:
+                              validateName(storeOwnerNameInputController.text),
+                          controller: storeOwnerNameInputController,
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: inputGap,
                         ),
-                        TextInputWidget(
-                          placeHoler: "개업일",
-                          onChanged: handleOpenDateInputChanged,
-                          validator: validateId,
+                        GestureDetector(
+                          onTap: () => showCalendar(),
+                          child: AbsorbPointer(
+                            absorbing: true,
+                            child: TextInputWidget(
+                              label: "개업일",
+                              placeHolder: "개업일을 입력하세요.",
+                              onChanged: handleOpenDateInputChanged,
+                              controller: openDateInputController,
+                            ),
+                          ),
                         )
                       ],
                     ),

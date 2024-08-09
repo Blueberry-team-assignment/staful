@@ -3,17 +3,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:staful/utils/form_validators.dart';
 
 class TextInputWidget extends StatefulWidget {
-  final String placeHoler;
+  final String label;
+  final String placeHolder;
   final ValueChanged<String> onChanged;
   final String? errorText;
-  final String? Function(String?)? validator;
+  final TextEditingController controller;
+  final bool shouldObscureText;
+  final bool shouldValidate;
 
   const TextInputWidget({
     super.key,
-    required this.placeHoler,
+    required this.label,
+    required this.placeHolder,
     required this.onChanged,
     this.errorText,
-    this.validator,
+    required this.controller,
+    this.shouldObscureText = false,
+    this.shouldValidate = true,
   });
 
   @override
@@ -21,53 +27,59 @@ class TextInputWidget extends StatefulWidget {
 }
 
 class _TextInputWidgetState extends State<TextInputWidget> {
-  final inputController = TextEditingController();
-  String? errorText;
-
   @override
   void initState() {
     super.initState();
-    inputController.addListener(onInputChanged);
+    widget.controller.addListener(onInputChanged);
   }
 
   @override
   void dispose() {
-    inputController.removeListener(onInputChanged);
-    inputController.dispose();
+    widget.controller.removeListener(onInputChanged);
+    widget.controller.dispose();
     super.dispose();
   }
 
   void onInputChanged() {
-    widget.onChanged(inputController.text);
-    setState(() {
-      errorText = widget.validator?.call(inputController.text);
-    });
+    widget.onChanged(widget.controller.text);
   }
+
+  bool get isValidInputText =>
+      widget.controller.text.isNotEmpty && widget.errorText == null;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: inputController,
+      controller: widget.controller,
+      obscureText: widget.shouldObscureText,
       style: const TextStyle(
         fontSize: 14,
       ),
-      validator: widget.validator,
       decoration: InputDecoration(
+          labelText: widget.label,
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
           ),
-          suffixIcon: IconButton(
-            onPressed: inputController.clear,
-            icon: SvgPicture.asset(
-              'lib/assets/icon_clear.svg',
-            ),
-          ),
+          suffixIcon:
+              widget.controller.text.isNotEmpty && widget.shouldValidate == true
+                  ? (isValidInputText
+                      ? const Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green,
+                        )
+                      : IconButton(
+                          onPressed: widget.controller.clear,
+                          icon: SvgPicture.asset(
+                            'lib/assets/icon_clear.svg',
+                          ),
+                        ))
+                  : null,
           border: OutlineInputBorder(
               borderSide: BorderSide(
             color: Theme.of(context).colorScheme.secondary,
           )),
-          hintText: widget.placeHoler,
-          errorText: errorText,
+          hintText: widget.placeHolder,
+          errorText: widget.errorText,
           errorMaxLines: 2,
           contentPadding: const EdgeInsets.symmetric(
             vertical: 5,

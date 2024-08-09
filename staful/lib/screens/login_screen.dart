@@ -15,7 +15,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isIdInputFilled = false;
   bool isPwInputFilled = false;
-  bool get isLoginButtonEnabled => isIdInputFilled && isPwInputFilled;
+  // bool get isLoginButtonEnabled => isIdInputFilled && isPwInputFilled;
+  final idInputController = TextEditingController();
+  final pwInputController = TextEditingController();
+  bool get isLoginButtonEnabled =>
+      idInputController.text.isNotEmpty && pwInputController.text.isNotEmpty;
 
   void handleIdInputChanged(String text) {
     setState(() {
@@ -76,18 +80,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 42,
                   child: TextInputWidget(
-                    placeHoler: "아이디를 입력하세요.",
+                    label: "아이디",
+                    placeHolder: "아이디를 입력하세요.",
                     onChanged: handleIdInputChanged,
+                    controller: idInputController,
+                    shouldValidate: false,
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 12,
                 ),
                 SizedBox(
                   height: 42,
                   child: TextInputWidget(
-                    placeHoler: "비밀번호를 입력하세요.",
+                    label: "비밀번호",
+                    placeHolder: "비밀번호를 입력하세요.",
                     onChanged: handlePwInputChanged,
+                    controller: pwInputController,
+                    shouldObscureText: true,
+                    shouldValidate: false,
                   ),
                 ),
               ],
@@ -97,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SubmitButtonWidget(isEnabled: isLoginButtonEnabled, text: "로그인"),
             const SizedBox(
-              height: 15,
+              height: 12,
             ),
             const Row(
               children: [
