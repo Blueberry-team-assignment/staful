@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 String? validateId(String? value) {
   final RegExp idRegExp = RegExp(
     r'^[a-zA-Z0-9]{4,20}$', // 4~20자 영문 대소문자와 숫자만 허용
@@ -7,7 +9,7 @@ String? validateId(String? value) {
   if ((value ?? '').isEmpty || idRegExp.hasMatch(value!)) {
     return null;
   }
-  return '아이디는 4자 이상 20자 이하의 영문 대소문자와 숫자만 허용됩니다.';
+  return 'idValidationText'.tr();
 }
 
 String? validateName(String? value) {
@@ -25,11 +27,11 @@ String? validateName(String? value) {
   }
 
   if (nameRegExp.hasMatch(value!) == false) {
-    return '숫자와 특수 기호는 포함될 수 없습니다.';
+    return 'nameValidationText'.tr();
   }
 
   if (incompleteKoreanRegExp.hasMatch(value) == false) {
-    return "형식이 올바르지 않습니다.";
+    return "generalValidationText".tr();
   }
   return null;
 }
@@ -49,11 +51,11 @@ String? validateStoreName(String? value) {
   }
 
   if (specialCharsRegExp.hasMatch(value!) == true) {
-    return "특수기호는 포함될 수 없습니다.";
+    return "storeNameValidationText".tr();
   }
 
   if (nameRegExp.hasMatch(value) == false) {
-    return "형식이 올바르지 않습니다.";
+    return "generalValidationText".tr();
   }
   return null;
 }
@@ -66,12 +68,12 @@ String? validatePw(String? value) {
   if ((value ?? '').isEmpty || passwordRegExp.hasMatch(value!)) {
     return null;
   }
-  return "비밀번호는 대문자 1개와 특수 기호 1개를 포함해 8자 이상 20자 이하여야 합니다.";
+  return "pwValidationText".tr();
 }
 
 String? arePasswordsMatching(String? pw, String? pwConfirm) {
   if ((pwConfirm ?? "").isEmpty || validatePw(pw) == null && pw == pwConfirm) {
     return null;
   }
-  return "비밀번호가 일치하지 않습니다.";
+  return "pwConfirmText".tr();
 }

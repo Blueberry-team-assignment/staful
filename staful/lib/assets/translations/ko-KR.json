@@ -27,5 +27,10 @@
   "findPw": "비밀번호 찾기",
   "deleteAll": "모두 지우기",
   "confirmPw": "비밀번호 확인",
-  "goBack":"이전으로"
+  "idValidationText": "아이디는 4자 이상 20자 이하의 영문 대소문자와 숫자만 허용됩니다",
+  "nameValidationText": "숫자와 특수 기호는 포함될 수 없습니다",
+  "generalValidationText": "형식이 올바르지 않습니다",
+  "storeNameValidationText": "특수기호는 포함될 수 없습니다.",
+  "pwValidationText": "비밀번호는 대문자 1개와 특수 기호 1개를 포함해 8자 이상 20자 이하여야 합니다.",
+  "pwConfirmText": "비밀번호가 일치하지 않습니다."
 }
