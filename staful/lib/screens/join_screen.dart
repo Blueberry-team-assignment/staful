@@ -39,37 +39,38 @@ class _JoinScreenState extends State<JoinScreen> {
 
   void handleIdInputChanged(String text) {
     setState(() {
-      // isIdInputFilled = text.isNotEmpty;
+      isIdInputFilled = validateId(text) == null;
     });
   }
 
   void handlePwInputChanged(String text) {
     setState(() {
-      // isPwInputFilled = text.isNotEmpty;
+      isPwInputFilled = validatePw(text) == null;
     });
   }
 
   void handlePwConfirmInputChanged(String text) {
     setState(() {
-      // isPwConfirmInputFilled = text.isNotEmpty;
+      isPwConfirmInputFilled =
+          arePasswordsMatching(pwInputController.text, text) == null;
     });
   }
 
   void handleStoreNameInputChanged(String text) {
     setState(() {
-      // isStoreNameInputFilled = text.isNotEmpty;
+      isStoreNameInputFilled = validateStoreName(text) == null;
     });
   }
 
   void handleStoreOwnerNameInputChanged(String text) {
     setState(() {
-      // isStoreOwnerNameInputFilled = text.isNotEmpty;
+      isStoreOwnerNameInputFilled = validateName(text) == null;
     });
   }
 
   void handleOpenDateInputChanged(String text) {
     setState(() {
-      // isOpenDateInputFilled = text.isNotEmpty;
+      isOpenDateInputFilled = text.isNotEmpty;
     });
   }
 
