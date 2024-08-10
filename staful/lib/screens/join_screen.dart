@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -105,11 +106,24 @@ class _JoinScreenState extends State<JoinScreen> {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.language_outlined),
+            onPressed: () => context.setLocale(
+              Localizations.localeOf(context).toString() == "ko_KR"
+                  ? const Locale('en', 'US')
+                  : const Locale('ko', 'KR'),
+            ),
+          ),
+        ],
+      ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 30,
-          vertical: 100,
+          vertical: 80,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -118,7 +132,7 @@ class _JoinScreenState extends State<JoinScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "회원가입",
+                    "signup".tr(),
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -138,17 +152,17 @@ class _JoinScreenState extends State<JoinScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "기본 정보",
-                              style: TextStyle(
+                            Text(
+                              "userInfo".tr(),
+                              style: const TextStyle(
                                 fontSize: 16,
                               ),
                             ),
                             GestureDetector(
                               onTap: clearAllInputs,
-                              child: const Text(
-                                "모두 지우기",
-                                style: TextStyle(
+                              child: Text(
+                                "deleteAll".tr(),
+                                style: const TextStyle(
                                   fontSize: 12,
                                   decoration: TextDecoration.underline,
                                 ),
@@ -160,8 +174,8 @@ class _JoinScreenState extends State<JoinScreen> {
                           height: inputGap,
                         ),
                         TextInputWidget(
-                          label: "아이디",
-                          placeHolder: "아이디를 입력하세요.",
+                          label: "id".tr(),
+                          placeHolder: "idPlaceholder".tr(),
                           onChanged: handleIdInputChanged,
                           errorText: validateId(idInputController.text),
                           controller: idInputController,
@@ -170,8 +184,8 @@ class _JoinScreenState extends State<JoinScreen> {
                           height: inputGap,
                         ),
                         TextInputWidget(
-                          label: "비밀번호",
-                          placeHolder: "비밀번호를 입력하세요.",
+                          label: "password".tr(),
+                          placeHolder: "typeyourpw".tr(),
                           onChanged: handlePwInputChanged,
                           errorText: validatePw(pwInputController.text),
                           controller: pwInputController,
@@ -181,8 +195,8 @@ class _JoinScreenState extends State<JoinScreen> {
                           height: inputGap,
                         ),
                         TextInputWidget(
-                          label: "비밀번호 확인",
-                          placeHolder: "비밀번호를 다시 한번 입력하세요.",
+                          label: "confirmPw".tr(),
+                          placeHolder: "typeyourpw2".tr(),
                           onChanged: handlePwConfirmInputChanged,
                           errorText: arePasswordsMatching(
                               pwInputController.text,
@@ -204,9 +218,9 @@ class _JoinScreenState extends State<JoinScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "매장 정보",
-                          style: TextStyle(
+                        Text(
+                          "storeInfo".tr(),
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
@@ -214,7 +228,7 @@ class _JoinScreenState extends State<JoinScreen> {
                           height: inputGap,
                         ),
                         TextInputWidget(
-                          label: "매장명",
+                          label: "storeName".tr(),
                           placeHolder: "매장명을 입력하세요.",
                           onChanged: handleStoreNameInputChanged,
                           errorText:
@@ -225,8 +239,8 @@ class _JoinScreenState extends State<JoinScreen> {
                           height: inputGap,
                         ),
                         TextInputWidget(
-                          label: "사장님 이름",
-                          placeHolder: "이름을 입력하세요.",
+                          label: "ownerName".tr(),
+                          placeHolder: "ownerNamePlaceholder".tr(),
                           onChanged: handleStoreOwnerNameInputChanged,
                           errorText:
                               validateName(storeOwnerNameInputController.text),
@@ -240,7 +254,7 @@ class _JoinScreenState extends State<JoinScreen> {
                           child: AbsorbPointer(
                             absorbing: true,
                             child: TextInputWidget(
-                              label: "개업일",
+                              label: "openingDate".tr(),
                               placeHolder: "개업일을 입력하세요.",
                               onChanged: handleOpenDateInputChanged,
                               controller: openDateInputController,
@@ -257,26 +271,26 @@ class _JoinScreenState extends State<JoinScreen> {
               ),
               SubmitButtonWidget(
                 isEnabled: isSubmitButtonEnabled,
-                text: "회원가입",
+                text: "signup".tr(),
               ),
               const SizedBox(
                 height: 50,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () => {Navigator.pop(context)},
-                    child: const Text(
-                      "이전으로",
-                      style: TextStyle(
-                        fontSize: 12,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: [
+              //     GestureDetector(
+              //       onTap: () => {Navigator.pop(context)},
+              //       child: Text(
+              //         "goBack".tr(),
+              //         style: const TextStyle(
+              //           fontSize: 12,
+              //           decoration: TextDecoration.underline,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),
