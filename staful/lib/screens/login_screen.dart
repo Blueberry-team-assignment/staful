@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:staful/screens/calendar_screen.dart';
 import 'package:staful/utils/form_validators.dart';
 import 'package:staful/screens/join_screen.dart';
 import 'package:staful/widgets/submit_button_widget.dart';
@@ -136,9 +137,21 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 40,
               ),
-              SubmitButtonWidget(
-                isEnabled: isLoginButtonEnabled,
-                text: "login".tr(),
+              GestureDetector(
+                onTap: () => {
+                  if (isLoginButtonEnabled)
+                    {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const CalendarScreen(),
+                        ),
+                      )
+                    }
+                },
+                child: SubmitButtonWidget(
+                  isEnabled: isLoginButtonEnabled,
+                  text: "login".tr(),
+                ),
               ),
               const SizedBox(
                 height: 12,
@@ -161,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   IconButton(
                     onPressed: () => {},
                     icon: Image.asset(
-                      'lib/assets/icon_google.png',
+                      'lib/assets/icons/icon_google.png',
                     ),
                   )
                 ],

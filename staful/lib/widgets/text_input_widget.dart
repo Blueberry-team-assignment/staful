@@ -70,7 +70,7 @@ class _TextInputWidgetState extends State<TextInputWidget> {
                       : IconButton(
                           onPressed: widget.controller.clear,
                           icon: SvgPicture.asset(
-                            'lib/assets/icon_clear.svg',
+                            'lib/assets/icons/icon_clear.svg',
                           ),
                         ))
                   : null,

@@ -44,6 +44,8 @@ class _MyWidgetState extends State<MyWidget> {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xff1e7e1c),
           primary: const Color(0xff1e7e1c),
+          primaryContainer: const Color(0xff1e7e1c).withOpacity(0.1),
+          onPrimaryContainer: const Color(0xff1e7e1c).withOpacity(0.3),
           secondary: const Color(0xffd1d1d1),
           surface: Colors.white,
         ),

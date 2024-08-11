@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:staful/screens/login_screen.dart';
 import 'package:staful/utils/form_validators.dart';
 import 'package:staful/widgets/calendar_widget.dart';
 import 'package:staful/widgets/submit_button_widget.dart';
@@ -270,9 +271,21 @@ class _JoinScreenState extends State<JoinScreen> {
               const SizedBox(
                 height: 80,
               ),
-              SubmitButtonWidget(
-                isEnabled: isSubmitButtonEnabled,
-                text: "signup".tr(),
+              GestureDetector(
+                onTap: () => {
+                  if (isSubmitButtonEnabled)
+                    {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      )
+                    }
+                },
+                child: SubmitButtonWidget(
+                  isEnabled: isSubmitButtonEnabled,
+                  text: "signup".tr(),
+                ),
               ),
               const SizedBox(
                 height: 50,
