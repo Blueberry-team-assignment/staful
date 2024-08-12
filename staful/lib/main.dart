@@ -15,19 +15,19 @@ void main() async {
         Locale('ko', 'KR'),
       ],
       path: 'lib/assets/translations',
-      child: const MyWidget(),
+      child: const STAFull(),
     ),
   );
 }
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class STAFull extends StatefulWidget {
+  const STAFull({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<STAFull> createState() => _STAFullState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _STAFullState extends State<STAFull> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

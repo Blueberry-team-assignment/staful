@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:staful/widgets/staff_profile_widget.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({super.key});
@@ -57,7 +58,7 @@ class CalendarScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.all(10),
+                      // padding: const EdgeInsets.all(10),
                       height: 180,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
@@ -73,6 +74,7 @@ class CalendarScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Container(
+                            padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
@@ -121,54 +123,52 @@ class CalendarScreen extends StatelessWidget {
                             ),
                           ),
                           Expanded(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 42,
-                                  height: 66,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        width: 42,
-                                        height: 42,
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      const Text(
-                                        "매니저",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: const SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    StaffProfileWidget(
+                                      name: "매니저",
+                                      imageName: "Ellipse 2.png",
+                                    ),
+                                    StaffProfileWidget(
+                                      name: "이나라",
+                                      imageName: "Ellipse 3.png",
+                                    ),
+                                    StaffProfileWidget(
+                                      name: "김경민",
+                                      imageName: "Ellipse 4.png",
+                                    ),
+                                    StaffProfileWidget(
+                                      name: "김선미",
+                                      imageName: "Ellipse 5.png",
+                                    ),
+                                    StaffProfileWidget(
+                                      name: "신동찬",
+                                      imageName: "Ellipse 2.png",
+                                    ),
+                                    StaffProfileWidget(
+                                      name: "매니저",
+                                      imageName: "Ellipse 3.png",
+                                    ),
+                                    StaffProfileWidget(
+                                      name: "이나라",
+                                      imageName: "Ellipse 4.png",
+                                    ),
+                                    StaffProfileWidget(
+                                      name: "김경민",
+                                      imageName: "Ellipse 5.png",
+                                    ),
+                                  ],
                                 ),
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           )
                         ],
@@ -178,7 +178,94 @@ class CalendarScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(
+                height: 30,
+              ),
+              const Text(
+                "다음 근무표",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
                 height: 20,
+              ),
+              Column(
+                children: [
+                  Container(
+                    // padding:
+                    // const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    height: 82,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          // width: 58,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                          ),
+                          height: 58,
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              right: BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("금"),
+                              Text("08.02"),
+                            ],
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Flexible(
+                            child: Container(
+                              color: Colors.red,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: const Row(
+                                children: [
+                                  StaffProfileWidget(
+                                    imageName: "Ellipse 2.png",
+                                  ),
+                                  StaffProfileWidget(
+                                    imageName: "Ellipse 3.png",
+                                  ),
+                                  StaffProfileWidget(
+                                    imageName: "Ellipse 4.png",
+                                  ),
+                                  StaffProfileWidget(
+                                    imageName: "Ellipse 5.png",
+                                  ),
+                                  StaffProfileWidget(
+                                    imageName: "Ellipse 2.png",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    color: Colors.red,
+                    child: const Row(
+                      children: [Text("hi")],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

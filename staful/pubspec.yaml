@@ -69,6 +69,10 @@ flutter:
     - lib/assets/icons/icon_settings.svg
     - lib/assets/icons/icon_users.svg
     - lib/assets/icons/logo_STAFull.svg
+    - lib/assets/images/Ellipse 2.png
+    - lib/assets/images/Ellipse 3.png
+    - lib/assets/images/Ellipse 4.png
+    - lib/assets/images/Ellipse 5.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
