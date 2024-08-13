@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:staful/layouts/bottom_nav_layout.dart';
 import 'package:staful/screens/calendar_screen.dart';
 import 'package:staful/utils/form_validators.dart';
 import 'package:staful/screens/join_screen.dart';
@@ -143,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const CalendarScreen(),
+                          builder: (context) => const BottomNavLayout(),
                         ),
                       )
                     }

@@ -13,14 +13,15 @@ class StaffProfileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
       width: 42,
       height: 66,
       margin: const EdgeInsets.symmetric(
         horizontal: 5,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: name != null
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.center,
         children: [
           Container(
             width: 42,
@@ -32,14 +33,13 @@ class StaffProfileWidget extends StatelessWidget {
               "lib/assets/images/$imageName",
             ),
           ),
-          // if (name != null)
-          //   Text(
-          //     name!,
-          //     style: const TextStyle(
-          //       fontWeight: FontWeight.w400,
-          //     ),
-          //   ),
-          // if (name == null) const Spacer()
+          if (name != null)
+            Text(
+              name!,
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+              ),
+            ),
         ],
       ),
     );
