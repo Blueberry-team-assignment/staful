@@ -49,6 +49,7 @@ class _BottomNavLayoutState extends State<BottomNavLayout> {
               icon: SvgPicture.asset('lib/assets/icons/icon_settings.svg')),
         ],
         selectedItemColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: childScreens[_currentIndex],
