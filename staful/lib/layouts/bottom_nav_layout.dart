@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:staful/screens/calendar_screen.dart';
+import 'package:staful/screens/calendar/calendar_screen.dart';
 import 'package:staful/screens/pay_screen.dart';
 import 'package:staful/screens/setting_screen.dart';
 import 'package:staful/screens/staff_screen.dart';
@@ -52,7 +52,10 @@ class _BottomNavLayoutState extends State<BottomNavLayout> {
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: childScreens[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: childScreens,
+      ),
     );
   }
 }
