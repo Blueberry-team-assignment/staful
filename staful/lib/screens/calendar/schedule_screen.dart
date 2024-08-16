@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ScheduleScreen extends StatelessWidget {
   const ScheduleScreen({super.key});

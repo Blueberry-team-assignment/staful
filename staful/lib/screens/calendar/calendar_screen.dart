@@ -27,52 +27,50 @@ class _CalendarScreenState extends State<CalendarScreen> {
     });
   }
 
+  void handleCurrentIndex(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> childScreens = [
       showDailyCalendar
-          ? const DailyCalendarScreen()
+          ? DailyCalendarScreen(
+              handleCurrentIndex: handleCurrentIndex,
+            )
           : const MonthlyCalendarScreen(),
       const ScheduleScreen(),
       const EditScheduleScreen()
     ];
 
-    void handleCurrentIndex(int index) {
-      setState(() {
-        _currentIndex = index;
-      });
-    }
-
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        leadingWidth: 123,
         backgroundColor: Theme.of(context).colorScheme.surface,
-        leading: Container(
-          margin: const EdgeInsets.only(left: 30),
-          child: SvgPicture.asset(
-            'lib/assets/icons/logo_STAFull.svg',
+        appBar: AppBar(
+          leadingWidth: 123,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          leading: Container(
+            margin: const EdgeInsets.only(left: 30),
+            child: SvgPicture.asset(
+              'lib/assets/icons/logo_STAFull.svg',
+            ),
           ),
+          actions: [
+            Container(
+              margin: const EdgeInsets.only(
+                right: 30,
+              ),
+              child: IconButton(
+                iconSize: 50,
+                onPressed: handleOnPressed,
+                icon: Icon(showDailyCalendar
+                    ? Icons.toggle_off_outlined
+                    : Icons.toggle_on_rounded),
+              ),
+            )
+          ],
         ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(
-              right: 30,
-            ),
-            child: IconButton(
-              iconSize: 50,
-              onPressed: handleOnPressed,
-              icon: Icon(showDailyCalendar
-                  ? Icons.toggle_off_outlined
-                  : Icons.toggle_on_rounded),
-            ),
-          )
-        ],
-      ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: childScreens,
-      ),
-    );
+        body: childScreens[_currentIndex]);
   }
 }

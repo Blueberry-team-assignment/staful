@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:staful/screens/calendar/edit_schedule_screen.dart';
 import 'package:staful/screens/calendar/schedule_screen.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 
 class DailyCalendarScreen extends StatelessWidget {
-  final void handleCurrentIndex;
+  final void Function(int) handleCurrentIndex;
 
   const DailyCalendarScreen({
     super.key,
-    this.handleCurrentIndex,
+    required this.handleCurrentIndex,
   });
 
   @override
@@ -53,7 +54,7 @@ class DailyCalendarScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         GestureDetector(
-                          onTap: () => handleCurrentIndex(2),
+                          onTap: () => handleCurrentIndex(1),
                           child: Container(
                             height: 60,
                             padding: const EdgeInsets.all(5),
