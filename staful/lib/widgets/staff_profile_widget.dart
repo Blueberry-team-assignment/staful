@@ -3,24 +3,26 @@ import 'package:flutter/material.dart';
 class StaffProfileWidget extends StatelessWidget {
   final String? name;
   final String imageName;
+  final String? size;
 
   const StaffProfileWidget({
     super.key,
     this.name,
     required this.imageName,
+    this.size,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 42,
-      height: 66,
+      width: size == null ? 42 : 74,
+      height: size == null ? 66 : 90,
       margin: const EdgeInsets.symmetric(
         horizontal: 5,
       ),
       child: Column(
         mainAxisAlignment: name != null
-            ? MainAxisAlignment.spaceBetween
+            ? MainAxisAlignment.spaceAround
             : MainAxisAlignment.center,
         children: [
           Container(
@@ -35,9 +37,10 @@ class StaffProfileWidget extends StatelessWidget {
           ),
           if (name != null)
             Text(
-              name!,
+              name!.length > 4 ? "${name!.substring(0, 4)}..." : name!,
               style: const TextStyle(
                 fontWeight: FontWeight.w400,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
         ],

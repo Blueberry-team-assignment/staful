@@ -19,7 +19,6 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   bool showDailyCalendar = true;
-  int _currentIndex = 0;
 
   void handleOnPressed() {
     setState(() {
@@ -27,50 +26,45 @@ class _CalendarScreenState extends State<CalendarScreen> {
     });
   }
 
-  void handleCurrentIndex(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<Widget> childScreens = [
-      showDailyCalendar
-          ? DailyCalendarScreen(
-              handleCurrentIndex: handleCurrentIndex,
-            )
-          : const MonthlyCalendarScreen(),
-      const ScheduleScreen(),
-      const EditScheduleScreen()
-    ];
-
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: AppBar(
-          leadingWidth: 123,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          leading: Container(
-            margin: const EdgeInsets.only(left: 30),
-            child: SvgPicture.asset(
-              'lib/assets/icons/logo_STAFull.svg',
-            ),
-          ),
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(
-                right: 30,
-              ),
-              child: IconButton(
-                iconSize: 50,
-                onPressed: handleOnPressed,
-                icon: Icon(showDailyCalendar
-                    ? Icons.toggle_off_outlined
-                    : Icons.toggle_on_rounded),
-              ),
-            )
-          ],
-        ),
-        body: childScreens[_currentIndex]);
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: CalendarAppBar(context),
+      body: SingleChildScrollView(
+        child: showDailyCalendar
+            ? const DailyCalendarScreen()
+            : const MonthlyCalendarScreen(),
+      ),
+    );
   }
+
+  AppBar CalendarAppBar(BuildContext context) {
+    return AppBar(
+      leadingWidth: 93,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      leading: SvgPicture.asset(
+        'lib/assets/icons/logo_STAFull.svg',
+      ),
+      actions: [
+        IconButton(
+          iconSize: 50,
+          onPressed: handleOnPressed,
+          icon: Icon(showDailyCalendar
+              ? Icons.toggle_off_outlined
+              : Icons.toggle_on_rounded),
+        )
+      ],
+    );
+  }
+}
+
+AppBar NavigateBackAppBar(BuildContext context) {
+  return AppBar(
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    leading: IconButton(
+      icon: const Icon(Icons.arrow_back_ios_new_outlined),
+      onPressed: () => Navigator.of(context).pop(),
+    ),
+  );
 }

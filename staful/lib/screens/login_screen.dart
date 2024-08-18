@@ -140,14 +140,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: () => {
-                  if (isLoginButtonEnabled)
-                    {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const BottomNavLayout(),
-                        ),
-                      )
-                    }
+                  // if (isLoginButtonEnabled)
+                  {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const BottomNavLayout(),
+                      ),
+                    )
+                  }
                 },
                 child: SubmitButtonWidget(
                   isEnabled: isLoginButtonEnabled,
