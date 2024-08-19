@@ -40,7 +40,6 @@ class StaffProfileWidget extends StatelessWidget {
               name!.length > 4 ? "${name!.substring(0, 4)}..." : name!,
               style: const TextStyle(
                 fontWeight: FontWeight.w400,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
         ],

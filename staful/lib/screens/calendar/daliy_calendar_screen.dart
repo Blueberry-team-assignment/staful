@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:staful/screens/calendar/edit_schedule_screen.dart';
 import 'package:staful/screens/calendar/schedule_screen.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 

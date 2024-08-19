@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:staful/screens/calendar/calendar_screen.dart';
+import 'package:staful/layouts/calendar_screen_layout.dart';
 import 'package:staful/screens/pay_screen.dart';
 import 'package:staful/screens/setting_screen.dart';
 import 'package:staful/screens/staff_screen.dart';
@@ -52,6 +52,7 @@ class _BottomNavLayoutState extends State<BottomNavLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 30,

@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:staful/screens/calendar/daliy_calendar_screen.dart';
-import 'package:staful/screens/calendar/edit_schedule_screen.dart';
 import 'package:staful/screens/calendar/monthly_calendar_screen.dart';
-import 'package:staful/screens/calendar/schedule_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({
@@ -18,11 +15,11 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  bool showDailyCalendar = true;
+  int toggleButtonIndex = 0;
 
-  void handleOnPressed() {
+  void handleOnPressed(int index) {
     setState(() {
-      showDailyCalendar = !showDailyCalendar;
+      toggleButtonIndex = index;
     });
   }
 
@@ -32,7 +29,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: CalendarAppBar(context),
       body: SingleChildScrollView(
-        child: showDailyCalendar
+        child: toggleButtonIndex == 0
             ? const DailyCalendarScreen()
             : const MonthlyCalendarScreen(),
       ),
@@ -47,13 +44,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
         'lib/assets/icons/logo_STAFull.svg',
       ),
       actions: [
-        IconButton(
-          iconSize: 50,
-          onPressed: handleOnPressed,
-          icon: Icon(showDailyCalendar
-              ? Icons.toggle_off_outlined
-              : Icons.toggle_on_rounded),
-        )
+        SizedBox(
+          width: 102,
+          height: 34,
+          child: ToggleButtons(
+            onPressed: handleOnPressed,
+            isSelected: [toggleButtonIndex == 0, toggleButtonIndex == 1],
+            borderRadius: BorderRadius.circular(10),
+            children: const [Text("일별"), Text("월별")],
+          ),
+        ),
       ],
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:staful/screens/calendar/calendar_screen.dart';
+import 'package:staful/layouts/calendar_screen_layout.dart';
 
 class EditScheduleScreen extends StatelessWidget {
   const EditScheduleScreen({super.key});

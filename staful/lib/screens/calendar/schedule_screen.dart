@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:staful/screens/calendar/calendar_screen.dart';
+import 'package:staful/layouts/calendar_screen_layout.dart';
 import 'package:staful/screens/calendar/edit_schedule_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {

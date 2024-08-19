@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:staful/screens/login_screen.dart';
 import 'package:staful/utils/form_validators.dart';
-import 'package:staful/widgets/calendar_widget.dart';
 import 'package:staful/widgets/submit_button_widget.dart';
 import 'package:staful/widgets/text_input_widget.dart';
 
