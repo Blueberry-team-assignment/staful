@@ -37,12 +37,16 @@ class _STAFullState extends State<STAFull> {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       theme: ThemeData(
-        useMaterial3: true,
+        // useMaterial3: true,
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
             fontFamily: "MainFont",
           ),
         ),
+        scaffoldBackgroundColor: const Color.fromARGB(249, 250, 250, 250),
+        primaryColor: const Color(0xff1e7e1c),
+        primaryColorLight: const Color(0x00ebffeb),
+        primaryColorDark: const Color(0x00013d00),
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xff1e7e1c),
           primary: const Color(0xff1e7e1c),

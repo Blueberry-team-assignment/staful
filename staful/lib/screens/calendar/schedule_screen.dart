@@ -18,6 +18,8 @@ class ScheduleScreen extends StatefulWidget {
 class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
+    final [year, month, day] = widget.date.toString().split(" ")[0].split("-");
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: NavigateBackAppBar(context),
