@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:staful/layouts/calendar_screen_layout.dart';
 import 'package:staful/screens/calendar/edit_schedule_screen.dart';
-import 'package:staful/widgets/merged_table_widget.dart';
+import 'package:staful/widgets/schedule_table_widget.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 Text([year, month, day].join("."))
               ],
             ),
-            const Flexible(child: MergedTableWidget()),
+            const Flexible(child: ScheduleTableWidget()),
             // const TableViewCell(child: Text("hi"))
           ],
         ));
