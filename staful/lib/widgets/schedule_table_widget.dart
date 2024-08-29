@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:staful/screens/calendar/edit_schedule_screen.dart';
 import 'package:staful/utils/time_utils.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
@@ -124,26 +125,33 @@ class ScheduleTableWidgetState extends State<ScheduleTableWidget> {
       return TableViewCell(
         columnMergeStart: start,
         columnMergeSpan: end - start + 2, // Span for merging columns
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-              10 + normalCellWidth * (startMinute / 60),
-              20,
-              10 + normalCellWidth * ((60 - endMinute) / 60),
-              20),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: ColoredBox(
-              color: _isEmployeeOnSchedule(schedules[vicinity.yIndex])
-                  ? Theme.of(context).primaryColor
-                  : Theme.of(context).colorScheme.secondary,
-              child: Center(
-                child: Text(
-                  "${schedules[vicinity.yIndex][0]} - ${schedules[vicinity.yIndex][1]}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const EditScheduleScreen(),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+                10 + normalCellWidth * (startMinute / 60),
+                20,
+                10 + normalCellWidth * ((60 - endMinute) / 60),
+                20),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: ColoredBox(
+                color: _isEmployeeOnSchedule(schedules[vicinity.yIndex])
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).colorScheme.secondary,
+                child: Center(
+                  child: Text(
+                    "${schedules[vicinity.yIndex][0]} - ${schedules[vicinity.yIndex][1]}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
