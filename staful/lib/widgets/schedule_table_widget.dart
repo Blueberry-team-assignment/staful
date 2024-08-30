@@ -28,7 +28,7 @@ class ScheduleTableWidgetState extends State<ScheduleTableWidget> {
     [],
     ["10:30", "20:30"],
     ["10:50", "21:00"],
-    ["14:00", "24:00"]
+    ["18:00", "24:00"]
   ];
 
   @override
@@ -101,11 +101,14 @@ class ScheduleTableWidgetState extends State<ScheduleTableWidget> {
     }
 
     if (vicinity.column == 0) {
-      return const TableViewCell(
-        child: Center(
-          child: StaffProfileWidget(
-            imageName: "Ellipse 3.png",
-            name: "매니저",
+      return TableViewCell(
+        child: Container(
+          color: Colors.white,
+          child: const Center(
+            child: StaffProfileWidget(
+              imageName: "Ellipse 3.png",
+              name: "매니저",
+            ),
           ),
         ),
       );
@@ -124,7 +127,14 @@ class ScheduleTableWidgetState extends State<ScheduleTableWidget> {
         child: GestureDetector(
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const EditScheduleScreen(),
+              builder: (context) => EditScheduleScreen(
+                workDate: {
+                  "month": timeInfo["month"],
+                  "day": timeInfo["day"],
+                  "dayOfWeekKorean": timeInfo["dayOfWeekKorean"]
+                },
+                workSchedule: schedules[vicinity.yIndex],
+              ),
             ),
           ),
           child: Padding(

@@ -84,7 +84,7 @@ class _BottomNavLayoutState extends State<BottomNavLayout> {
           ),
         ],
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        backgroundColor: Theme.of(context).colorScheme.secondary,
+        backgroundColor: Colors.white,
       ),
     );
   }

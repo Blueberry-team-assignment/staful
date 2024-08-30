@@ -6,7 +6,9 @@ import 'package:staful/widgets/staff_profile_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class MonthlyCalendarScreen extends StatefulWidget {
-  const MonthlyCalendarScreen({super.key});
+  const MonthlyCalendarScreen({
+    super.key,
+  });
 
   @override
   State<MonthlyCalendarScreen> createState() => _MonthlyCalendarScreenState();
@@ -83,59 +85,81 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-            // height: 50,
-            ),
-        TableCalendar(
-          onHeaderLongPressed: handleOnHeaderLongPressed,
-          onHeaderTapped: handleOnHeaderTapped,
-          onDaySelected: (selectedDay, focusedDay) => {
-            onDaySelected(selectedDay),
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ScheduleScreen(
-                  date: _selectedDay,
-                ),
-              ),
-            )
-          },
-          calendarStyle: CalendarStyle(
-            todayTextStyle: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-            todayDecoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              shape: BoxShape.circle,
-            ),
-          ),
-          headerStyle: CalendarHeaderStyle(),
-          locale: Localizations.localeOf(context).toString(),
-          currentDay: _selectedDay,
-          focusedDay: _focusedDay,
-          firstDay: DateTime(1950),
-          lastDay: DateTime(2150),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30,
+        vertical: 5,
+      ),
+      child: Container(
+        color: Colors.white,
+        child: Column(
           children: [
             const SizedBox(
-              height: 30,
+              height: 15,
             ),
-            const Text("근무자"),
-            const SizedBox(
-              height: 20,
+            TableCalendar(
+              onHeaderLongPressed: handleOnHeaderLongPressed,
+              onHeaderTapped: handleOnHeaderTapped,
+              onDaySelected: (selectedDay, focusedDay) => {
+                onDaySelected(selectedDay),
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ScheduleScreen(
+                      date: _selectedDay,
+                    ),
+                  ),
+                )
+              },
+              calendarStyle: CalendarStyle(
+                todayTextStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                todayDecoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              headerStyle: CalendarHeaderStyle(),
+              locale: Localizations.localeOf(context).toString(),
+              currentDay: _selectedDay,
+              focusedDay: _focusedDay,
+              firstDay: DateTime(1950),
+              lastDay: DateTime(2150),
             ),
-            Wrap(
-              spacing: 10.0, // Horizontal spacing between items
-              runSpacing: 20.0, // Vertical spacing between rows
-              children: staffProfileWidgets,
-            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    "근무자",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Wrap(
+                  spacing: 10.0, // Horizontal spacing between items
+                  runSpacing: 20.0, // Vertical spacing between rows
+                  children: staffProfileWidgets,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            )
           ],
-        )
-      ],
+        ),
+      ),
     );
   }
 
@@ -149,7 +173,7 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
       leftChevronMargin: const EdgeInsets.only(
         left: 70,
       ),
-      headerPadding: const EdgeInsets.symmetric(vertical: 20),
+      headerPadding: const EdgeInsets.only(bottom: 15),
       formatButtonVisible: false,
       titleCentered: true,
       titleTextFormatter: (date, locale) => DateFormat("y.MM").format(date),

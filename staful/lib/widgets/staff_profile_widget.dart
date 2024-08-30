@@ -18,8 +18,8 @@ class StaffProfileWidget extends StatelessWidget {
       width: size == null ? 42 : 74,
       height: size == null ? 66 : 90,
       margin: const EdgeInsets.symmetric(
-        horizontal: 5,
-      ),
+          // horizontal: 5,
+          ),
       child: Column(
         mainAxisAlignment: name != null
             ? MainAxisAlignment.spaceAround
