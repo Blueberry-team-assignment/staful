@@ -26,7 +26,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: CalendarAppBar(context),
       body: SingleChildScrollView(
         child: toggleButtonIndex == 0
@@ -38,10 +38,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   AppBar CalendarAppBar(BuildContext context) {
     return AppBar(
-      leadingWidth: 93,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      leading: SvgPicture.asset(
-        'lib/assets/icons/logo_STAFull.svg',
+      leadingWidth: 93 + 30,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      leading: Row(
+        children: [
+          const SizedBox(
+            width: 30,
+          ),
+          SvgPicture.asset(
+            'lib/assets/icons/logo_STAFull.svg',
+          ),
+        ],
       ),
       actions: [
         SizedBox(
@@ -54,6 +61,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
             children: const [Text("일별"), Text("월별")],
           ),
         ),
+        const SizedBox(
+          width: 30,
+        ),
       ],
     );
   }
@@ -61,10 +71,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
 AppBar NavigateBackAppBar(BuildContext context) {
   return AppBar(
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    leading: IconButton(
-      icon: const Icon(Icons.arrow_back_ios_new_outlined),
-      onPressed: () => Navigator.of(context).pop(),
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    leadingWidth: 100,
+    leading: Row(
+      children: [
+        const SizedBox(
+          width: 10,
+        ),
+        IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_outlined),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
     ),
   );
 }

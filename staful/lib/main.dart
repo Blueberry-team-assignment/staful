@@ -43,10 +43,12 @@ class _STAFullState extends State<STAFull> {
             fontFamily: "MainFont",
           ),
         ),
-        scaffoldBackgroundColor: const Color.fromARGB(249, 250, 250, 250),
+        scaffoldBackgroundColor: const Color(0xffEFEFEF),
         primaryColor: const Color(0xff1e7e1c),
-        primaryColorLight: const Color(0x00ebffeb),
-        primaryColorDark: const Color(0x00013d00),
+        primaryColorLight: const Color(0xffebffeb),
+        primaryColorDark: const Color(0xff013d00),
+        disabledColor: const Color(0xffd1d1d1),
+
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xff1e7e1c),
           primary: const Color(0xff1e7e1c),

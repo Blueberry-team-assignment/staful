@@ -32,48 +32,54 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     final timeInfo = getCurrentDateTimeInfo();
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: NavigateBackAppBar(context),
-        body: Column(
-          children: [
-            const SizedBox(
-                // height: 5,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 30,
+            vertical: 5,
+          ),
+          child: Column(
+            children: [
+              const SizedBox(
+                  // height: 5,
+                  ),
+              GestureDetector(
+                onTap: _handleParentTap,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      timeInfo["dayOfWeekKorean"],
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      [
+                        timeInfo["year"].toString().substring(2),
+                        timeInfo["month"],
+                        timeInfo["day"]
+                      ].join("."),
+                      style: const TextStyle(
+                        fontSize: 12,
+                      ),
+                    )
+                  ],
                 ),
-            GestureDetector(
-              onTap: _handleParentTap,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    timeInfo["dayOfWeekKorean"],
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    [
-                      timeInfo["year"].toString().substring(2),
-                      timeInfo["month"],
-                      timeInfo["day"]
-                    ].join("."),
-                    style: const TextStyle(
-                      fontSize: 12,
-                    ),
-                  )
-                ],
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            const Flexible(child: ScheduleTableWidget()),
-            // const TableViewCell(child: Text("hi"))
-          ],
+              const SizedBox(
+                height: 30,
+              ),
+              const Flexible(child: ScheduleTableWidget()),
+              // const TableViewCell(child: Text("hi"))
+            ],
+          ),
         ));
   }
 }
