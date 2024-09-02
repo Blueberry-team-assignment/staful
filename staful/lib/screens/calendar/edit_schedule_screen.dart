@@ -54,18 +54,19 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
       builder: (BuildContext context) {
         return Container(
-          color: Colors.white,
           padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 20,
+            horizontal: 30,
+            vertical: 40,
           ),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(25.0),
+            ),
+            color: Colors.white,
+          ),
+          width: MediaQuery.sizeOf(context).width - 30,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -81,12 +82,67 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                   color: Theme.of(context).disabledColor,
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('취소'),
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 50,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              Theme.of(context).primaryColor),
+                        ),
+                        onPressed: () => {},
+                        child: const Text(
+                          "삭제",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 50,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              Theme.of(context).disabledColor),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text(
+                          "취소",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
