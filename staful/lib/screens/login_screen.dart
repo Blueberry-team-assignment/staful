@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:staful/layouts/bottom_nav_layout.dart';
 import 'package:staful/screens/join_screen.dart';
 import 'package:staful/widgets/submit_button_widget.dart';
-import 'package:staful/widgets/text_input_widget.dart';
+import 'package:staful/widgets/validation_text_input_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   SizedBox(
                     height: 42,
-                    child: TextInputWidget(
+                    child: ValidationTextInputWidget(
                       label: "id".tr(),
                       placeHolder: "idPlaceholder".tr(),
                       onChanged: handleIdInputChanged,
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(
                     height: 42,
-                    child: TextInputWidget(
+                    child: ValidationTextInputWidget(
                       label: "password".tr(),
                       placeHolder: "typeyourpw".tr(),
                       onChanged: handlePwInputChanged,
@@ -148,7 +148,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
                 child: SubmitButtonWidget(
-                  isEnabled: isLoginButtonEnabled,
+                  color: isLoginButtonEnabled
+                      ? null
+                      : Theme.of(context).disabledColor,
                   text: "login".tr(),
                 ),
               ),

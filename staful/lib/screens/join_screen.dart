@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:staful/screens/login_screen.dart';
 import 'package:staful/utils/form_validators.dart';
 import 'package:staful/widgets/submit_button_widget.dart';
-import 'package:staful/widgets/text_input_widget.dart';
+import 'package:staful/widgets/validation_text_input_widget.dart';
 
 class JoinScreen extends StatefulWidget {
   const JoinScreen({super.key});
@@ -174,7 +174,7 @@ class _JoinScreenState extends State<JoinScreen> {
                         const SizedBox(
                           height: inputGap,
                         ),
-                        TextInputWidget(
+                        ValidationTextInputWidget(
                           label: "id".tr(),
                           placeHolder: "idPlaceholder".tr(),
                           onChanged: handleIdInputChanged,
@@ -184,7 +184,7 @@ class _JoinScreenState extends State<JoinScreen> {
                         const SizedBox(
                           height: inputGap,
                         ),
-                        TextInputWidget(
+                        ValidationTextInputWidget(
                           label: "password".tr(),
                           placeHolder: "typeyourpw".tr(),
                           onChanged: handlePwInputChanged,
@@ -195,7 +195,7 @@ class _JoinScreenState extends State<JoinScreen> {
                         const SizedBox(
                           height: inputGap,
                         ),
-                        TextInputWidget(
+                        ValidationTextInputWidget(
                           label: "confirmPw".tr(),
                           placeHolder: "typeyourpw2".tr(),
                           onChanged: handlePwConfirmInputChanged,
@@ -228,7 +228,7 @@ class _JoinScreenState extends State<JoinScreen> {
                         const SizedBox(
                           height: inputGap,
                         ),
-                        TextInputWidget(
+                        ValidationTextInputWidget(
                           label: "storeName".tr(),
                           placeHolder: "매장명을 입력하세요.",
                           onChanged: handleStoreNameInputChanged,
@@ -239,7 +239,7 @@ class _JoinScreenState extends State<JoinScreen> {
                         const SizedBox(
                           height: inputGap,
                         ),
-                        TextInputWidget(
+                        ValidationTextInputWidget(
                           label: "ownerName".tr(),
                           placeHolder: "ownerNamePlaceholder".tr(),
                           onChanged: handleStoreOwnerNameInputChanged,
@@ -254,7 +254,7 @@ class _JoinScreenState extends State<JoinScreen> {
                           onTap: () => showCalendar(),
                           child: AbsorbPointer(
                             absorbing: true,
-                            child: TextInputWidget(
+                            child: ValidationTextInputWidget(
                               label: "openingDate".tr(),
                               placeHolder: "개업일을 입력하세요.",
                               onChanged: handleOpenDateInputChanged,
@@ -282,7 +282,9 @@ class _JoinScreenState extends State<JoinScreen> {
                     }
                 },
                 child: SubmitButtonWidget(
-                  isEnabled: isSubmitButtonEnabled,
+                  color: isSubmitButtonEnabled
+                      ? null
+                      : Theme.of(context).disabledColor,
                   text: "signup".tr(),
                 ),
               ),

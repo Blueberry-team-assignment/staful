@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class TextInputWidget extends StatefulWidget {
-  final String label;
+class ValidationTextInputWidget extends StatefulWidget {
+  final String? label;
   final String placeHolder;
   final ValueChanged<String> onChanged;
   final String? errorText;
@@ -10,9 +10,9 @@ class TextInputWidget extends StatefulWidget {
   final bool shouldObscureText;
   final bool shouldValidate;
 
-  const TextInputWidget({
+  const ValidationTextInputWidget({
     super.key,
-    required this.label,
+    this.label,
     required this.placeHolder,
     required this.onChanged,
     this.errorText,
@@ -22,10 +22,11 @@ class TextInputWidget extends StatefulWidget {
   });
 
   @override
-  State<TextInputWidget> createState() => _TextInputWidgetState();
+  State<ValidationTextInputWidget> createState() =>
+      _ValidationTextInputWidgetState();
 }
 
-class _TextInputWidgetState extends State<TextInputWidget> {
+class _ValidationTextInputWidgetState extends State<ValidationTextInputWidget> {
   @override
   void initState() {
     super.initState();
@@ -74,9 +75,11 @@ class _TextInputWidgetState extends State<TextInputWidget> {
                         ))
                   : null,
           border: OutlineInputBorder(
-              borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.secondary,
-          )),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          ),
           hintText: widget.placeHolder,
           errorText: widget.errorText,
           errorMaxLines: 2,
