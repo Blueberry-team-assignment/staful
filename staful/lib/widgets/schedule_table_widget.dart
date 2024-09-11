@@ -133,7 +133,7 @@ class ScheduleTableWidgetState extends State<ScheduleTableWidget> {
                   "day": timeInfo["day"],
                   "dayOfWeekKorean": timeInfo["dayOfWeekKorean"]
                 },
-                workSchedule: schedules[vicinity.yIndex],
+                workHours: schedules[vicinity.yIndex],
               ),
             ),
           ),

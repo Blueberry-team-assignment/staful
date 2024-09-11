@@ -15,11 +15,11 @@ class OverlaySearchResultsWidget extends StatefulWidget {
   });
 
   @override
-  _OverlaySearchResultsWidgetState createState() =>
-      _OverlaySearchResultsWidgetState();
+  OverlaySearchResultsWidgetState createState() =>
+      OverlaySearchResultsWidgetState();
 }
 
-class _OverlaySearchResultsWidgetState
+class OverlaySearchResultsWidgetState
     extends State<OverlaySearchResultsWidget> {
   OverlayEntry? _overlayEntry;
 
@@ -49,17 +49,10 @@ class _OverlaySearchResultsWidgetState
 
     if (widget.controller.text.isEmpty) return;
 
-    final inputText2 = widget.controller.text;
-    final inputText = widget.controller.value.text;
-    print("value : $inputText");
-    print("value2 : $inputText2");
+    final inputText = widget.controller.text;
 
     // 초성 입력인지 여부 확인
-    final filteredSuggestions = _isKorean(inputText)
-        ? _searchByChosungOnly(inputText) // 초성만 입력된 경우
-        : _isKorean(inputText)
-            ? _searchByChosung(inputText) // 초성+중성 입력된 경우
-            : _searchByEnglish(inputText); // 영어 입력된 경우
+    final filteredSuggestions = _searchByChosung(inputText);
 
     // 필터링된 리스트가 비어 있으면 오버레이를 표시하지 않음
     if (filteredSuggestions.isEmpty) return;
@@ -69,58 +62,22 @@ class _OverlaySearchResultsWidgetState
     Overlay.of(context).insert(_overlayEntry!);
   }
 
-  // 한글인지 여부 확인
-  bool _isKorean(String input) {
-    // 한글 초성 또는 완성된 한글 음절인지 확인하는 정규식
-    final regex = RegExp(r'^[\u1100-\u1112\uAC00-\uD7A3]+$');
-    print(regex.hasMatch(input));
-    return regex.hasMatch(input);
-  }
-
-  // 초성만 입력된 상태인지 확인
-  bool _isChosungOnly(String input) {
-    // 초성만 입력된 경우는 유니코드 범위에서 초성만 해당하는 문자들로만 구성된 경우
-    print("ㄱ".codeUnits);
-    print(input.codeUnits);
-    return input.codeUnits.every((unit) => unit >= 0x1100 && unit <= 0x1112);
-  }
-
-  // 초성만 입력된 경우 검색
-  List<String> _searchByChosungOnly(String input) {
-    final inputChosung = input; // 입력된 문자 자체가 초성일 경우 그대로 사용
-    print("inputChosung");
-    print(inputChosung);
-    return widget.suggestions.where((suggestion) {
-      String chosungName = getChosung(suggestion);
-      print("chosungName :");
-      print(chosungName);
-      return chosungName.startsWith(inputChosung); // 초성만 비교
-    }).toList();
-  }
-
   // 초성 검색 로직 (초성+중성)
   List<String> _searchByChosung(String input) {
-    final inputChosung = getChosung(input); // 입력된 텍스트에서 초성 추출
+    final inputChosung = decomposeHangul(input); // 입력된 텍스트를
 
     return widget.suggestions.where((suggestion) {
-      String chosungName = getChosung(suggestion);
-      return chosungName.startsWith(inputChosung); // 초성+중성으로 시작하는지 확인
+      String chosungName = decomposeHangul(suggestion);
+      return chosungName.startsWith(inputChosung);
     }).toList();
   }
 
-  // 기존 로직 (영어 검색)
-  List<String> _searchByEnglish(String input) {
-    return widget.suggestions
-        .where((suggestion) =>
-            suggestion.isNotEmpty &&
-            suggestion.toLowerCase().contains(input.toLowerCase()))
-        .toList();
-  }
-
-  // 초성을 추출하는 함수
-  String getChosung(String input) {
+  // 초성,중성,종성으로 한글 분리하는 함수
+  String decomposeHangul(String input) {
     const int baseCode = 44032; // '가'의 유니코드
-    const int chosungBase = 588; // 각 초성의 간격
+    const int chosungBase = 588;
+    const int jungseongBase = 28;
+
     const List<String> chosungList = [
       "ㄱ",
       "ㄲ",
@@ -142,23 +99,78 @@ class _OverlaySearchResultsWidgetState
       "ㅍ",
       "ㅎ"
     ];
+    const List<String> jungseongList = [
+      "ㅏ",
+      "ㅐ",
+      "ㅑ",
+      "ㅒ",
+      "ㅓ",
+      "ㅔ",
+      "ㅕ",
+      "ㅖ",
+      "ㅗ",
+      "ㅘ",
+      "ㅙ",
+      "ㅚ",
+      "ㅛ",
+      "ㅜ",
+      "ㅝ",
+      "ㅞ",
+      "ㅟ",
+      "ㅠ",
+      "ㅡ",
+      "ㅢ",
+      "ㅣ"
+    ];
+    const List<String> jongseongList = [
+      "",
+      "ㄱ",
+      "ㄲ",
+      "ㄳ",
+      "ㄴ",
+      "ㄵ",
+      "ㄶ",
+      "ㄷ",
+      "ㄹ",
+      "ㄺ",
+      "ㄻ",
+      "ㄼ",
+      "ㄽ",
+      "ㄾ",
+      "ㄿ",
+      "ㅀ",
+      "ㅁ",
+      "ㅂ",
+      "ㅄ",
+      "ㅅ",
+      "ㅆ",
+      "ㅇ",
+      "ㅈ",
+      "ㅊ",
+      "ㅋ",
+      "ㅌ",
+      "ㅍ",
+      "ㅎ"
+    ];
 
     String result = '';
     for (int i = 0; i < input.length; i++) {
       int charCode = input.codeUnitAt(i);
 
-      // 완성된 한글 음절인지 확인 (유니코드 범위에 있는지)
       if (charCode >= baseCode && charCode <= baseCode + 11171) {
-        int chosungIndex = (charCode - baseCode) ~/ chosungBase;
-        result += chosungList[chosungIndex];
-      } else if (charCode >= 0x1100 && charCode <= 0x1112) {
-        // 한글 초성 유니코드 범위에서 초성 추출 (ㄱ~ㅎ)
-        result += String.fromCharCode(charCode);
+        int syllableIndex = charCode - baseCode;
+        int chosungIndex = syllableIndex ~/ chosungBase;
+        int jungseongIndex = (syllableIndex % chosungBase) ~/ jungseongBase;
+        int jongseongIndex = syllableIndex % jungseongBase;
+
+        result += chosungList[chosungIndex] +
+            jungseongList[jungseongIndex] +
+            jongseongList[jongseongIndex];
       } else {
-        result += input[i]; // 한글이 아닌 경우 그대로 추가
+        if (input[i].isNotEmpty) result += input[i]; // 한글이 아닌 경우 그대로 추가
       }
     }
-    return result;
+    return result.toLowerCase();
   }
 
   OverlayEntry _createOverlay(List<String> filteredSuggestions) {

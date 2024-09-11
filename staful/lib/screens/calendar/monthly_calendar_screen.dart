@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/screens/calendar/schedule_screen.dart';
+import 'package:staful/utils/dummies.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -18,48 +19,15 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
-  List<Widget> staffProfileWidgets = [
-    const StaffProfileWidget(
-      name: "매니저저저asdadsadsad",
-      imageName: "Ellipse 2.png",
-      size: "lg",
-    ),
-    const StaffProfileWidget(
-      name: "이나라라",
-      imageName: "Ellipse 3.png",
-      size: "lg",
-    ),
-    const StaffProfileWidget(
-      name: "김경민",
-      imageName: "Ellipse 4.png",
-      size: "lg",
-    ),
-    const StaffProfileWidget(
-      name: "김선미",
-      imageName: "Ellipse 5.png",
-      size: "lg",
-    ),
-    const StaffProfileWidget(
-      name: "신동찬",
-      imageName: "Ellipse 2.png",
-      size: "lg",
-    ),
-    const StaffProfileWidget(
-      name: "매니저",
-      imageName: "Ellipse 3.png",
-      size: "lg",
-    ),
-    const StaffProfileWidget(
-      name: "이나라",
-      imageName: "Ellipse 4.png",
-      size: "lg",
-    ),
-    const StaffProfileWidget(
-      name: "김경민",
-      imageName: "Ellipse 5.png",
-      size: "lg",
-    ),
-  ];
+  List<Widget> staffProfileWidgets = staffs
+      .map((staff) => Padding(
+            padding: const EdgeInsets.all(15),
+            child: StaffProfileWidget(
+              imageName: staff["image"],
+              name: staff["name"],
+            ),
+          ))
+      .toList();
 
   void onDaySelected(selectedDay) {
     setState(() {
@@ -147,9 +115,11 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                Wrap(
-                  spacing: 10.0, // Horizontal spacing between items
-                  runSpacing: 20.0, // Vertical spacing between rows
+                GridView.count(
+                  crossAxisCount: 4,
+                  shrinkWrap: true, // 자식 위젯들의 크기에 맞게 자신의 크기를 줄이도록 함.
+                  physics:
+                      const NeverScrollableScrollPhysics(), // GridView 자체 스크롤 비활성화.
                   children: staffProfileWidgets,
                 ),
                 const SizedBox(

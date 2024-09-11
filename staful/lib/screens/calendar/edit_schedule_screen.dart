@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/layouts/calendar_screen_layout.dart';
+import 'package:staful/widgets/bottom_sheet_widget.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 
 class EditScheduleScreen extends StatefulWidget {
   final dynamic workDate;
-  final workSchedule;
+  final dynamic workHours;
 
   const EditScheduleScreen({
     super.key,
     required this.workDate,
-    required this.workSchedule,
+    required this.workHours,
   });
 
   @override
@@ -21,11 +22,11 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
   bool isOnEditMode = false;
 
   List<List<dynamic>> get scheduleInfo => [
-        widget.workSchedule[0].split(":").map(int.parse).toList(),
-        widget.workSchedule[1].split(":").map(int.parse).toList()
+        widget.workHours[0].split(":").map(int.parse).toList(),
+        widget.workHours[1].split(":").map(int.parse).toList()
       ];
 
-  late final updatedSchedule = widget.workSchedule;
+  late final updatedSchedule = widget.workHours;
 
   void handleOnUpdateOpeningHour(DateTime time) {
     setState(() {
@@ -49,106 +50,6 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
     setState(() {
       isOnEditMode = false;
     });
-  }
-
-  void _showBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 30,
-            vertical: 40,
-          ),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(25.0),
-            ),
-            color: Colors.white,
-          ),
-          width: MediaQuery.sizeOf(context).width - 30,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Text(
-                '이 스케줄을 삭제하시겠습니까?',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                '삭제되면 다시 복구되지 않습니다',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).disabledColor,
-                ),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          backgroundColor: WidgetStateProperty.all<Color>(
-                              Theme.of(context).primaryColor),
-                        ),
-                        onPressed: () => {},
-                        child: const Text(
-                          "삭제",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: TextButton(
-                        style: ButtonStyle(
-                          shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          backgroundColor: WidgetStateProperty.all<Color>(
-                              Theme.of(context).disabledColor),
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
-                          "취소",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -384,10 +285,10 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                             ),
                           ],
                         )
-                      : SizedBox(
+                      : const SizedBox(
                           height: 48,
                           child: DeleteScheduleBtn(
-                            onPressed: _showBottomSheet,
+                            onPressed: showBottomSheetWidget,
                           ),
                         ),
                 ),
@@ -475,7 +376,7 @@ class WorkScheduleForDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "${widget.workSchedule[0]} - ${widget.workSchedule[1]}",
+      "${widget.workHours[0]} - ${widget.workHours[1]}",
       style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,

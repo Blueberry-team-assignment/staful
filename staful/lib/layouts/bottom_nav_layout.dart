@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:staful/layouts/calendar_screen_layout.dart';
 import 'package:staful/screens/pay_screen.dart';
 import 'package:staful/screens/setting_screen.dart';
-import 'package:staful/screens/staff_screen.dart';
+import 'package:staful/screens/staff/staff_screen.dart';
 
 class BottomNavLayout extends StatefulWidget {
   const BottomNavLayout({super.key});
