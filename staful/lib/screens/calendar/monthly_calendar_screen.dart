@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:staful/layouts/app_layout.dart';
 import 'package:staful/screens/calendar/schedule_screen.dart';
 import 'package:staful/utils/dummies.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -53,81 +55,83 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 30,
-        vertical: 5,
-      ),
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            TableCalendar(
-              onHeaderLongPressed: handleOnHeaderLongPressed,
-              onHeaderTapped: handleOnHeaderTapped,
-              onDaySelected: (selectedDay, focusedDay) => {
-                onDaySelected(selectedDay),
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ScheduleScreen(
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: 5,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(
+                height: 15,
+              ),
+              TableCalendar(
+                onHeaderLongPressed: handleOnHeaderLongPressed,
+                onHeaderTapped: handleOnHeaderTapped,
+                onDaySelected: (selectedDay, focusedDay) => {
+                  onDaySelected(selectedDay),
+                  openPage(
+                    context,
+                    ScheduleScreen(
                       date: _selectedDay,
                     ),
+                  )
+                },
+                calendarStyle: CalendarStyle(
+                  todayTextStyle: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
-                )
-              },
-              calendarStyle: CalendarStyle(
-                todayTextStyle: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+                  todayDecoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    shape: BoxShape.circle,
+                  ),
                 ),
-                todayDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  shape: BoxShape.circle,
-                ),
+                headerStyle: CalendarHeaderStyle(),
+                locale: Localizations.localeOf(context).toString(),
+                currentDay: _selectedDay,
+                focusedDay: _focusedDay,
+                firstDay: DateTime(1950),
+                lastDay: DateTime(2150),
               ),
-              headerStyle: CalendarHeaderStyle(),
-              locale: Localizations.localeOf(context).toString(),
-              currentDay: _selectedDay,
-              focusedDay: _focusedDay,
-              firstDay: DateTime(1950),
-              lastDay: DateTime(2150),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    "근무자",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      "근무자",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                GridView.count(
-                  crossAxisCount: 4,
-                  shrinkWrap: true, // 자식 위젯들의 크기에 맞게 자신의 크기를 줄이도록 함.
-                  physics:
-                      const NeverScrollableScrollPhysics(), // GridView 자체 스크롤 비활성화.
-                  children: staffProfileWidgets,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-              ],
-            )
-          ],
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true, // 자식 위젯들의 크기에 맞게 자신의 크기를 줄이도록 함.
+                    physics:
+                        const NeverScrollableScrollPhysics(), // GridView 자체 스크롤 비활성화.
+                    children: staffProfileWidgets,
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

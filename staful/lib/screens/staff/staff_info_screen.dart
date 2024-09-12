@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/layouts/calendar_screen_layout.dart';
+import 'package:staful/layouts/app_layout.dart';
 import 'package:staful/screens/staff/staff_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/widgets/bottom_sheet_widget.dart';
@@ -8,15 +9,11 @@ import 'package:staful/widgets/simple_text_input_widget.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 
 class StaffInfoScreen extends StatefulWidget {
-  final dynamic workDate;
-  final dynamic workHours;
-  final dynamic workDays;
+  final dynamic staffInfo;
 
   const StaffInfoScreen({
     super.key,
-    required this.workDate,
-    required this.workHours,
-    required this.workDays,
+    required this.staffInfo,
   });
 
   @override
@@ -27,11 +24,11 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
   bool isOnEditMode = false;
 
   List<List<dynamic>> get scheduleInfo => [
-        widget.workHours[0].split(":").map(int.parse).toList(),
-        widget.workHours[1].split(":").map(int.parse).toList()
+        widget.staffInfo["workHours"][0].split(":").map(int.parse).toList(),
+        widget.staffInfo["workHours"][1].split(":").map(int.parse).toList()
       ];
 
-  late final updatedSchedule = widget.workHours;
+  late final updatedSchedule = widget.staffInfo["workHours"];
 
   void handleOnUpdateOpeningHour(DateTime time) {
     setState(() {
@@ -72,7 +69,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: NavigateBackAppBar(context),
+      appBar: navigateBackAppBar(context),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 30,
@@ -125,13 +122,13 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(bottom: 15),
+                      padding: const EdgeInsets.only(bottom: 15),
                       child: StaffProfileWidget(
-                          imageName: "Ellipse 5.png", size: 64),
+                          imageName: widget.staffInfo["image"], size: 64),
                     ),
                   ],
                 ),
@@ -167,9 +164,9 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                     )
                                   ],
                                 )
-                              : const Text(
-                                  "매니저",
-                                  style: TextStyle(
+                              : Text(
+                                  widget.staffInfo["name"],
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -280,7 +277,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                 const ColumnItemContainer(
                   content: TextField(
                     maxLines: null,
-                    minLines: 16,
+                    minLines: 5,
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                       labelText: "직원에 대해 알아야 할 점을 자유롭게 기록하세요",
@@ -293,43 +290,51 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
           ),
           Positioned(
             bottom: 0,
+            left: 0,
+            right: 0,
             child: Row(
               children: [
-                TextButton(
-                  style: ButtonStyle(
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                Expanded(
+                  child: TextButton(
+                    style: ButtonStyle(
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                       ),
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                          Theme.of(context).disabledColor),
                     ),
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                        Theme.of(context).disabledColor),
-                  ),
-                  onPressed: onTabUndoBtn,
-                  child: const Text(
-                    "취소",
-                    style: TextStyle(
-                      color: Colors.black,
+                    onPressed: onTabUndoBtn,
+                    child: const Text(
+                      "취소",
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(
                   width: 10,
                 ),
-                TextButton(
-                  style: ButtonStyle(
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                Expanded(
+                  child: TextButton(
+                    style: ButtonStyle(
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
+                    onPressed: () => {},
+                    child: const Text(
+                      "저장",
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
                     ),
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                        Theme.of(context).primaryColor),
-                  ),
-                  onPressed: () => {},
-                  child: const Text(
-                    "저장",
-                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -437,7 +442,7 @@ class WorkScheduleForDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "${widget.workHours[0]} - ${widget.workHours[1]}",
+      "${widget.staffInfo["workHours"][0]} - ${widget.staffInfo["workHours"][1]}",
       style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,

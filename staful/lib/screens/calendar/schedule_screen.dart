@@ -1,11 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:staful/layouts/calendar_screen_layout.dart';
-import 'package:staful/screens/calendar/edit_schedule_screen.dart';
+import 'package:staful/layouts/app_layout.dart';
 import 'package:staful/utils/time_utils.dart';
 import 'package:staful/widgets/schedule_table_widget.dart';
-import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
 class ScheduleScreen extends StatefulWidget {
   final DateTime date;
@@ -32,8 +28,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     final timeInfo = getCurrentDateTimeInfo();
 
     return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: NavigateBackAppBar(context),
+        appBar: navigateBackAppBar(context),
         body: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 30,
@@ -76,8 +71,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               const SizedBox(
                 height: 30,
               ),
-              const Flexible(child: ScheduleTableWidget()),
-              // const TableViewCell(child: Text("hi"))
+              const Expanded(
+                child: ScheduleTableWidget(),
+              ),
             ],
           ),
         ));

@@ -176,9 +176,9 @@ class OverlaySearchResultsWidgetState
   OverlayEntry _createOverlay(List<String> filteredSuggestions) {
     return OverlayEntry(
       builder: (context) => Positioned(
-        left: 31,
-        right: 31,
-        top: 215,
+        left: 30,
+        right: 30,
+        top: 210,
         child: Material(
           elevation: 4.0,
           child: Padding(

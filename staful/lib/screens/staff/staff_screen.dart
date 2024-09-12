@@ -20,6 +20,8 @@ class StaffScreenState extends State<StaffScreen> {
   List<String> searchSuggestions =
       (staffs.map((staff) => staff["name"] as String)).toList();
 
+  late dynamic searchedStaff = staffs;
+
   void onSearchInputChanged(String text) {
     // 검색어가 변경될 때마다 호출됨
     // print(text);
@@ -27,13 +29,18 @@ class StaffScreenState extends State<StaffScreen> {
 
   void onSuggestionSelected(String suggestion) {
     searchInputController.text = suggestion;
+
+    setState(() {
+      searchedStaff =
+          staffs.where((staff) => staff["name"] == suggestion).toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        vertical: 100,
+        vertical: 30,
         horizontal: 30,
       ),
       child: Column(
@@ -73,65 +80,79 @@ class StaffScreenState extends State<StaffScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                "총 n명",
+                "총 ${staffs.length}명",
                 style: TextStyleConfig(size: 14).setTextStyle(),
               )
             ],
           ),
-          ColumnItemContainer(
-            content: Column(
-              children: [
-                GestureDetector(
-                  onTap: () => {
-                    openPage(
-                      context,
-                      const StaffInfoScreen(
-                        workDate: "2024.09.11",
-                        workHours: ["09:00", "14:00"],
-                        workDays: ["sun", "wed", "thu"],
-                      ),
-                    )
-                  },
-                  child: Row(
-                    children: [
-                      const StaffProfileWidget(imageName: "Ellipse 5.png"),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "매니저",
-                        style: TextStyleConfig(size: 16).setTextStyle(),
-                      )
-                    ],
-                  ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: searchedStaff.length, // 스태프 수에 따라 아이템 수 결정
+              itemBuilder: (context, index) {
+                final staff = searchedStaff[index];
+                return Container(
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                    ),
+                    child: buildStaffCards(context, staff)); // 개별 스태프 카드 생성
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ColumnItemContainer buildStaffCards(BuildContext context, staff) {
+    return ColumnItemContainer(
+      content: Column(
+        children: [
+          GestureDetector(
+            onTap: () => {
+              openPage(
+                context,
+                StaffInfoScreen(
+                  staffInfo: staff,
                 ),
-                const Row(
-                  children: [
-                    ExpandedRowItem(
-                      text: "일",
-                    ),
-                    ExpandedRowItem(
-                      text: "월",
-                    ),
-                    ExpandedRowItem(
-                      text: "화",
-                    ),
-                    ExpandedRowItem(
-                      text: "수",
-                    ),
-                    ExpandedRowItem(
-                      text: "목",
-                    ),
-                    ExpandedRowItem(
-                      text: "금",
-                    ),
-                    ExpandedRowItem(
-                      text: "토",
-                    ),
-                  ],
+              )
+            },
+            child: Row(
+              children: [
+                StaffProfileWidget(imageName: staff["image"]),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  staff["name"],
+                  style: TextStyleConfig(size: 16).setTextStyle(),
                 )
               ],
             ),
+          ),
+          const Row(
+            children: [
+              ExpandedRowItem(
+                text: "일",
+              ),
+              ExpandedRowItem(
+                text: "월",
+              ),
+              ExpandedRowItem(
+                text: "화",
+              ),
+              ExpandedRowItem(
+                text: "수",
+              ),
+              ExpandedRowItem(
+                text: "목",
+              ),
+              ExpandedRowItem(
+                text: "금",
+              ),
+              ExpandedRowItem(
+                text: "토",
+              ),
+            ],
           )
         ],
       ),

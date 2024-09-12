@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:staful/layouts/calendar_screen_layout.dart';
+import 'package:staful/screens/calendar/monthly_calendar_screen.dart';
 import 'package:staful/screens/pay_screen.dart';
 import 'package:staful/screens/setting_screen.dart';
 import 'package:staful/screens/staff/staff_screen.dart';
@@ -23,7 +24,7 @@ class _BottomNavLayoutState extends State<BottomNavLayout> {
   ];
 
   final List<Widget> _screens = [
-    const CalendarScreen(),
+    const MonthlyCalendarScreen(),
     const StaffScreen(),
     const PayScreen(),
     const SettingScreen(),

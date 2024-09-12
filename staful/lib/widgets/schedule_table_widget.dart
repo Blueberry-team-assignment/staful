@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staful/screens/calendar/edit_schedule_screen.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/utils/time_utils.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
@@ -125,16 +126,15 @@ class ScheduleTableWidgetState extends State<ScheduleTableWidget> {
         columnMergeStart: start,
         columnMergeSpan: end - start + 2, // Span for merging columns
         child: GestureDetector(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => EditScheduleScreen(
-                workDate: {
-                  "month": timeInfo["month"],
-                  "day": timeInfo["day"],
-                  "dayOfWeekKorean": timeInfo["dayOfWeekKorean"]
-                },
-                workHours: schedules[vicinity.yIndex],
-              ),
+          onTap: () => openPage(
+            context,
+            EditScheduleScreen(
+              workDate: {
+                "month": timeInfo["month"],
+                "day": timeInfo["day"],
+                "dayOfWeekKorean": timeInfo["dayOfWeekKorean"]
+              },
+              workHours: schedules[vicinity.yIndex],
             ),
           ),
           child: Padding(

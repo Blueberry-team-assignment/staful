@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:staful/layouts/calendar_screen_layout.dart';
+import 'package:staful/layouts/app_layout.dart';
 import 'package:staful/widgets/bottom_sheet_widget.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 
@@ -55,8 +55,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: NavigateBackAppBar(context),
+      appBar: navigateBackAppBar(context),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 30,
@@ -86,7 +85,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                             child: TextButton(
                               onPressed: onTabEditBtn,
                               style: ButtonStyle(
-                                // alignment: Alignment.topCenter,s
+                                // alignment: Alignment.topCenter,
                                 backgroundColor: WidgetStateProperty.all<Color>(
                                   Theme.of(context).primaryColorLight,
                                 ),
@@ -232,68 +231,70 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: isOnEditMode
-                      ? Row(
-                          children: [
-                            Expanded(
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  shape: WidgetStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  backgroundColor:
-                                      WidgetStateProperty.all<Color>(
-                                          Theme.of(context).disabledColor),
-                                ),
-                                onPressed: onTabUndoBtn,
-                                child: const Text(
-                                  "취소",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
+            isOnEditMode
+                ? Container(
+                    margin: const EdgeInsets.only(bottom: 70),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            style: ButtonStyle(
+                              shape: WidgetStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
                               ),
+                              backgroundColor: WidgetStateProperty.all<Color>(
+                                  Theme.of(context).disabledColor),
                             ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: TextButton(
-                                style: ButtonStyle(
-                                  shape: WidgetStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  backgroundColor:
-                                      WidgetStateProperty.all<Color>(
-                                          Theme.of(context).primaryColor),
-                                ),
-                                onPressed: () => {},
-                                child: const Text(
-                                  "저장",
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                            onPressed: onTabUndoBtn,
+                            child: const Text(
+                              "취소",
+                              style: TextStyle(
+                                color: Colors.black,
                               ),
                             ),
-                          ],
-                        )
-                      : const SizedBox(
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: TextButton(
+                            style: ButtonStyle(
+                              shape: WidgetStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              backgroundColor: WidgetStateProperty.all<Color>(
+                                  Theme.of(context).primaryColor),
+                            ),
+                            onPressed: () => {},
+                            child: const Text(
+                              "저장",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Row(
+                    children: [
+                      Expanded(
+                        child: Container(
                           height: 48,
-                          child: DeleteScheduleBtn(
+                          margin: const EdgeInsets.only(bottom: 70),
+                          child: const DeleteScheduleBtn(
                             onPressed: showBottomSheetWidget,
                           ),
                         ),
-                ),
-              ],
-            ),
+                      ),
+                    ],
+                  ),
           ],
         ),
       ),
