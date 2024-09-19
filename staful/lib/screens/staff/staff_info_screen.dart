@@ -22,13 +22,14 @@ class StaffInfoScreen extends StatefulWidget {
 
 class _StaffInfoScreenState extends State<StaffInfoScreen> {
   bool isOnEditMode = false;
+  late TextEditingController lastNameController;
+  late TextEditingController firstNameController;
+  late List<TimeOfDay> updatedSchedule;
 
   String get weeklyWorkTime => widget.staffInfo.weeklyWorkingHours["minute"]! >
           0
       ? "${widget.staffInfo.weeklyWorkingHours["hour"]}시간 ${widget.staffInfo.weeklyWorkingHours["minute"]}분"
       : "${widget.staffInfo.weeklyWorkingHours["hour"]}시간";
-
-  late List<TimeOfDay> updatedSchedule;
 
   @override
   void initState() {
@@ -38,6 +39,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
       widget.staffInfo.workHours.startTime,
       widget.staffInfo.workHours.endTime
     ];
+    lastNameController = TextEditingController();
+    firstNameController = TextEditingController();
   }
 
   void handleOnUpdateOpeningHour(DateTime time) {
@@ -55,6 +58,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
   void onTabEditBtn() {
     setState(() {
       isOnEditMode = true;
+      lastNameController = TextEditingController();
+      firstNameController = TextEditingController();
     });
   }
 
@@ -63,9 +68,6 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
       isOnEditMode = false;
     });
   }
-
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController firstNameController = TextEditingController();
 
   void handleFirstNameChanged(String inputText) {
     print(inputText);
@@ -149,43 +151,52 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                     ColumnItemContainer(
                       content: Row(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "이름",
-                                style: TextStyle(
-                                  fontSize: 14,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "이름",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              isOnEditMode
-                                  ? Row(
-                                      children: [
-                                        Expanded(
-                                          child: SimpleTextInputWidget(
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                isOnEditMode
+                                    ? Row(
+                                        children: [
+                                          Expanded(
+                                            child: SimpleTextInputWidget(
                                               placeHolder: "성",
                                               onChanged: handleLastNameChanged,
-                                              controller: lastNameController),
-                                        ),
-                                        Expanded(
-                                          child: SimpleTextInputWidget(
+                                              controller: lastNameController,
+                                              onlyBottomBorder: true,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 15,
+                                          ),
+                                          Expanded(
+                                            child: SimpleTextInputWidget(
                                               placeHolder: "이름",
                                               onChanged: handleFirstNameChanged,
-                                              controller: firstNameController),
-                                        )
-                                      ],
-                                    )
-                                  : Text(
-                                      widget.staffInfo.name,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                                              controller: firstNameController,
+                                              onlyBottomBorder: true,
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    : Text(
+                                        widget.staffInfo.name,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                            ],
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -206,7 +217,10 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          WorkDaysRow(workDays: widget.staffInfo.workDays)
+                          WorkDaysRow(
+                            workDays: widget.staffInfo.workDays,
+                            disabled: !isOnEditMode,
+                          )
                         ],
                       ),
                     ),
@@ -227,31 +241,37 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 15,
                                 ),
                                 if (isOnEditMode)
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      TimePicker(
-                                        scheduleInfo: widget
-                                            .staffInfo.workHours.startTime,
-                                        onDateTimeChanged:
-                                            handleOnUpdateOpeningHour,
+                                      Expanded(
+                                        child: TimePicker(
+                                          scheduleInfo: widget
+                                              .staffInfo.workHours.startTime,
+                                          onDateTimeChanged:
+                                              handleOnUpdateOpeningHour,
+                                        ),
                                       ),
-                                      TimePicker(
-                                        scheduleInfo:
-                                            widget.staffInfo.workHours.endTime,
-                                        onDateTimeChanged:
-                                            handleOnUpdateClosingHour,
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: TimePicker(
+                                          scheduleInfo: widget
+                                              .staffInfo.workHours.endTime,
+                                          onDateTimeChanged:
+                                              handleOnUpdateClosingHour,
+                                        ),
                                       ),
                                     ],
                                   )
                                 else
-                                  WorkScheduleForDisplay(widget: widget),
+                                  WorkScheduleForDisplay(
+                                      workHours: widget.staffInfo.workHours),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 15,
                                 ),
                                 RichText(
                                   text: TextSpan(
@@ -352,7 +372,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                 ],
               ),
             const SizedBox(
-              height: 50,
+              height: bottomMargin,
             ),
           ],
         ),
@@ -428,10 +448,9 @@ class TimePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 100,
-      width: 170,
       child: CupertinoDatePicker(
         mode: CupertinoDatePickerMode.time,
-        minuteInterval: 5,
+        minuteInterval: 10,
         onDateTimeChanged: onDateTimeChanged,
         initialDateTime: DateTime(
           DateTime.now().year,
@@ -447,36 +466,31 @@ class TimePicker extends StatelessWidget {
 }
 
 class WorkScheduleForDisplay extends StatelessWidget {
+  final TimeRange workHours;
+
   const WorkScheduleForDisplay({
     super.key,
-    required this.widget,
+    required this.workHours,
   });
-
-  final StaffInfoScreen widget;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 5,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            formatTimeOfDay(widget.staffInfo.workHours.startTime),
-            style: TextStyleConfig(size: 20).setTextStyle(),
-          ),
-          Text(
-            "-",
-            style: TextStyleConfig(size: 20).setTextStyle(),
-          ),
-          Text(
-            formatTimeOfDay(widget.staffInfo.workHours.endTime),
-            style: TextStyleConfig(size: 20).setTextStyle(),
-          )
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text(
+          formatTimeOfDay(workHours.startTime),
+          style: TextStyleConfig(size: 20).setTextStyle(),
+        ),
+        Text(
+          "-",
+          style: TextStyleConfig(size: 20).setTextStyle(),
+        ),
+        Text(
+          formatTimeOfDay(workHours.endTime),
+          style: TextStyleConfig(size: 20).setTextStyle(),
+        )
+      ],
     );
   }
 }

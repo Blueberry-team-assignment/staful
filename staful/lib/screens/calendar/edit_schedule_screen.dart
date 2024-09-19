@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/layouts/app_layout.dart';
+import 'package:staful/utils/app_styles.dart';
 import 'package:staful/widgets/bottom_sheet_widget.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 
@@ -207,18 +208,23 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                             ),
                             isOnEditMode
                                 ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      TimePicker(
-                                        scheduleInfo: scheduleInfo[0],
-                                        onDateTimeChanged:
-                                            handleOnUpdateOpeningHour,
+                                      Expanded(
+                                        child: TimePicker(
+                                          scheduleInfo: scheduleInfo[0],
+                                          onDateTimeChanged:
+                                              handleOnUpdateOpeningHour,
+                                        ),
                                       ),
-                                      TimePicker(
-                                        scheduleInfo: scheduleInfo[1],
-                                        onDateTimeChanged:
-                                            handleOnUpdateClosingHour,
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: TimePicker(
+                                          scheduleInfo: scheduleInfo[1],
+                                          onDateTimeChanged:
+                                              handleOnUpdateClosingHour,
+                                        ),
                                       ),
                                     ],
                                   )
@@ -287,7 +293,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                       Expanded(
                         child: Container(
                           height: 48,
-                          margin: const EdgeInsets.only(bottom: 70),
+                          margin: const EdgeInsets.only(bottom: bottomMargin),
                           child: const DeleteScheduleBtn(
                             onPressed: showBottomSheetWidget,
                           ),
@@ -348,10 +354,9 @@ class TimePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 100,
-      width: 170,
       child: CupertinoDatePicker(
         mode: CupertinoDatePickerMode.time,
-        minuteInterval: 5,
+        minuteInterval: 10,
         onDateTimeChanged: onDateTimeChanged,
         initialDateTime: DateTime(
           DateTime.now().year,

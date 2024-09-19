@@ -5,12 +5,14 @@ class SimpleTextInputWidget extends StatefulWidget {
   final String placeHolder;
   final ValueChanged<String> onChanged;
   final TextEditingController controller;
+  final bool onlyBottomBorder;
 
   const SimpleTextInputWidget({
     super.key,
     required this.placeHolder,
     required this.onChanged,
     required this.controller,
+    this.onlyBottomBorder = false,
   });
 
   @override
@@ -24,6 +26,7 @@ class _SimpleTextInputWidgetState extends State<SimpleTextInputWidget> {
       placeHolder: widget.placeHolder,
       onChanged: widget.onChanged,
       controller: widget.controller,
+      onlyBottomBorder: widget.onlyBottomBorder,
     );
   }
 }

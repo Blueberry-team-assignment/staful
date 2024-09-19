@@ -145,10 +145,12 @@ class StaffScreenState extends State<StaffScreen> {
 
 class WorkDaysRow extends StatelessWidget {
   final List<String> workDays;
+  final bool disabled;
 
   const WorkDaysRow({
     super.key,
     required this.workDays,
+    this.disabled = true,
   });
 
   @override
@@ -158,6 +160,7 @@ class WorkDaysRow extends StatelessWidget {
           .map((key) => WorkDaysRowItem(
                 text: mapOfWorkDays[key] ?? "",
                 isSelected: workDays.contains(key),
+                disabled: disabled,
               ))
           .toList(),
     );
@@ -173,7 +176,7 @@ class WorkDaysRowItem extends StatefulWidget {
     super.key,
     this.text = "",
     this.isSelected = false,
-    this.disabled = true,
+    required this.disabled,
   });
 
   @override

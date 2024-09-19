@@ -9,6 +9,7 @@ class ValidationTextInputWidget extends StatefulWidget {
   final TextEditingController controller;
   final bool shouldObscureText;
   final bool shouldValidate;
+  final bool onlyBottomBorder;
 
   const ValidationTextInputWidget({
     super.key,
@@ -19,6 +20,7 @@ class ValidationTextInputWidget extends StatefulWidget {
     required this.controller,
     this.shouldObscureText = false,
     this.shouldValidate = true,
+    this.onlyBottomBorder = false,
   });
 
   @override
@@ -49,6 +51,18 @@ class _ValidationTextInputWidgetState extends State<ValidationTextInputWidget> {
 
   @override
   Widget build(BuildContext context) {
+    InputBorder borderStyle(Color color) => widget.onlyBottomBorder
+        ? UnderlineInputBorder(
+            borderSide: BorderSide(
+            color: color,
+          ))
+        : OutlineInputBorder(
+            borderSide: BorderSide(
+              color: color,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          );
+
     return TextFormField(
       controller: widget.controller,
       obscureText: widget.shouldObscureText,
@@ -57,9 +71,7 @@ class _ValidationTextInputWidgetState extends State<ValidationTextInputWidget> {
       ),
       decoration: InputDecoration(
           labelText: widget.label,
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-          ),
+          focusedBorder: borderStyle(Colors.black),
           suffixIcon:
               widget.controller.text.isNotEmpty && widget.shouldValidate == true
                   ? (isValidInputText
@@ -74,12 +86,7 @@ class _ValidationTextInputWidgetState extends State<ValidationTextInputWidget> {
                           ),
                         ))
                   : null,
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            borderRadius: BorderRadius.circular(5),
-          ),
+          border: borderStyle(Theme.of(context).disabledColor),
           hintText: widget.placeHolder,
           errorText: widget.errorText,
           errorMaxLines: 2,

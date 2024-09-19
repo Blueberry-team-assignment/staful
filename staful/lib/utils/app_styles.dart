@@ -19,3 +19,5 @@ class TextStyleConfig {
     );
   }
 }
+
+const double bottomMargin = 60;

@@ -19,15 +19,25 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
-  List<Widget> staffProfileWidgets = staffs
-      .map((staff) => Padding(
-            padding: const EdgeInsets.all(15),
-            child: StaffProfileWidget(
-              imageName: staff.image,
-              name: staff.name,
-            ),
-          ))
-      .toList();
+  List<Widget> staffProfileWidgets(BuildContext context) {
+    return staffs
+        .map((staff) => Padding(
+              padding: const EdgeInsets.all(15),
+              child: GestureDetector(
+                onTap: () => openPage(
+                  context,
+                  ScheduleScreen(
+                    date: _selectedDay,
+                  ),
+                ),
+                child: StaffProfileWidget(
+                  imageName: staff.image,
+                  name: staff.name,
+                ),
+              ),
+            ))
+        .toList();
+  }
 
   void onDaySelected(selectedDay) {
     setState(() {
@@ -75,12 +85,6 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
                 onHeaderTapped: handleOnHeaderTapped,
                 onDaySelected: (selectedDay, focusedDay) => {
                   onDaySelected(selectedDay),
-                  openPage(
-                    context,
-                    ScheduleScreen(
-                      date: _selectedDay,
-                    ),
-                  )
                 },
                 calendarStyle: CalendarStyle(
                   todayTextStyle: const TextStyle(
@@ -92,7 +96,7 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
                     shape: BoxShape.circle,
                   ),
                 ),
-                headerStyle: CalendarHeaderStyle(),
+                headerStyle: calendarHeaderStyle(),
                 locale: Localizations.localeOf(context).toString(),
                 currentDay: _selectedDay,
                 focusedDay: _focusedDay,
@@ -124,7 +128,7 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
                     shrinkWrap: true, // 자식 위젯들의 크기에 맞게 자신의 크기를 줄이도록 함.
                     physics:
                         const NeverScrollableScrollPhysics(), // GridView 자체 스크롤 비활성화.
-                    children: staffProfileWidgets,
+                    children: staffProfileWidgets(context),
                   ),
                 ],
               )
@@ -135,7 +139,7 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
     );
   }
 
-  HeaderStyle CalendarHeaderStyle() {
+  HeaderStyle calendarHeaderStyle() {
     return HeaderStyle(
       rightChevronIcon: ChevronIconStyle("r"),
       rightChevronMargin: const EdgeInsets.only(
