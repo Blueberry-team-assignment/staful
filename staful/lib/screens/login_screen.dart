@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/layouts/app_layout.dart';
-import 'package:staful/layouts/bottom_nav_layout.dart';
 import 'package:staful/screens/calendar/monthly_calendar_screen.dart';
 import 'package:staful/screens/join_screen.dart';
 import 'package:staful/widgets/submit_button_widget.dart';

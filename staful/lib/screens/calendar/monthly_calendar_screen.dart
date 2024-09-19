@@ -1,7 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:staful/layouts/app_layout.dart';
 import 'package:staful/screens/calendar/schedule_screen.dart';
 import 'package:staful/utils/dummies.dart';
 import 'package:staful/utils/navigation_helpers.dart';
@@ -25,8 +23,8 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
       .map((staff) => Padding(
             padding: const EdgeInsets.all(15),
             child: StaffProfileWidget(
-              imageName: staff["image"],
-              name: staff["name"],
+              imageName: staff.image,
+              name: staff.name,
             ),
           ))
       .toList();

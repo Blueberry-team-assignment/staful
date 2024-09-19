@@ -71,6 +71,7 @@ class _AppLayoutState extends State<AppLayout> {
         buildBottomNavItems("설정", "icon_settings.svg", 3),
       ],
       selectedItemColor: Theme.of(context).primaryColor,
+      unselectedItemColor: Colors.black,
     );
   }
 

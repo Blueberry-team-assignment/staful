@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:staful/layouts/calendar_screen_layout.dart';
 import 'package:staful/layouts/app_layout.dart';
+import 'package:staful/models/staff_model.dart';
 import 'package:staful/screens/staff/staff_screen.dart';
 import 'package:staful/utils/app_styles.dart';
-import 'package:staful/widgets/bottom_sheet_widget.dart';
+import 'package:staful/utils/time_utils.dart';
 import 'package:staful/widgets/simple_text_input_widget.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 
 class StaffInfoScreen extends StatefulWidget {
-  final dynamic staffInfo;
+  final Staff staffInfo;
 
   const StaffInfoScreen({
     super.key,
@@ -23,22 +23,32 @@ class StaffInfoScreen extends StatefulWidget {
 class _StaffInfoScreenState extends State<StaffInfoScreen> {
   bool isOnEditMode = false;
 
-  List<List<dynamic>> get scheduleInfo => [
-        widget.staffInfo["workHours"][0].split(":").map(int.parse).toList(),
-        widget.staffInfo["workHours"][1].split(":").map(int.parse).toList()
-      ];
+  String get weeklyWorkTime => widget.staffInfo.weeklyWorkingHours["minute"]! >
+          0
+      ? "${widget.staffInfo.weeklyWorkingHours["hour"]}시간 ${widget.staffInfo.weeklyWorkingHours["minute"]}분"
+      : "${widget.staffInfo.weeklyWorkingHours["hour"]}시간";
 
-  late final updatedSchedule = widget.staffInfo["workHours"];
+  late List<TimeOfDay> updatedSchedule;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    updatedSchedule = [
+      widget.staffInfo.workHours.startTime,
+      widget.staffInfo.workHours.endTime
+    ];
+  }
 
   void handleOnUpdateOpeningHour(DateTime time) {
     setState(() {
-      updatedSchedule[0] = time.toString().split(" ")[1].substring(0, 5);
+      updatedSchedule[0] = TimeOfDay(hour: time.hour, minute: time.minute);
     });
   }
 
   void handleOnUpdateClosingHour(DateTime time) {
     setState(() {
-      updatedSchedule[1] = time.toString().split(" ")[1].substring(0, 5);
+      updatedSchedule[1] = TimeOfDay(hour: time.hour, minute: time.minute);
     });
   }
 
@@ -75,272 +85,277 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
           horizontal: 30,
           vertical: 5,
         ),
-        child: Stack(children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  textBaseline: TextBaseline.alphabetic,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    Text(
-                      "직원 정보",
-                      style: TextStyleConfig(size: 24).setTextStyle(),
-                    ),
-                    isOnEditMode
-                        ? const SizedBox.shrink()
-                        : SizedBox(
-                            width: 43,
-                            height: 29,
-                            child: TextButton(
-                              onPressed: onTabEditBtn,
-                              style: ButtonStyle(
-                                // alignment: Alignment.topCenter,s
-                                backgroundColor: WidgetStateProperty.all<Color>(
-                                  Theme.of(context).primaryColorLight,
-                                ),
-                                padding:
-                                    WidgetStateProperty.all<EdgeInsetsGeometry>(
-                                  const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 10,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          "직원 정보",
+                          style: TextStyleConfig(size: 24).setTextStyle(),
+                        ),
+                        isOnEditMode
+                            ? const SizedBox.shrink()
+                            : SizedBox(
+                                width: 43,
+                                height: 29,
+                                child: TextButton(
+                                  onPressed: onTabEditBtn,
+                                  style: ButtonStyle(
+                                    // alignment: Alignment.topCenter,s
+                                    backgroundColor:
+                                        WidgetStateProperty.all<Color>(
+                                      Theme.of(context).primaryColorLight,
+                                    ),
+                                    padding: WidgetStateProperty.all<
+                                        EdgeInsetsGeometry>(
+                                      const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                        horizontal: 10,
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "수정",
+                                    style: TextStyle(
+                                      textBaseline: TextBaseline.alphabetic,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              child: const Text(
-                                "수정",
+                              )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: StaffProfileWidget(
+                              imageName: widget.staffInfo.image, size: 64),
+                        ),
+                      ],
+                    ),
+                    ColumnItemContainer(
+                      content: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "이름",
                                 style: TextStyle(
-                                  textBaseline: TextBaseline.alphabetic,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w300,
+                                  fontSize: 14,
                                 ),
                               ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              isOnEditMode
+                                  ? Row(
+                                      children: [
+                                        Expanded(
+                                          child: SimpleTextInputWidget(
+                                              placeHolder: "성",
+                                              onChanged: handleLastNameChanged,
+                                              controller: lastNameController),
+                                        ),
+                                        Expanded(
+                                          child: SimpleTextInputWidget(
+                                              placeHolder: "이름",
+                                              onChanged: handleFirstNameChanged,
+                                              controller: firstNameController),
+                                        )
+                                      ],
+                                    )
+                                  : Text(
+                                      widget.staffInfo.name,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    ColumnItemContainer(
+                      content: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "근무 요일",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          WorkDaysRow(workDays: widget.staffInfo.workDays)
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    ColumnItemContainer(
+                      content: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "근무 시간",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                if (isOnEditMode)
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TimePicker(
+                                        scheduleInfo: widget
+                                            .staffInfo.workHours.startTime,
+                                        onDateTimeChanged:
+                                            handleOnUpdateOpeningHour,
+                                      ),
+                                      TimePicker(
+                                        scheduleInfo:
+                                            widget.staffInfo.workHours.endTime,
+                                        onDateTimeChanged:
+                                            handleOnUpdateClosingHour,
+                                      ),
+                                    ],
+                                  )
+                                else
+                                  WorkScheduleForDisplay(widget: widget),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    style: TextStyleConfig(size: 13)
+                                        .setTextStyle(),
+                                    children: [
+                                      const TextSpan(text: "해당 직원은"),
+                                      TextSpan(
+                                          text: " 주 $weeklyWorkTime ",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor)),
+                                      const TextSpan(text: "근무입니다"),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           )
-                  ],
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      child: StaffProfileWidget(
-                          imageName: widget.staffInfo["image"], size: 64),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          child: Text(
+                            "메모",
+                            style: TextStyleConfig(
+                              size: 14,
+                            ).setTextStyle(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    ColumnItemContainer(
+                      content: TextField(
+                        readOnly: !isOnEditMode,
+                        maxLines: null,
+                        minLines: 4,
+                        keyboardType: TextInputType.multiline,
+                        decoration: const InputDecoration(
+                          hintText: "직원에 대해 알아야 할 점을 자유롭게 기록하세요",
+                          border: InputBorder.none,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                ColumnItemContainer(
-                  content: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "이름",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+              ),
+            ),
+            if (isOnEditMode)
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      style: ButtonStyle(
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          isOnEditMode
-                              ? Row(
-                                  children: [
-                                    Expanded(
-                                      child: SimpleTextInputWidget(
-                                          placeHolder: "성",
-                                          onChanged: handleLastNameChanged,
-                                          controller: lastNameController),
-                                    ),
-                                    Expanded(
-                                      child: SimpleTextInputWidget(
-                                          placeHolder: "이름",
-                                          onChanged: handleFirstNameChanged,
-                                          controller: firstNameController),
-                                    )
-                                  ],
-                                )
-                              : Text(
-                                  widget.staffInfo["name"],
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const ColumnItemContainer(
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "근무 요일",
+                        ),
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                            Theme.of(context).disabledColor),
+                      ),
+                      onPressed: onTabUndoBtn,
+                      child: const Text(
+                        "취소",
                         style: TextStyle(
-                          fontSize: 14,
+                          color: Colors.black,
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          ExpandedRowItem(
-                            text: "일",
-                          ),
-                          ExpandedRowItem(
-                            text: "월",
-                          ),
-                          ExpandedRowItem(
-                            text: "화",
-                          ),
-                          ExpandedRowItem(
-                            text: "수",
-                          ),
-                          ExpandedRowItem(
-                            text: "목",
-                          ),
-                          ExpandedRowItem(
-                            text: "금",
-                          ),
-                          ExpandedRowItem(
-                            text: "토",
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                ColumnItemContainer(
-                  content: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "근무 시간",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          isOnEditMode
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TimePicker(
-                                      scheduleInfo: scheduleInfo[0],
-                                      onDateTimeChanged:
-                                          handleOnUpdateOpeningHour,
-                                    ),
-                                    TimePicker(
-                                      scheduleInfo: scheduleInfo[1],
-                                      onDateTimeChanged:
-                                          handleOnUpdateClosingHour,
-                                    ),
-                                  ],
-                                )
-                              : WorkScheduleForDisplay(widget: widget)
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(
-                        "메모",
-                        style: TextStyleConfig(
-                          size: 14,
-                        ).setTextStyle(),
-                      ),
-                    ),
-                  ],
-                ),
-                const ColumnItemContainer(
-                  content: TextField(
-                    maxLines: null,
-                    minLines: 5,
-                    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(
-                      labelText: "직원에 대해 알아야 할 점을 자유롭게 기록하세요",
-                      border: InputBorder.none,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextButton(
+                      style: ButtonStyle(
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                            Theme.of(context).primaryColor),
+                      ),
+                      onPressed: () => {},
+                      child: const Text(
+                        "저장",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(
+              height: 50,
             ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                    style: ButtonStyle(
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      backgroundColor: WidgetStateProperty.all<Color>(
-                          Theme.of(context).disabledColor),
-                    ),
-                    onPressed: onTabUndoBtn,
-                    child: const Text(
-                      "취소",
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: TextButton(
-                    style: ButtonStyle(
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      backgroundColor: WidgetStateProperty.all<Color>(
-                          Theme.of(context).primaryColor),
-                    ),
-                    onPressed: () => {},
-                    child: const Text(
-                      "저장",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -400,7 +415,7 @@ class DeleteScheduleBtn extends StatelessWidget {
 }
 
 class TimePicker extends StatelessWidget {
-  final List scheduleInfo;
+  final TimeOfDay scheduleInfo;
   final Function(DateTime) onDateTimeChanged;
 
   const TimePicker({
@@ -422,8 +437,8 @@ class TimePicker extends StatelessWidget {
           DateTime.now().year,
           DateTime.now().month,
           DateTime.now().day,
-          scheduleInfo[0],
-          scheduleInfo[1],
+          scheduleInfo.hour,
+          scheduleInfo.minute,
         ),
         use24hFormat: true,
       ),
@@ -441,11 +456,26 @@ class WorkScheduleForDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      "${widget.staffInfo["workHours"][0]} - ${widget.staffInfo["workHours"][1]}",
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 5,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+            formatTimeOfDay(widget.staffInfo.workHours.startTime),
+            style: TextStyleConfig(size: 20).setTextStyle(),
+          ),
+          Text(
+            "-",
+            style: TextStyleConfig(size: 20).setTextStyle(),
+          ),
+          Text(
+            formatTimeOfDay(widget.staffInfo.workHours.endTime),
+            style: TextStyleConfig(size: 20).setTextStyle(),
+          )
+        ],
       ),
     );
   }

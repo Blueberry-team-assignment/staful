@@ -1,20 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 Map<String, dynamic> getCurrentDateTimeInfo() {
-  // Get the current date and time
   DateTime now = DateTime.now();
 
-  // Extract year, month, day, hour, and minute
   int year = now.year;
   int month = now.month;
   int day = now.day;
   int hour = now.hour;
   int minute = now.minute;
 
-  // Get the day of the week in English
   String dayOfWeekEnglish = DateFormat('EEEE').format(now);
 
-  // Map the day of the week to Korean
   Map<String, String> daysOfWeekKorean = {
     'Monday': '월요일',
     'Tuesday': '화요일',
@@ -27,7 +24,6 @@ Map<String, dynamic> getCurrentDateTimeInfo() {
 
   String dayOfWeekKorean = daysOfWeekKorean[dayOfWeekEnglish]!;
 
-  // Return the results as a map
   return {
     'year': year,
     'month': month,
@@ -37,4 +33,11 @@ Map<String, dynamic> getCurrentDateTimeInfo() {
     'dayOfWeekEnglish': dayOfWeekEnglish,
     'dayOfWeekKorean': dayOfWeekKorean,
   };
+}
+
+String formatTimeOfDay(TimeOfDay time) {
+  final hour = time.hour.toString().padLeft(2, '0'); // 시간이 한 자리일 경우 앞에 0을 붙임
+  final minute = time.minute.toString().padLeft(2, '0'); // 분이 한 자리일 경우 앞에 0을 붙임
+
+  return "$hour : $minute";
 }
