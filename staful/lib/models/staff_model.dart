@@ -6,6 +6,7 @@ class Staff {
   final List<String> workDays;
   final TimeRange workHours;
   final List<String>? workDate;
+  final String memo;
 
   Staff({
     required this.name,
@@ -13,6 +14,7 @@ class Staff {
     required this.workDays,
     required this.workHours,
     this.workDate,
+    this.memo = "",
   });
 
   // 주간 근무 시간을 계산하는 메서드

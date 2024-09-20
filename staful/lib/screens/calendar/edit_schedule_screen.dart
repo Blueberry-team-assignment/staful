@@ -133,7 +133,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                           ),
                           Row(
                             children: [
-                              StaffProfileWidget(imageName: "Ellipse 5.png"),
+                              StaffProfileWidget(
+                                  imagePath: "lib/assets/images/Ellipse 5.png"),
                               SizedBox(
                                 width: 10,
                               ),

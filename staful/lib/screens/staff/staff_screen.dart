@@ -123,7 +123,7 @@ class StaffScreenState extends State<StaffScreen> {
             },
             child: Row(
               children: [
-                StaffProfileWidget(imageName: staff.image),
+                StaffProfileWidget(imagePath: "lib/assets/images/${staff.image}"),
                 const SizedBox(
                   width: 10,
                 ),

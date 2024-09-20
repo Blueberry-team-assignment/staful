@@ -195,7 +195,7 @@ class OverlaySearchResultsWidgetState
                   itemBuilder: (context, index) {
                     return Row(
                       children: [
-                        const StaffProfileWidget(imageName: "Ellipse 5.png"),
+                        const StaffProfileWidget(imagePath: "lib/assets/images/Ellipse 5.png"),
                         Expanded(
                           child: ListTile(
                             title: Text(filteredSuggestions[index]),

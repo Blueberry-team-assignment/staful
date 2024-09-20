@@ -31,7 +31,7 @@ class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
                   ),
                 ),
                 child: StaffProfileWidget(
-                  imageName: staff.image,
+                  imagePath: "lib/assets/images/${staff.image}",
                   name: staff.name,
                 ),
               ),

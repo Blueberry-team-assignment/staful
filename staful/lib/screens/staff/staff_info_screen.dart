@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/layouts/app_layout.dart';
@@ -5,8 +6,10 @@ import 'package:staful/models/staff_model.dart';
 import 'package:staful/screens/staff/staff_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/time_utils.dart';
+import 'package:staful/widgets/simple_text_button_widget.dart';
 import 'package:staful/widgets/simple_text_input_widget.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StaffInfoScreen extends StatefulWidget {
   final Staff staffInfo;
@@ -22,9 +25,14 @@ class StaffInfoScreen extends StatefulWidget {
 
 class _StaffInfoScreenState extends State<StaffInfoScreen> {
   bool isOnEditMode = false;
-  late TextEditingController lastNameController;
-  late TextEditingController firstNameController;
-  late List<TimeOfDay> updatedSchedule;
+  late TextEditingController lastNameController = TextEditingController();
+  late TextEditingController firstNameController = TextEditingController();
+  late TextEditingController nameController = TextEditingController();
+  final TextEditingController memoFieldController = TextEditingController();
+  late TimeRange updatedSchedule;
+  final ImagePicker _picker = ImagePicker();
+  late XFile imageController;
+  late List<String> workDaysController;
 
   String get weeklyWorkTime => widget.staffInfo.weeklyWorkingHours["minute"]! >
           0
@@ -35,23 +43,32 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    updatedSchedule = [
-      widget.staffInfo.workHours.startTime,
-      widget.staffInfo.workHours.endTime
-    ];
-    lastNameController = TextEditingController();
-    firstNameController = TextEditingController();
+
+    // 수정화면에 보여줄 입력값들 초기화
+    updatedSchedule = TimeRange(
+        startTime: widget.staffInfo.workHours.startTime,
+        endTime: widget.staffInfo.workHours.endTime);
+    imageController = XFile("lib/assets/images/${widget.staffInfo.image}");
+    nameController.text = widget.staffInfo.name;
+    memoFieldController.text = widget.staffInfo.memo;
+    workDaysController = widget.staffInfo.workDays;
   }
 
   void handleOnUpdateOpeningHour(DateTime time) {
     setState(() {
-      updatedSchedule[0] = TimeOfDay(hour: time.hour, minute: time.minute);
+      updatedSchedule = TimeRange(
+        startTime: TimeOfDay(hour: time.hour, minute: time.minute),
+        endTime: updatedSchedule.endTime,
+      );
     });
   }
 
   void handleOnUpdateClosingHour(DateTime time) {
     setState(() {
-      updatedSchedule[1] = TimeOfDay(hour: time.hour, minute: time.minute);
+      updatedSchedule = TimeRange(
+        startTime: updatedSchedule.startTime,
+        endTime: TimeOfDay(hour: time.hour, minute: time.minute),
+      );
     });
   }
 
@@ -63,7 +80,24 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
     });
   }
 
+  Future<void> onTapImgChangeBtn() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        imageController = XFile(pickedFile.path);
+      });
+    }
+  }
+
   void onTabUndoBtn() {
+    setState(() {
+      isOnEditMode = false;
+    });
+  }
+
+  void onTapSaveBtn() {
     setState(() {
       isOnEditMode = false;
     });
@@ -107,32 +141,11 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                             : SizedBox(
                                 width: 43,
                                 height: 29,
-                                child: TextButton(
+                                child: SimpleTextButtonWidget(
                                   onPressed: onTabEditBtn,
-                                  style: ButtonStyle(
-                                    // alignment: Alignment.topCenter,s
-                                    backgroundColor:
-                                        WidgetStateProperty.all<Color>(
-                                      Theme.of(context).primaryColorLight,
-                                    ),
-                                    padding: WidgetStateProperty.all<
-                                        EdgeInsetsGeometry>(
-                                      const EdgeInsets.symmetric(
-                                        vertical: 4,
-                                        horizontal: 10,
-                                      ),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    "수정",
-                                    style: TextStyle(
-                                      textBaseline: TextBaseline.alphabetic,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  text: "수정",
                                 ),
-                              )
+                              ),
                       ],
                     ),
                     const SizedBox(
@@ -141,10 +154,25 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child: StaffProfileWidget(
-                              imageName: widget.staffInfo.image, size: 64),
+                        Column(
+                          children: [
+                            StaffProfileWidget(
+                                imagePath: imageController.path, size: 64),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            if (isOnEditMode)
+                              SizedBox(
+                                height: 24,
+                                child: SimpleTextButtonWidget(
+                                  onPressed: onTapImgChangeBtn,
+                                  text: "사진 변경",
+                                ),
+                              ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -248,8 +276,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                     children: [
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: widget
-                                              .staffInfo.workHours.startTime,
+                                          scheduleInfo:
+                                              updatedSchedule.startTime,
                                           onDateTimeChanged:
                                               handleOnUpdateOpeningHour,
                                         ),
@@ -259,8 +287,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                       ),
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: widget
-                                              .staffInfo.workHours.endTime,
+                                          scheduleInfo: updatedSchedule.endTime,
                                           onDateTimeChanged:
                                               handleOnUpdateClosingHour,
                                         ),
@@ -269,7 +296,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                   )
                                 else
                                   WorkScheduleForDisplay(
-                                      workHours: widget.staffInfo.workHours),
+                                    workHours: updatedSchedule,
+                                  ),
                                 const SizedBox(
                                   height: 15,
                                 ),
@@ -309,6 +337,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                     ),
                     ColumnItemContainer(
                       content: TextField(
+                        controller: memoFieldController,
                         readOnly: !isOnEditMode,
                         maxLines: null,
                         minLines: 4,
@@ -360,7 +389,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                             Theme.of(context).primaryColor),
                       ),
-                      onPressed: () => {},
+                      onPressed: onTapSaveBtn,
                       child: const Text(
                         "저장",
                         style: TextStyle(

@@ -107,10 +107,10 @@ class ScheduleTableWidgetState extends State<ScheduleTableWidget> {
           color: Colors.white,
           child: const Center(
             child: StaffProfileWidget(
-              imageName: "Ellipse 3.png",
+              imagePath: "lib/assets/images/Ellipse 3.png",
               name: "매니저",
             ),
-          ),
+          ), 
         ),
       );
     }

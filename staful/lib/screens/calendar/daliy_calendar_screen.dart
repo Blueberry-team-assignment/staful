@@ -122,35 +122,35 @@ class DailyCalendarScreen extends StatelessWidget {
                                 children: [
                                   StaffProfileWidget(
                                     name: "매니저",
-                                    imageName: "Ellipse 2.png",
+                                    imagePath: "lib/assets/images/Ellipse 2.png",
                                   ),
                                   StaffProfileWidget(
                                     name: "이나라",
-                                    imageName: "Ellipse 3.png",
+                                    imagePath: "lib/assets/images/Ellipse 3.png",
                                   ),
                                   StaffProfileWidget(
                                     name: "김경민",
-                                    imageName: "Ellipse 4.png",
+                                    imagePath: "lib/assets/images/Ellipse 4.png",
                                   ),
                                   StaffProfileWidget(
                                     name: "김선미",
-                                    imageName: "Ellipse 5.png",
+                                    imagePath: "lib/assets/images/Ellipse 5.png",
                                   ),
                                   StaffProfileWidget(
                                     name: "신동찬",
-                                    imageName: "Ellipse 2.png",
+                                    imagePath: "lib/assets/images/Ellipse 2.png",
                                   ),
                                   StaffProfileWidget(
                                     name: "매니저",
-                                    imageName: "Ellipse 3.png",
+                                    imagePath: "lib/assets/images/Ellipse 3.png",
                                   ),
                                   StaffProfileWidget(
                                     name: "이나라",
-                                    imageName: "Ellipse 4.png",
+                                    imagePath: "lib/assets/images/Ellipse 4.png",
                                   ),
                                   StaffProfileWidget(
                                     name: "김경민",
-                                    imageName: "Ellipse 5.png",
+                                    imagePath: "lib/assets/images/Ellipse 5.png",
                                   ),
                                 ],
                               ),
@@ -230,25 +230,25 @@ class DailyCalendarScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             StaffProfileWidget(
-                              imageName: "Ellipse 2.png",
+                              imagePath: "lib/assets/images/Ellipse 2.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 3.png",
+                              imagePath: "lib/assets/images/Ellipse 3.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 4.png",
+                              imagePath: "lib/assets/images/Ellipse 4.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 5.png",
+                              imagePath: "lib/assets/images/Ellipse 5.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 2.png",
+                              imagePath: "lib/assets/images/Ellipse 2.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 3.png",
+                              imagePath: "lib/assets/images/Ellipse 3.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 4.png",
+                              imagePath: "lib/assets/images/Ellipse 4.png",
                             ),
                           ],
                         ),
@@ -316,25 +316,25 @@ class DailyCalendarScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             StaffProfileWidget(
-                              imageName: "Ellipse 2.png",
+                              imagePath: "lib/assets/images/Ellipse 2.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 3.png",
+                              imagePath: "lib/assets/images/Ellipse 3.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 4.png",
+                              imagePath: "lib/assets/images/Ellipse 4.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 5.png",
+                              imagePath: "lib/assets/images/Ellipse 5.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 2.png",
+                              imagePath: "lib/assets/images/Ellipse 2.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 3.png",
+                              imagePath: "lib/assets/images/Ellipse 3.png",
                             ),
                             StaffProfileWidget(
-                              imageName: "Ellipse 4.png",
+                              imagePath: "lib/assets/images/Ellipse 4.png",
                             ),
                           ],
                         ),
