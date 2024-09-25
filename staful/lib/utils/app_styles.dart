@@ -20,4 +20,10 @@ class TextStyleConfig {
   }
 }
 
+final titleStyle = TextStyleConfig(size: 24).setTextStyle();
+final contentTitleStyle =
+    TextStyleConfig(size: 14, weight: FontWeight.normal).setTextStyle();
+final contentTextStyle = TextStyleConfig(size: 20).setTextStyle();
+
 const double bottomMargin = 60;
+const double borderRadius = 5;

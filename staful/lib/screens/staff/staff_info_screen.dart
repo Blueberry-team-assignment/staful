@@ -139,7 +139,6 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                         isOnEditMode
                             ? const SizedBox.shrink()
                             : SizedBox(
-                                width: 43,
                                 height: 29,
                                 child: SimpleTextButtonWidget(
                                   onPressed: onTabEditBtn,
@@ -412,17 +411,19 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
 
 class ColumnItemContainer extends StatelessWidget {
   final Widget? content;
+  final Color? color;
 
   const ColumnItemContainer({
     super.key,
     this.content,
+    this.color = Colors.white,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: color,
         borderRadius: BorderRadius.circular(5),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),

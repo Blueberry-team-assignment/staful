@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_svg/svg.dart';
-import 'package:staful/screens/calendar/monthly_calendar_screen.dart';
-import 'package:staful/screens/pay_screen.dart';
+import 'package:staful/screens/calendar/calendar_screen.dart';
+import 'package:staful/screens/payroll/payroll_screen.dart';
 import 'package:staful/screens/setting_screen.dart';
 import 'package:staful/screens/staff/staff_screen.dart';
 
@@ -26,9 +26,9 @@ class _AppLayoutState extends State<AppLayout> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const MonthlyCalendarScreen(),
+    const CalendarScreen(),
     const StaffScreen(),
-    const PayScreen(),
+    const PayrollScreen(),
     const SettingScreen(),
   ];
 
@@ -67,7 +67,7 @@ class _AppLayoutState extends State<AppLayout> {
       items: [
         buildBottomNavItems("캘린더", "icon_calendar.svg", 0),
         buildBottomNavItems("직원", "icon_users.svg", 1),
-        buildBottomNavItems("급여", "icon_users.svg", 2),
+        buildBottomNavItems("급여", "icon_payroll.svg", 2),
         buildBottomNavItems("설정", "icon_settings.svg", 3),
       ],
       selectedItemColor: Theme.of(context).primaryColor,

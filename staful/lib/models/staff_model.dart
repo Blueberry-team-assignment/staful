@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:staful/models/template_model.dart';
 
 class Staff {
   final String name;
@@ -7,6 +8,7 @@ class Staff {
   final TimeRange workHours;
   final List<String>? workDate;
   final String memo;
+  final List<Map<String, int>> payroll;
 
   Staff({
     required this.name,
@@ -15,6 +17,7 @@ class Staff {
     required this.workHours,
     this.workDate,
     this.memo = "",
+    required this.payroll,
   });
 
   // 주간 근무 시간을 계산하는 메서드
@@ -25,6 +28,9 @@ class Staff {
 
     return {"hour": totalWorkMinutes ~/ 60, "minute": totalWorkMinutes % 60};
   }
+
+  // 총 지급액을 계산하는 메서드
+  int get totalPay => payroll.fold(0, (sum, item) => sum + item.values.first);
 }
 
 class TimeRange {

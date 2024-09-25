@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/layouts/app_layout.dart';
-import 'package:staful/screens/calendar/monthly_calendar_screen.dart';
+import 'package:staful/screens/calendar/calendar_screen.dart';
 import 'package:staful/screens/join_screen.dart';
 import 'package:staful/widgets/submit_button_widget.dart';
 import 'package:staful/widgets/validation_text_input_widget.dart';
@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isPwInputFilled = text.isNotEmpty;
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const AppLayout(
                       appBarType: "logo",
                       showBottomNavigationBar: true,
-                      child: MonthlyCalendarScreen(),
+                      child: CalendarScreen(),
                     ),
                   )
                 },

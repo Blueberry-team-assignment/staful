@@ -40,6 +40,7 @@ dependencies:
   two_dimensional_scrollables: ^0.3.1
   intl: ^0.19.0
   image_picker: ^1.1.2
+  dropdown_search: ^6.0.1
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ flutter:
     - lib/assets/icons/icon_google.png
     - lib/assets/icons/icon_calendar.svg
     - lib/assets/icons/icon_settings.svg
+    - lib/assets/icons/icon_payroll.svg
     - lib/assets/icons/icon_users.svg
     - lib/assets/icons/logo_STAFull.svg
     - lib/assets/images/Ellipse 2.png

@@ -6,16 +6,16 @@ import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class MonthlyCalendarScreen extends StatefulWidget {
-  const MonthlyCalendarScreen({
+class CalendarScreen extends StatefulWidget {
+  const CalendarScreen({
     super.key,
   });
 
   @override
-  State<MonthlyCalendarScreen> createState() => _MonthlyCalendarScreenState();
+  State<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-class _MonthlyCalendarScreenState extends State<MonthlyCalendarScreen> {
+class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
