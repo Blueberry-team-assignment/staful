@@ -1,9 +1,15 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:staful/layouts/app_layout.dart';
 import 'package:staful/models/staff_model.dart';
+import 'package:staful/models/template_model.dart';
+import 'package:staful/screens/payroll/payroll_template_detail_screen.dart';
+import 'package:staful/screens/payroll/payroll_template_register_screen.dart';
 import 'package:staful/screens/staff/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/dummies.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/widgets/overlay_search_results_widget.dart';
 import 'package:staful/widgets/simple_text_button_widget.dart';
 import 'package:staful/widgets/simple_text_input_widget.dart';
@@ -18,16 +24,26 @@ class PayrollTemplatesScreen extends StatefulWidget {
 
 class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  List<String> searchSuggestions = (staffs.map((staff) => staff.name)).toList();
+  List<String> searchSuggestions =
+      templates.map((template) => template.name).toList();
 
-  late List<Staff> searchedStaff = staffs;
+  late List<TemplateModel> searchedTemplates = templates;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    for (var template in templates) {
+      template.getStaffList(staffs, template.name);
+    }
+  }
 
   void onSearchInputChanged(String text) {
     // 검색어가 변경될 때마다 호출됨
     // print(text);
     if (text.isEmpty) {
       setState(() {
-        searchedStaff = staffs;
+        searchedTemplates = templates;
       });
     }
   }
@@ -36,15 +52,15 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
     searchInputController.text = suggestion;
 
     setState(() {
-      searchedStaff =
-          staffs.where((staff) => staff.name == suggestion).toList();
+      searchedTemplates =
+          templates.where((template) => template.name == suggestion).toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     void onPressed() {}
-
+    searchedTemplates.map((t) => t.staffList = staffs);
     return Scaffold(
         appBar: navigateBackAppBar(context),
         body: Padding(
@@ -62,7 +78,8 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
                   SizedBox(
                     height: 30,
                     child: SimpleTextButtonWidget(
-                      onPressed: () => {},
+                      onPressed: () => openPage(
+                          context, const PayrollTemplateRegisterScreen()),
                       text: "등록",
                     ),
                   )
@@ -74,11 +91,12 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
               Stack(
                 children: [
                   SimpleTextInputWidget(
-                    placeHolder: "이름으로 검색하세요",
+                    placeHolder: "템플릿명을 검색하세요",
                     onChanged: onSearchInputChanged,
                     controller: searchInputController,
                   ),
                   OverlaySearchResultsWidget(
+                    staffSearch: false,
                     suggestions: searchSuggestions,
                     controller: searchInputController,
                     onSelect: onSuggestionSelected,
@@ -92,21 +110,25 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "총 ${searchedStaff.length}개",
+                    "총 ${searchedTemplates.length}개",
                     style: TextStyleConfig(size: 14).setTextStyle(),
                   )
                 ],
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: searchedStaff.length, // 스태프 수에 따라 아이템 수 결정
+                  itemCount: searchedTemplates.length, // 스태프 수에 따라 아이템 수 결정
                   itemBuilder: (context, index) {
-                    final Staff staff = searchedStaff[index];
+                    final TemplateModel template = searchedTemplates[index];
                     return Container(
                         margin: const EdgeInsets.only(
                           top: 10,
                         ),
-                        child: buildStaffCards(context, staff)); // 개별 스태프 카드 생성
+                        child: GestureDetector(
+                          onTap: () => openPage(
+                              context, const PayrollTemplateDetailScreen()),
+                          child: buildTemplateCards(context, template),
+                        )); // 개별 스태프 카드 생성
                   },
                 ),
               ),
@@ -116,25 +138,40 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
   }
 }
 
-ColumnItemContainer buildStaffCards(BuildContext context, Staff staff) {
+ColumnItemContainer buildTemplateCards(
+    BuildContext context, TemplateModel template) {
+  final staffList = template.staffList;
+
   return ColumnItemContainer(
     content: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: () => {},
-          child: Row(
-            children: [
-              StaffProfileWidget(imagePath: "lib/assets/images/${staff.image}"),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                staff.name,
-                style: TextStyleConfig(size: 16).setTextStyle(),
-              )
-            ],
-          ),
+        Text(
+          template.name,
+          style: contentTextStyle,
         ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          height: 66,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: staffList?.length,
+            itemBuilder: (context, index) {
+              final Staff staff = staffList![index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 5,
+                ),
+                child: StaffProfileWidget(
+                  imagePath: "lib/assets/images/${staff.image}",
+                  name: staff.name,
+                ),
+              ); // 개별 스태프 카드 생성
+            },
+          ),
+        )
       ],
     ),
   );

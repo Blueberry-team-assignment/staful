@@ -2,6 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:staful/models/staff_model.dart';
 import 'package:staful/models/template_model.dart';
 
+final templates = [
+  TemplateModel(
+    name: "평일 마감 템플릿",
+    payDetails: [
+      PayDetail(description: "식대", amount: 80000, type: PayType.fixed),
+      PayDetail(description: "시급", amount: 10000, type: PayType.hourly),
+    ],
+    staffList: [],
+  ),
+  TemplateModel(
+    name: "주말 마감 템플릿",
+    payDetails: [
+      PayDetail(description: "식대", amount: 50000, type: PayType.fixed),
+      PayDetail(description: "시급", amount: 12000, type: PayType.hourly),
+    ],
+    staffList: [],
+  )
+];
+
 final List<Staff> staffs = [
   Staff(
     name: "이나라",
@@ -11,7 +30,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 10, minute: 0),
         endTime: const TimeOfDay(hour: 18, minute: 0)),
     workDate: [],
-    payroll: TemplateModel(name: "평일 마감 템플릿", ).payDetails,
+    template: templates[0],
   ),
   Staff(
     name: "김경민",
@@ -21,7 +40,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 13, minute: 0),
         endTime: const TimeOfDay(hour: 22, minute: 0)),
     workDate: [],
-    payroll: TemplateModel(name: "평일 마감 템플릿", ).payDetails,
+    template: templates[0],
   ),
   Staff(
     name: "김선미",
@@ -31,7 +50,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 13, minute: 0),
         endTime: const TimeOfDay(hour: 20, minute: 0)),
     workDate: [],
-    payroll: TemplateModel(name: "평일 마감 템플릿", ).payDetails,
+    template: templates[0],
   ),
   Staff(
     name: "신동찬",
@@ -41,7 +60,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 8, minute: 0),
         endTime: const TimeOfDay(hour: 18, minute: 0)),
     workDate: [],
-    payroll: TemplateModel(name: "평일 마감 템플릿", ).payDetails,
+    template: templates[1],
   ),
   Staff(
     name: "매니저",
@@ -51,7 +70,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 9, minute: 0),
         endTime: const TimeOfDay(hour: 18, minute: 0)),
     workDate: [],
-    payroll: TemplateModel(name: "평일 마감 템플릿", ).payDetails,
+    template: templates[1],
   ),
   Staff(
     name: "김수한무거북",
@@ -61,7 +80,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 10, minute: 30),
         endTime: const TimeOfDay(hour: 15, minute: 0)),
     workDate: [],
-    payroll: TemplateModel(name: "평일 마감 템플릿", ).payDetails,
+    template: templates[1],
   ),
   Staff(
     name: "김수한무",
@@ -71,7 +90,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 11, minute: 0),
         endTime: const TimeOfDay(hour: 19, minute: 0)),
     workDate: [],
-    payroll: TemplateModel(name: "평일 마감 템플릿", ).payDetails,
+    template: templates[1],
   ),
   Staff(
     name: "Steive Kim",
@@ -81,7 +100,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 9, minute: 30),
         endTime: const TimeOfDay(hour: 17, minute: 30)),
     workDate: [],
-    payroll: TemplateModel(name: "평일 마감 템플릿", ).payDetails,
+    template: templates[0],
   ),
 ];
 

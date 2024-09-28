@@ -8,7 +8,7 @@ class Staff {
   final TimeRange workHours;
   final List<String>? workDate;
   final String memo;
-  final List<Map<String, int>> payroll;
+  final TemplateModel template;
 
   Staff({
     required this.name,
@@ -17,7 +17,7 @@ class Staff {
     required this.workHours,
     this.workDate,
     this.memo = "",
-    required this.payroll,
+    required this.template,
   });
 
   // 주간 근무 시간을 계산하는 메서드
@@ -30,7 +30,20 @@ class Staff {
   }
 
   // 총 지급액을 계산하는 메서드
-  int get totalPay => payroll.fold(0, (sum, item) => sum + item.values.first);
+  int get totalPay {
+    final int totalWorkMinutes =
+        workHours.workDurationInMinutes * workDays.length;
+    return template.payDetails.fold(0, (sum, payDetail) {
+      if (payDetail.type == PayType.hourly) {
+        // 시간에 비례한 지급액일 때
+        final hourlyRate = payDetail.amount;
+        return sum + (hourlyRate * totalWorkMinutes ~/ 60);
+      } else {
+        // 고정급일 때
+        return sum + payDetail.amount;
+      }
+    });
+  }
 }
 
 class TimeRange {

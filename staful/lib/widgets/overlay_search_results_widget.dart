@@ -6,12 +6,14 @@ class OverlaySearchResultsWidget extends StatefulWidget {
   final List<String> suggestions;
   final TextEditingController controller;
   final void Function(String) onSelect;
+  final bool staffSearch;
 
   const OverlaySearchResultsWidget({
     super.key,
     required this.suggestions,
     required this.controller,
     required this.onSelect,
+    this.staffSearch = true,
   });
 
   @override
@@ -180,6 +182,7 @@ class OverlaySearchResultsWidgetState
         right: 30,
         top: 210,
         child: Material(
+          color: Colors.white,
           elevation: 4.0,
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -195,7 +198,9 @@ class OverlaySearchResultsWidgetState
                   itemBuilder: (context, index) {
                     return Row(
                       children: [
-                        const StaffProfileWidget(imagePath: "lib/assets/images/Ellipse 5.png"),
+                        if (widget.staffSearch)
+                          const StaffProfileWidget(
+                              imagePath: "lib/assets/images/Ellipse 5.png"),
                         Expanded(
                           child: ListTile(
                             title: Text(filteredSuggestions[index]),
@@ -209,12 +214,13 @@ class OverlaySearchResultsWidgetState
                     );
                   },
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10,
-                  ),
-                  child: SubmitButtonWidget(text: "직원 등록"),
-                )
+                if (widget.staffSearch)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    child: SubmitButtonWidget(text: "직원 등록"),
+                  )
               ],
             ),
           ),
