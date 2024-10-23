@@ -3,12 +3,12 @@ import 'package:staful/models/staff_model.dart';
 class TemplateModel {
   final String name;
   final List<PayDetail> payDetails;
-  List<Staff>? staffList;
+  List<Staff> staffList;
 
   TemplateModel({
     required this.name,
     required this.payDetails,
-    this.staffList,
+    required this.staffList,
   });
 
   void getStaffList(List<Staff> staffList, String templateName) {
@@ -31,3 +31,23 @@ class PayDetail {
 }
 
 enum PayType { hourly, fixed }
+
+class SelectablePayDetail {
+  final PayDetail payDetail;
+  bool isSelected;
+  bool isShow;
+
+  SelectablePayDetail({
+    required this.payDetail,
+    this.isSelected = false,
+    this.isShow = true,
+  });
+
+  void setSelected() {
+    isSelected = !isSelected;
+  }
+
+  void setIsShow() {
+    isShow = !isShow;
+  }
+}
