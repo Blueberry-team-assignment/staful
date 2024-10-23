@@ -44,6 +44,10 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
     }
   }
 
+  void handleOnSave() {
+    setState(() {});
+  }
+
   void onSearchInputChanged(String text) {
     // 검색어가 변경될 때마다 호출됨
     // print(text);
@@ -86,6 +90,7 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
                         context,
                         TemplateDetailScreen(
                           template: emptyTemplate,
+                          onSave: handleOnSave,
                         )),
                     text: "등록",
                   ),
@@ -133,7 +138,11 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
                       ),
                       child: GestureDetector(
                         onTap: () => openPage(
-                            context, TemplateDetailScreen(template: template)),
+                            context,
+                            TemplateDetailScreen(
+                              template: template,
+                              onSave: handleOnSave,
+                            )),
                         child: buildTemplateCards(context, template),
                       )); // 개별 스태프 카드 생성
                 },

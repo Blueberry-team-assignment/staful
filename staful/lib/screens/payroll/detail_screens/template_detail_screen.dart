@@ -14,33 +14,19 @@ import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/widgets/save_cancel_footer.dart';
 import 'package:staful/widgets/simple_text_button_widget.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
+import 'package:staful/widgets/confirmation_dialog.dart';
 
-final List<SelectablePayDetail> _non = [
-  SelectablePayDetail(
-    payDetail: PayDetail(description: "식대", amount: 50000, type: PayType.fixed),
-    isSelected: true,
-  ),
-  SelectablePayDetail(
-    payDetail:
-        PayDetail(description: "시급", amount: 12000, type: PayType.hourly),
-    isSelected: true,
-  ),
-  SelectablePayDetail(
-    payDetail:
-        PayDetail(description: "추가 수당", amount: 200000, type: PayType.fixed),
-  ),
-  SelectablePayDetail(
-    payDetail:
-        PayDetail(description: "기타 수당", amount: 100000, type: PayType.fixed),
-  ),
-];
+enum SaveType { update, create }
 
 class TemplateDetailScreen extends StatefulWidget {
   final TemplateModel template;
+  final VoidCallback onSave;
+  // final SaveType saveType;
 
   const TemplateDetailScreen({
     super.key,
     required this.template,
+    required this.onSave,
   });
 
   @override
@@ -116,11 +102,14 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
       ];
 
       final template = TemplateModel(
-          name: templateNameController.text,
-          payDetails: payDetails,
-          staffList: staffs);
+        name: templateNameController.text,
+        payDetails: payDetails,
+        staffList: staffs,
+      );
 
+      // 등록이 아니고 수정일 경우는 업데이트 해야함. 업데이트 메서드 추가 필요
       templates.add(template);
+      widget.onSave();
     } catch (e) {}
   }
 
@@ -239,6 +228,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
                                 StaffSearchScreen(
                                   text: "직원 리스트",
                                   onListChange: onStaffListChange,
+                                  staffList: staffs,
                                 ),
                               ),
                             ),
@@ -275,7 +265,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
               SaveCancelFooter(
                 onTabUndoBtn: () => onTabUndoBtn(context),
                 onTapSaveBtn: () => {
-                  onTapSaveBtn,
+                  ConfirmationDialog.show(
+                      context: context,
+                      onConfirm: onTapSaveBtn,
+                      message: "정상적으로 저장되었습니다")
                 },
               )
             ],

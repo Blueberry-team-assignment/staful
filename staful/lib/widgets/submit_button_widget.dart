@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:staful/utils/app_styles.dart';
 
 class SubmitButtonWidget extends StatelessWidget {
   final String? text;
@@ -25,7 +26,7 @@ class SubmitButtonWidget extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: color ?? primeColor,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(borderRadius),
             ),
             child: Text(
               text ?? "",

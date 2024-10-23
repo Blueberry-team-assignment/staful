@@ -3,6 +3,7 @@ import 'package:staful/layouts/app_layout.dart';
 import 'package:staful/models/template_model.dart';
 import 'package:staful/screens/staff/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
+import 'package:staful/widgets/confirmation_dialog.dart';
 import 'package:staful/widgets/overlay_search_results_widget.dart';
 import 'package:staful/widgets/save_cancel_footer.dart';
 import 'package:staful/widgets/simple_text_input_widget.dart';
@@ -171,6 +172,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   final SelectablePayDetail payDetail =
                       selectablePayDetails[index];
+                  if (!payDetail.isShow) return const SizedBox.shrink();
                   return Container(
                     margin: const EdgeInsets.only(
                       top: 10,
@@ -206,10 +208,13 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
               ),
             ),
             SaveCancelFooter(
-              onTabUndoBtn: ()=>onTabUndoBtn(context),
-              onTapSaveBtn: () => {
-                onTapSaveBtn(),
-              },
+              onTabUndoBtn: () => onTabUndoBtn(context),
+              onTapSaveBtn: () => ConfirmationDialog.show(
+                context: context,
+                onConfirm: onTapSaveBtn,
+                showCancelButton: false,
+                message: "정상적으로 추가되었습니다"
+              ),
             )
           ],
         ),

@@ -4,6 +4,7 @@ import 'package:staful/models/staff_model.dart';
 import 'package:staful/screens/staff/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/dummies.dart';
+import 'package:staful/widgets/confirmation_dialog.dart';
 import 'package:staful/widgets/overlay_search_results_widget.dart';
 import 'package:staful/widgets/save_cancel_footer.dart';
 import 'package:staful/widgets/simple_text_input_widget.dart';
@@ -16,6 +17,7 @@ class _SelectableStaff {
 
   _SelectableStaff({
     required this.staff,
+    required this.isSelected,
   });
 
   void setSelected() {
@@ -27,17 +29,19 @@ class _SelectableStaff {
   }
 }
 
-final List<_SelectableStaff> selectableStaffs = List.generate(
-    staffs.length, (index) => _SelectableStaff(staff: staffs[index]));
+// final List<_SelectableStaff> selectableStaffs = List.generate(
+//     staffs.length, (index) => _SelectableStaff(staff: staffs[index]));
 
 class StaffSearchScreen extends StatefulWidget {
   final String text;
   final void Function(List<Staff>) onListChange;
+  final List<Staff> staffList;
 
   const StaffSearchScreen({
     super.key,
     required this.text,
     required this.onListChange,
+    required this.staffList,
   });
 
   @override
@@ -48,7 +52,27 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
   final TextEditingController searchInputController = TextEditingController();
   final List<String> searchSuggestions =
       staffs.map((staff) => staff.name).toList();
-  late List<_SelectableStaff> searchedStaffs = selectableStaffs;
+  late List<_SelectableStaff> searchedStaffs = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    setState(() {
+      final staffNames = List.generate(
+          widget.staffList.length, (int idx) => widget.staffList[idx].name);
+
+      final List<_SelectableStaff> list = List.generate(
+        staffs.length,
+        (int idx) => _SelectableStaff(
+            staff: staffs[idx],
+            isSelected: staffNames.contains(staffs[idx].name) ? true : false),
+      );
+
+      searchedStaffs.addAll(list);
+    });
+  }
 
   void onSearchInputChanged(String text) {
     if (text.isEmpty) {
@@ -97,12 +121,13 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
     widget.onListChange(staffs);
   }
 
-  void onTabUndoBtn() {
-    setState(() {
-      for (var staff in searchedStaffs) {
-        staff.isSelected = false;
-      }
-    });
+  void onTabUndoBtn(BuildContext context) {
+    // setState(() {
+    //   for (var staff in searchedStaffs) {
+    //     staff.isSelected = false;
+    //   }
+    // });
+    Navigator.of(context).pop();
   }
 
   @override
@@ -199,10 +224,12 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
               ),
             ),
             SaveCancelFooter(
-              onTabUndoBtn: onTabUndoBtn,
+              onTabUndoBtn: () => onTabUndoBtn(context),
               onTapSaveBtn: () => {
-                onTapSaveBtn(),
-                Navigator.of(context).pop(),
+                ConfirmationDialog.show(
+                    context: context,
+                    onConfirm: onTapSaveBtn,
+                    message: "정상적으로 추가되었습니다")
               },
             )
           ],

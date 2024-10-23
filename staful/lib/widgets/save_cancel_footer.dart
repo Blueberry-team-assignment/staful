@@ -22,7 +22,7 @@ class SaveCancelFooter extends StatelessWidget {
                 style: ButtonStyle(
                   shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(borderRadius),
                     ),
                   ),
                   backgroundColor: WidgetStateProperty.all<Color>(
@@ -46,7 +46,7 @@ class SaveCancelFooter extends StatelessWidget {
                 style: ButtonStyle(
                   shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(borderRadius),
                     ),
                   ),
                   backgroundColor: WidgetStateProperty.all<Color>(
