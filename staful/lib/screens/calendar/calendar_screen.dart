@@ -20,7 +20,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
 
   List<Widget> staffProfileWidgets(BuildContext context) {
-    return staffs
+    return STAFFS
         .map((staff) => Padding(
               padding: const EdgeInsets.all(15),
               child: GestureDetector(

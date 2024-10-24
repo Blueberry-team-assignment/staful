@@ -38,14 +38,14 @@ class _PayrollScreenState extends State<PayrollScreen> {
     }
   }
 
+  void handleOnChanged(String? newValue) {
+    setState(() {
+      selectedOption = newValue!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    void handleOnChanged(String? newValue) {
-      setState(() {
-        selectedOption = newValue!;
-      });
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 30,

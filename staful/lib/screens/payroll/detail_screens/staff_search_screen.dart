@@ -10,37 +10,17 @@ import 'package:staful/widgets/save_cancel_footer.dart';
 import 'package:staful/widgets/simple_text_input_widget.dart';
 import 'package:staful/widgets/staff_profile_widget.dart';
 
-class _SelectableStaff {
-  final Staff staff;
-  bool isSelected = false;
-  bool isShow = true;
 
-  _SelectableStaff({
-    required this.staff,
-    required this.isSelected,
-  });
-
-  void setSelected() {
-    isSelected = !isSelected;
-  }
-
-  void setIsShow() {
-    isShow = !isShow;
-  }
-}
-
-// final List<_SelectableStaff> selectableStaffs = List.generate(
-//     staffs.length, (index) => _SelectableStaff(staff: staffs[index]));
 
 class StaffSearchScreen extends StatefulWidget {
   final String text;
-  final void Function(List<Staff>) onListChange;
+  // final void Function(List<Staff>) onListChange;
   final List<Staff> staffList;
 
   const StaffSearchScreen({
     super.key,
     required this.text,
-    required this.onListChange,
+    // required this.onListChange,
     required this.staffList,
   });
 
@@ -50,83 +30,72 @@ class StaffSearchScreen extends StatefulWidget {
 
 class _StaffSearchScreenState extends State<StaffSearchScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  final List<String> searchSuggestions =
-      staffs.map((staff) => staff.name).toList();
-  late List<_SelectableStaff> searchedStaffs = [];
+  late List<SelectableStaff> selectableStaffs = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    setState(() {
-      final staffNames = List.generate(
-          widget.staffList.length, (int idx) => widget.staffList[idx].name);
-
-      final List<_SelectableStaff> list = List.generate(
-        staffs.length,
-        (int idx) => _SelectableStaff(
-            staff: staffs[idx],
-            isSelected: staffNames.contains(staffs[idx].name) ? true : false),
-      );
-
-      searchedStaffs.addAll(list);
-    });
+    _initializeSelectableStaffs();
   }
 
-  void onSearchInputChanged(String text) {
-    if (text.isEmpty) {
-      setState(() {
-        for (var staff in searchedStaffs) {
-          staff.isShow = true;
-        }
-      });
-    }
+  void _initializeSelectableStaffs() {
+    final selectedStaffNames =
+        widget.staffList.map((staff) => staff.name).toSet();
+
+    selectableStaffs = STAFFS
+        .map((staff) => SelectableStaff(
+              staff: staff,
+              isSelected: selectedStaffNames.contains(staff.name),
+            ))
+        .toList();
   }
 
-  void onSuggestionSelected(String suggestion) {
-    searchInputController.text = suggestion;
+  void _onSearchInputChanged(String text) {
     setState(() {
-      for (var staff in searchedStaffs) {
-        if (suggestion == staff.staff.name) {
-          staff.isShow = true;
-        } else {
-          staff.isShow = false;
-        }
+      if (text.isEmpty) {
+        _showAllStaffs();
+      } else {
+        _filterStaffsByName(text);
       }
     });
   }
 
-  void handleOnTap(int idx) {
+  void _showAllStaffs() {
+    for (var staff in selectableStaffs) {
+      staff.toggleVisibility(true);
+    }
+  }
+
+  void _filterStaffsByName(String name) {
+    for (var staff in selectableStaffs) {
+      staff.toggleVisibility(staff.staff.name.contains(name));
+    }
+  }
+
+  void _onSuggestionSelected(String suggestion) {
+    searchInputController.text = suggestion;
     setState(() {
-      searchedStaffs[idx].setSelected();
+      _filterStaffsByName(suggestion);
     });
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    for (var staff in searchedStaffs) {
-      staff.isShow = true;
-    }
-    super.dispose();
+  void _handleStaffTap(int index) {
+    setState(() {
+      selectableStaffs[index].toggleSelected();
+    });
   }
 
-  void onTapSaveBtn() {
-    final List<Staff> staffs = searchedStaffs
-        .where((staff) => staff.isSelected == true)
+  void _onTapSaveBtn(BuildContext context) {
+    final List<Staff> selectedStaffs = selectableStaffs
+        .where((staff) => staff.isSelected)
         .map((staff) => staff.staff)
         .toList();
 
-    widget.onListChange(staffs);
+    // widget.onListChange(selectedStaffs);
+    Navigator.of(context).pop(selectedStaffs);
   }
 
-  void onTabUndoBtn(BuildContext context) {
-    // setState(() {
-    //   for (var staff in searchedStaffs) {
-    //     staff.isSelected = false;
-    //   }
-    // });
+  void _onTabUndoBtn(BuildContext context) {
     Navigator.of(context).pop();
   }
 
@@ -141,100 +110,95 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${widget.text} 수정",
-                  style: titleStyle,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Stack(
-              children: [
-                SimpleTextInputWidget(
-                  placeHolder: "직원명을 검색하세요",
-                  onChanged: onSearchInputChanged,
-                  controller: searchInputController,
-                ),
-                OverlaySearchResultsWidget(
-                  // staffSearch: false,
-                  suggestions: searchSuggestions,
-                  controller: searchInputController,
-                  onSelect: onSuggestionSelected,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: searchedStaffs.length, // 스태프 수에 따라 아이템 수 결정
-                itemBuilder: (BuildContext context, int index) {
-                  final _SelectableStaff staff = searchedStaffs[index];
-                  if (!staff.isShow) return const SizedBox.shrink();
-                  return Container(
-                    margin: const EdgeInsets.only(
-                      top: 10,
-                    ),
-                    child: GestureDetector(
-                      onTap: () => handleOnTap(index),
-                      child: ColumnItemContainer(
-                        color: searchedStaffs[index].isSelected
-                            ? lightColor
-                            : Colors.white,
-                        content: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                StaffProfileWidget(
-                                  imagePath:
-                                      "lib/assets/images/${staff.staff.image}",
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  staff.staff.name,
-                                  style:
-                                      contentTextStyle.copyWith(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Icon(
-                              searchedStaffs[index].isSelected
-                                  ? Icons.check_box_outlined
-                                  : Icons.check_box_outline_blank_outlined,
-                              color: searchedStaffs[index].isSelected
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.black,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
+            _buildHeader(),
+            const SizedBox(height: 20),
+            _buildSearchInput(),
+            const SizedBox(height: 10),
+            Expanded(child: _buildStaffList(lightColor)),
+            SaveCancelFooter(
+              onTabUndoBtn: () => _onTabUndoBtn(context),
+              onTapSaveBtn: () => ConfirmationDialog.show(
+                context: context,
+                onConfirm: () => _onTapSaveBtn(context),
+                message: "정상적으로 추가되었습니다",
               ),
             ),
-            SaveCancelFooter(
-              onTabUndoBtn: () => onTabUndoBtn(context),
-              onTapSaveBtn: () => {
-                ConfirmationDialog.show(
-                    context: context,
-                    onConfirm: onTapSaveBtn,
-                    message: "정상적으로 추가되었습니다")
-              },
-            )
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "${widget.text} 수정",
+          style: titleStyle,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchInput() {
+    return Stack(
+      children: [
+        SimpleTextInputWidget(
+          placeHolder: "직원명을 검색하세요",
+          onChanged: _onSearchInputChanged,
+          controller: searchInputController,
+        ),
+        OverlaySearchResultsWidget(
+          suggestions: STAFFS.map((staff) => staff.name).toList(),
+          controller: searchInputController,
+          onSelect: _onSuggestionSelected,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStaffList(Color lightColor) {
+    return ListView.builder(
+      itemCount: selectableStaffs.length,
+      itemBuilder: (context, index) {
+        final staff = selectableStaffs[index];
+        if (!staff.isShown) return const SizedBox.shrink();
+
+        return GestureDetector(
+          onTap: () => _handleStaffTap(index),
+          child: ColumnItemContainer(
+            color: staff.isSelected ? lightColor : Colors.white,
+            content: _buildStaffRow(staff),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildStaffRow(SelectableStaff staff) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            StaffProfileWidget(
+                imagePath: "lib/assets/images/${staff.staff.image}"),
+            const SizedBox(width: 10),
+            Text(
+              staff.staff.name,
+              style: contentTextStyle.copyWith(fontSize: 16),
+            ),
+          ],
+        ),
+        Icon(
+          staff.isSelected
+              ? Icons.check_box_outlined
+              : Icons.check_box_outline_blank_outlined,
+          color:
+              staff.isSelected ? Theme.of(context).primaryColor : Colors.black,
+        )
+      ],
     );
   }
 }

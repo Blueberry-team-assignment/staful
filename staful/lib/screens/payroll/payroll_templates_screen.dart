@@ -3,11 +3,9 @@ import 'package:staful/layouts/app_layout.dart';
 import 'package:staful/models/staff_model.dart';
 import 'package:staful/models/template_model.dart';
 import 'package:staful/screens/payroll/detail_screens/template_detail_screen.dart';
-// import 'package:staful/screens/payroll/detail_screens/payroll_template_register_screen';
 import 'package:staful/screens/staff/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/dummies.dart';
-import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/widgets/overlay_search_results_widget.dart';
 import 'package:staful/widgets/simple_text_button_widget.dart';
 import 'package:staful/widgets/simple_text_input_widget.dart';
@@ -31,39 +29,70 @@ class PayrollTemplatesScreen extends StatefulWidget {
 class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
   final TextEditingController searchInputController = TextEditingController();
   List<String> searchSuggestions =
-      templates.map((template) => template.name).toList();
+      TEMPLATES.map((template) => template.name).toList();
 
-  late List<TemplateModel> searchedTemplates = templates;
+  late List<TemplateModel> searchedTemplates = TEMPLATES;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    for (var template in templates) {
-      template.getStaffList(staffs, template.name);
+  }
+
+  Future<void> _navigateAndUpdateTemplate({
+    required BuildContext context,
+    required Widget Function(BuildContext) builder,
+    required void Function(TemplateModel) onResult,
+  }) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: builder),
+    );
+
+    if (result != null && result is TemplateModel) {
+      onResult(result); // 결과값을 처리하는 콜백
+      searchInputController.clear();
     }
   }
 
-  void handleOnSave() {
-    setState(() {});
+  // 검색어 입력 시 필터링
+  void _onSearchInputChanged(String text) {
+    setState(() {
+      if (text.isEmpty) {
+        searchedTemplates = TEMPLATES;
+      }
+      // else {
+      //   searchedTemplates = TEMPLATES
+      //       .where((template) => template.name == searchInputController.text)
+      //       .toList();
+      // }
+    });
   }
 
-  void onSearchInputChanged(String text) {
-    // 검색어가 변경될 때마다 호출됨
-    // print(text);
-    if (text.isEmpty) {
-      setState(() {
-        searchedTemplates = templates;
-      });
-    }
-  }
-
-  void onSuggestionSelected(String suggestion) {
+  // 검색 제안 선택 시 처리
+  void _onSuggestionSelected(String suggestion) {
     searchInputController.text = suggestion;
 
     setState(() {
-      searchedTemplates =
-          templates.where((template) => template.name == suggestion).toList();
+      searchedTemplates = TEMPLATES
+          .where((template) => template.name.startsWith(suggestion))
+          .toList();
+    });
+  }
+
+  // 템플릿 추가 시 로직
+  void _onAddTemplate(TemplateModel newTemplate) {
+    setState(() {
+      TEMPLATES.add(newTemplate);
+      searchSuggestions = TEMPLATES.map((template) => template.name).toList();
+    });
+  }
+
+  // 템플릿 수정 시 로직
+  void _onUpdateTemplate(TemplateModel updatedTemplate, int index) {
+    setState(() {
+      TEMPLATES[index] = updatedTemplate;
+      searchSuggestions = TEMPLATES.map((template) => template.name).toList();
+      // _onSearchInputChanged(searchInputController.text);
     });
   }
 
@@ -86,65 +115,64 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
                 SizedBox(
                   height: 30,
                   child: SimpleTextButtonWidget(
-                    onPressed: () => openPage(
-                        context,
-                        TemplateDetailScreen(
-                          template: emptyTemplate,
-                          onSave: handleOnSave,
-                        )),
+                    onPressed: () => _navigateAndUpdateTemplate(
+                      context: context,
+                      builder: (context) => TemplateDetailScreen(
+                        template: emptyTemplate,
+                      ),
+                      onResult: (updatedTemplate) =>
+                          _onAddTemplate(updatedTemplate),
+                    ),
                     text: "등록",
                   ),
-                )
+                ),
               ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Stack(
               children: [
                 SimpleTextInputWidget(
                   placeHolder: "템플릿명을 검색하세요",
-                  onChanged: onSearchInputChanged,
+                  onChanged: _onSearchInputChanged,
                   controller: searchInputController,
                 ),
                 OverlaySearchResultsWidget(
                   staffSearch: false,
                   suggestions: searchSuggestions,
                   controller: searchInputController,
-                  onSelect: onSuggestionSelected,
+                  onSelect: _onSuggestionSelected,
                 ),
               ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
                   "총 ${searchedTemplates.length}개",
                   style: TextStyleConfig(size: 14).setTextStyle(),
-                )
+                ),
               ],
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: searchedTemplates.length, // 스태프 수에 따라 아이템 수 결정
+                itemCount: searchedTemplates.length, // 템플릿 수에 따라 아이템 수 결정
                 itemBuilder: (context, index) {
                   final TemplateModel template = searchedTemplates[index];
                   return Container(
-                      margin: const EdgeInsets.only(
-                        top: 10,
+                    margin: const EdgeInsets.only(top: 10),
+                    child: GestureDetector(
+                      onTap: () => _navigateAndUpdateTemplate(
+                        context: context,
+                        builder: (context) => TemplateDetailScreen(
+                          template: template,
+                        ),
+                        onResult: (updatedTemplate) => _onUpdateTemplate(
+                            updatedTemplate, TEMPLATES.indexOf(template)),
                       ),
-                      child: GestureDetector(
-                        onTap: () => openPage(
-                            context,
-                            TemplateDetailScreen(
-                              template: template,
-                              onSave: handleOnSave,
-                            )),
-                        child: buildTemplateCards(context, template),
-                      )); // 개별 스태프 카드 생성
+                      child: buildTemplateCards(context, template),
+                    ),
+                  );
                 },
               ),
             ),
@@ -155,6 +183,7 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
   }
 }
 
+// 템플릿 카드 UI 빌드
 ColumnItemContainer buildTemplateCards(
     BuildContext context, TemplateModel template) {
   final staffList = template.staffList;
@@ -167,9 +196,7 @@ ColumnItemContainer buildTemplateCards(
           template.name,
           style: contentTextStyle,
         ),
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 10),
         SizedBox(
           height: 66,
           child: ListView.builder(
@@ -178,14 +205,12 @@ ColumnItemContainer buildTemplateCards(
             itemBuilder: (context, index) {
               final Staff staff = staffList[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 5,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: StaffProfileWidget(
                   imagePath: "lib/assets/images/${staff.image}",
                   name: staff.name,
                 ),
-              ); // 개별 스태프 카드 생성
+              );
             },
           ),
         )

@@ -1,8 +1,11 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:staful/models/staff_model.dart';
 import 'package:staful/models/template_model.dart';
+import 'package:staful/utils/time_utils.dart';
 
-final templates = [
+final TEMPLATES = [
   TemplateModel(
     name: "평일 마감 템플릿",
     payDetails: [
@@ -21,7 +24,7 @@ final templates = [
   )
 ];
 
-final List<Staff> staffs = [
+final List<Staff> STAFFS = [
   Staff(
     name: "이나라",
     image: "Ellipse 2.png",
@@ -30,7 +33,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 10, minute: 0),
         endTime: const TimeOfDay(hour: 18, minute: 0)),
     workDate: [],
-    template: templates[0],
+    template: TEMPLATES[0],
   ),
   Staff(
     name: "김경민",
@@ -40,7 +43,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 13, minute: 0),
         endTime: const TimeOfDay(hour: 22, minute: 0)),
     workDate: [],
-    template: templates[0],
+    template: TEMPLATES[0],
   ),
   Staff(
     name: "김선미",
@@ -50,7 +53,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 13, minute: 0),
         endTime: const TimeOfDay(hour: 20, minute: 0)),
     workDate: [],
-    template: templates[0],
+    template: TEMPLATES[0],
   ),
   Staff(
     name: "신동찬",
@@ -60,7 +63,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 8, minute: 0),
         endTime: const TimeOfDay(hour: 18, minute: 0)),
     workDate: [],
-    template: templates[1],
+    template: TEMPLATES[1],
   ),
   Staff(
     name: "매니저",
@@ -70,7 +73,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 9, minute: 0),
         endTime: const TimeOfDay(hour: 18, minute: 0)),
     workDate: [],
-    template: templates[1],
+    template: TEMPLATES[1],
   ),
   Staff(
     name: "김수한무거북",
@@ -80,7 +83,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 10, minute: 30),
         endTime: const TimeOfDay(hour: 15, minute: 0)),
     workDate: [],
-    template: templates[1],
+    template: TEMPLATES[1],
   ),
   Staff(
     name: "김수한무",
@@ -90,7 +93,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 11, minute: 0),
         endTime: const TimeOfDay(hour: 19, minute: 0)),
     workDate: [],
-    template: templates[1],
+    template: TEMPLATES[1],
   ),
   Staff(
     name: "Steive Kim",
@@ -100,7 +103,7 @@ final List<Staff> staffs = [
         startTime: const TimeOfDay(hour: 9, minute: 30),
         endTime: const TimeOfDay(hour: 17, minute: 30)),
     workDate: [],
-    template: templates[0],
+    template: TEMPLATES[0],
   ),
 ];
 

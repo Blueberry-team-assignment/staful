@@ -177,53 +177,62 @@ class OverlaySearchResultsWidgetState
 
   OverlayEntry _createOverlay(List<String> filteredSuggestions) {
     return OverlayEntry(
-      builder: (context) => Positioned(
-        left: 30,
-        right: 30,
-        top: 210,
-        child: Material(
-          color: Colors.white,
-          elevation: 4.0,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 10,
-            ),
-            child: Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  itemCount: filteredSuggestions.length,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        if (widget.staffSearch)
-                          const StaffProfileWidget(
-                              imagePath: "lib/assets/images/Ellipse 5.png"),
-                        Expanded(
-                          child: ListTile(
-                            title: Text(filteredSuggestions[index]),
-                            onTap: () {
-                              widget.onSelect(filteredSuggestions[index]);
-                              _removeOverlay(); // 선택 후 오버레이 제거
-                            },
-                          ),
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          _removeOverlay(); // 바깥 영역 클릭 시 오버레이 제거
+        },
+        child: Stack(
+          children: [
+            Positioned(
+              left: 30,
+              right: 30,
+              top: 210,
+              child: Material(
+                color: Colors.white,
+                elevation: 4.0,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        itemCount: filteredSuggestions.length,
+                        itemBuilder: (context, index) {
+                          return Row(
+                            children: [
+                              if (widget.staffSearch)
+                                const StaffProfileWidget(
+                                    imagePath:
+                                        "lib/assets/images/Ellipse 5.png"),
+                              Expanded(
+                                child: ListTile(
+                                  title: Text(filteredSuggestions[index]),
+                                  onTap: () {
+                                    widget.onSelect(filteredSuggestions[index]);
+                                    _removeOverlay(); // 선택 후 오버레이 제거
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      if (widget.staffSearch)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: SubmitButtonWidget(text: "직원 등록"),
                         ),
-                      ],
-                    );
-                  },
+                    ],
+                  ),
                 ),
-                if (widget.staffSearch)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    child: SubmitButtonWidget(text: "직원 등록"),
-                  )
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

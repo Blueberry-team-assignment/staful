@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:staful/models/template_model.dart';
+import 'package:staful/utils/time_utils.dart';
 
 class Staff {
   final String name;
@@ -46,19 +46,22 @@ class Staff {
   }
 }
 
-class TimeRange {
-  final TimeOfDay startTime;
-  final TimeOfDay endTime;
+class SelectableStaff {
+  final Staff staff;
+  bool isSelected;
+  bool isShown;
 
-  TimeRange({
-    required this.startTime,
-    required this.endTime,
+  SelectableStaff({
+    required this.staff,
+    this.isSelected = false,
+    this.isShown = true,
   });
 
-  // 하루의 근무 시간을 분 단위로 계산하는 메서드
-  int get workDurationInMinutes {
-    final startMinutes = startTime.hour * 60 + startTime.minute;
-    final endMinutes = endTime.hour * 60 + endTime.minute;
-    return endMinutes - startMinutes;
+  void toggleSelected() {
+    isSelected = !isSelected;
+  }
+
+  void toggleVisibility(bool show) {
+    isShown = show;
   }
 }

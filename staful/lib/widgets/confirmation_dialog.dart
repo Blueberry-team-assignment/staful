@@ -90,9 +90,9 @@ class ConfirmationDialog extends StatelessWidget {
           title: title,
           message: message,
           onConfirm: () {
-            onConfirm();
+            print('on Confirm');
             Navigator.of(context).pop(); // 팝업 닫기
-            Navigator.of(context).pop(); // 이전페이지로 돌아가기
+            onConfirm();
           },
           onCancel: () {
             Navigator.of(context).pop(); // 팝업 닫기

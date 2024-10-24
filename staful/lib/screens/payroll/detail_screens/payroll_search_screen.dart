@@ -17,13 +17,13 @@ final _items = [
 
 class PayrollSearchScreen extends StatefulWidget {
   final String text;
-  final void Function(List<PayDetail>) onListChange;
+  // final void Function(List<PayDetail>) onListChange;
   final List<PayDetail> payDetails;
 
   const PayrollSearchScreen({
     super.key,
     required this.text,
-    required this.onListChange,
+    // required this.onListChange,
     required this.payDetails,
   });
 
@@ -85,9 +85,10 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
 
       final newItem = SelectablePayDetail(
         payDetail: PayDetail(
-            type: item["type"] as PayType,
-            description: item["description"] as String,
-            amount: amount),
+          type: item["type"] as PayType,
+          description: item["description"] as String,
+          amount: amount,
+        ),
         isSelected: isSelected,
       );
 
@@ -106,13 +107,14 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
     super.dispose();
   }
 
-  void onTapSaveBtn() {
-    final List<PayDetail> payDetailsForParent = selectablePayDetails
+  void onTapSaveBtn(BuildContext context) {
+    final List<PayDetail> updatedPayDetails = selectablePayDetails
         .where((detail) => detail.isSelected == true)
         .map((detail) => detail.payDetail)
         .toList();
 
-    widget.onListChange(payDetailsForParent);
+    // widget.onListChange(updatedPayDetails);
+    Navigator.of(context).pop(updatedPayDetails);
   }
 
   void onTabUndoBtn(BuildContext context) {
@@ -210,11 +212,10 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
             SaveCancelFooter(
               onTabUndoBtn: () => onTabUndoBtn(context),
               onTapSaveBtn: () => ConfirmationDialog.show(
-                context: context,
-                onConfirm: onTapSaveBtn,
-                showCancelButton: false,
-                message: "정상적으로 추가되었습니다"
-              ),
+                  context: context,
+                  onConfirm: () => onTapSaveBtn(context),
+                  showCancelButton: false,
+                  message: "정상적으로 추가되었습니다"),
             )
           ],
         ),

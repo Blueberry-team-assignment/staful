@@ -41,3 +41,20 @@ String formatTimeOfDay(TimeOfDay time) {
 
   return "$hour : $minute";
 }
+
+class TimeRange {
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
+
+  TimeRange({
+    required this.startTime,
+    required this.endTime,
+  });
+
+  // 하루의 근무 시간을 분 단위로 계산하는 메서드
+  int get workDurationInMinutes {
+    final startMinutes = startTime.hour * 60 + startTime.minute;
+    final endMinutes = endTime.hour * 60 + endTime.minute;
+    return endMinutes - startMinutes;
+  }
+}

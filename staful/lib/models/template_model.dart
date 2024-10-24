@@ -11,11 +11,11 @@ class TemplateModel {
     required this.staffList,
   });
 
-  void getStaffList(List<Staff> staffList, String templateName) {
-    this.staffList = staffList
-        .where((staff) => staff.template.name == templateName)
-        .toList();
-  }
+  // void getStaffList(List<Staff> staffList, String templateName) {
+  //   this.staffList = staffList
+  //       .where((staff) => staff.template.name == templateName)
+  //       .toList();
+  // }
 }
 
 class PayDetail {

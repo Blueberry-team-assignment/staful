@@ -18,16 +18,16 @@ class StaffScreen extends StatefulWidget {
 
 class StaffScreenState extends State<StaffScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  List<String> searchSuggestions = (staffs.map((staff) => staff.name)).toList();
+  List<String> searchSuggestions = (STAFFS.map((staff) => staff.name)).toList();
 
-  late List<Staff> searchedStaff = staffs;
+  late List<Staff> searchedStaff = STAFFS;
 
   void onSearchInputChanged(String text) {
     // 검색어가 변경될 때마다 호출됨
     // print(text);
     if (text.isEmpty) {
       setState(() {
-        searchedStaff = staffs;
+        searchedStaff = STAFFS;
       });
     }
   }
@@ -37,7 +37,7 @@ class StaffScreenState extends State<StaffScreen> {
 
     setState(() {
       searchedStaff =
-          staffs.where((staff) => staff.name == suggestion).toList();
+          STAFFS.where((staff) => staff.name == suggestion).toList();
     });
   }
 

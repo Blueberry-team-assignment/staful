@@ -24,3 +24,9 @@ class CurrencyFormatter extends TextInputFormatter {
             TextSelection.collapsed(offset: newText.length)); // 커서를 마지막으로 이동
   }
 }
+
+ String formatNumber(String value) {
+    if (value.isEmpty) return '';
+    final formatter = NumberFormat('#,###');
+    return formatter.format(int.parse(value.replaceAll(',', '')));
+  }
