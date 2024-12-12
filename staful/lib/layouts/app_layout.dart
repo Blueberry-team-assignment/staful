@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:staful/screens/calendar/calendar_screen.dart';
 import 'package:staful/screens/payroll/payroll_screen.dart';
-import 'package:staful/screens/setting_screen.dart';
+import 'package:staful/screens/setting/setting_screen.dart';
 import 'package:staful/screens/staff/staff_screen.dart';
 
 class AppLayout extends StatefulWidget {
