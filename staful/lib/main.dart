@@ -1,12 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:staful/firebase_options.dart';
+import 'package:staful/script/add_dummy_data.dart';
 import 'package:staful/ui/screens/login_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await addDummyData(); // firestore에 더미데이터 넣기
+
   await EasyLocalization.ensureInitialized();
   await initializeDateFormatting();
 
