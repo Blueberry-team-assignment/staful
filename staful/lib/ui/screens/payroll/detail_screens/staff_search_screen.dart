@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/domain/models/staff_model.dart';
 import 'package:staful/ui/screens/staff/staff_info_screen.dart';
@@ -10,9 +11,7 @@ import 'package:staful/ui/widgets/save_cancel_footer.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
-
-
-class StaffSearchScreen extends StatefulWidget {
+class StaffSearchScreen extends ConsumerStatefulWidget {
   final String text;
   // final void Function(List<Staff>) onListChange;
   final List<Staff> staffList;
@@ -25,10 +24,10 @@ class StaffSearchScreen extends StatefulWidget {
   });
 
   @override
-  State<StaffSearchScreen> createState() => _StaffSearchScreenState();
+  ConsumerState<StaffSearchScreen> createState() => _StaffSearchScreenState();
 }
 
-class _StaffSearchScreenState extends State<StaffSearchScreen> {
+class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
   final TextEditingController searchInputController = TextEditingController();
   late List<SelectableStaff> selectableStaffs = [];
 
@@ -44,8 +43,12 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
 
     selectableStaffs = STAFFS
         .map((staff) => SelectableStaff(
-              staff: staff,
+              name: staff.name,
+              image: staff.image,
+              workDays: staff.workDays,
+              workHours: staff.workHours,
               isSelected: selectedStaffNames.contains(staff.name),
+              templateId: staff.template.templateId,
             ))
         .toList();
   }
@@ -68,7 +71,7 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
 
   void _filterStaffsByName(String name) {
     for (var staff in selectableStaffs) {
-      staff.toggleVisibility(staff.staff.name.contains(name));
+      staff.toggleVisibility(staff.name.contains(name));
     }
   }
 
@@ -86,9 +89,8 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
   }
 
   void _onTapSaveBtn(BuildContext context) {
-    final List<Staff> selectedStaffs = selectableStaffs
+    final List<SelectableStaff> selectedStaffs = selectableStaffs
         .where((staff) => staff.isSelected)
-        .map((staff) => staff.staff)
         .toList();
 
     // widget.onListChange(selectedStaffs);
@@ -163,7 +165,7 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
       itemCount: selectableStaffs.length,
       itemBuilder: (context, index) {
         final staff = selectableStaffs[index];
-        if (!staff.isShown) return const SizedBox.shrink();
+        if (!staff.isVisible) return const SizedBox.shrink();
 
         return GestureDetector(
           onTap: () => _handleStaffTap(index),
@@ -183,10 +185,10 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
         Row(
           children: [
             StaffProfileWidget(
-                imagePath: "lib/assets/images/${staff.staff.image}"),
+                imagePath: "lib/assets/images/${staff.image}"),
             const SizedBox(width: 10),
             Text(
-              staff.staff.name,
+              staff.name,
               style: contentTextStyle.copyWith(fontSize: 16),
             ),
           ],

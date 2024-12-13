@@ -78,6 +78,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
       name: templateNameController.text,
       payDetails: payDetails,
       staffList: staffs,
+      templateId: 99,
     );
 
     Navigator.of(context).pop(newTemplate);

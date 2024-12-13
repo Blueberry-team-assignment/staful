@@ -16,8 +16,12 @@ final List<PayDetail> defaultList = [
   PayDetail(description: "시급", amount: 0, type: PayType.hourly),
 ];
 
-final emptyTemplate =
-    TemplateModel(name: "", payDetails: defaultList, staffList: []);
+final emptyTemplate = TemplateModel(
+  name: "",
+  payDetails: defaultList,
+  staffList: [],
+  templateId: 99,
+);
 
 class PayrollTemplatesScreen extends StatefulWidget {
   const PayrollTemplatesScreen({super.key});

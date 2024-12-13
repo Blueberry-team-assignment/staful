@@ -13,6 +13,7 @@ final TEMPLATES = [
       PayDetail(description: "시급", amount: 10000, type: PayType.hourly),
     ],
     staffList: [],
+    templateId: 0,
   ),
   TemplateModel(
     name: "주말 마감 템플릿",
@@ -21,6 +22,7 @@ final TEMPLATES = [
       PayDetail(description: "시급", amount: 12000, type: PayType.hourly),
     ],
     staffList: [],
+    templateId: 1,
   )
 ];
 

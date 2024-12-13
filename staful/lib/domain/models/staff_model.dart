@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:staful/domain/models/template_model.dart';
 import 'package:staful/domain/utils/time_utils.dart';
 
@@ -47,14 +48,26 @@ class Staff {
 }
 
 class SelectableStaff {
-  final Staff staff;
-  bool isSelected;
-  bool isShown;
+  final String name;
+  final String image;
+  final List<String> workDays;
+  final TimeRange workHours;
+  final List<String>? workDate;
+  final int templateId;
+
+  // UI 관련 상태 변수
+  bool isSelected; // 선택 여부
+  bool isVisible; // 보임 여부
 
   SelectableStaff({
-    required this.staff,
-    this.isSelected = false,
-    this.isShown = true,
+    required this.name,
+    required this.image,
+    required this.workDays,
+    required this.workHours,
+    this.workDate,
+    required this.templateId,
+    this.isSelected = false, // 기본값: 선택되지 않음
+    this.isVisible = true, // 기본값: 보임
   });
 
   void toggleSelected() {
@@ -62,6 +75,40 @@ class SelectableStaff {
   }
 
   void toggleVisibility(bool show) {
-    isShown = show;
+    isVisible = show;
+  }
+
+  // Firestore 데이터를 기반으로 인스턴스를 생성하는 팩토리 메서드
+  factory SelectableStaff.fromFirestore(Map<String, dynamic> data) {
+    final workHour = Map<String, dynamic>.from(data["workHours"]);
+    final newWorkHour = TimeRange(
+      startTime: TimeOfDay(
+          hour: workHour["start"]["hour"], minute: workHour["start"]["minute"]),
+      endTime: TimeOfDay(
+        hour: workHour["end"]["hour"],
+        minute: workHour["end"]["minute"],
+      ),
+    );
+
+    return SelectableStaff(
+      name: data["name"],
+      image: data["image"],
+      workDays: List<String>.from(data["workDays"]),
+      workHours: newWorkHour,
+      workDate: List<String>.from(data["workDate"]),
+      templateId: data["templateId"],
+    );
+  }
+
+  // 인스턴스를 Firestore 형식으로 변환
+  Map<String, dynamic> toFirestore() {
+    return {
+      "name": name,
+      "image": image,
+      "workDays": workDays,
+      "workHours": workHours,
+      "workDate": workDate,
+      "templateId": templateId,
+    };
   }
 }

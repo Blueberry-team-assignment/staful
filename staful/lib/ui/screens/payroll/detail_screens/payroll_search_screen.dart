@@ -41,7 +41,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
     if (text.isEmpty) {
       setState(() {
         for (var payDetail in selectablePayDetails) {
-          payDetail.isShow = true;
+          payDetail.isVisible = true;
         }
       });
     }
@@ -52,9 +52,9 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
     setState(() {
       for (var payDetail in selectablePayDetails) {
         if (suggestion == payDetail.payDetail.description) {
-          payDetail.isShow = true;
+          payDetail.isVisible = true;
         } else {
-          payDetail.isShow = false;
+          payDetail.isVisible = false;
         }
       }
     });
@@ -62,7 +62,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
 
   void handleOnTap(int idx) {
     setState(() {
-      selectablePayDetails[idx].setSelected();
+      selectablePayDetails[idx].toggleSelected();
     });
   }
 
@@ -102,7 +102,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
   void dispose() {
     // TODO: implement dispose
     for (var detail in selectablePayDetails) {
-      detail.isShow = true;
+      detail.isVisible = true;
     }
     super.dispose();
   }
@@ -174,7 +174,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   final SelectablePayDetail payDetail =
                       selectablePayDetails[index];
-                  if (!payDetail.isShow) return const SizedBox.shrink();
+                  if (!payDetail.isVisible) return const SizedBox.shrink();
                   return Container(
                     margin: const EdgeInsets.only(
                       top: 10,

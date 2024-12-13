@@ -14,7 +14,7 @@ Future<void> addDummyData() async {
         "end": {"hour": 18, "minute": 0}
       },
       "workDate": [],
-      "templateId": 0,
+      "templateId": "0",
       "desc": ""
     },
     {
@@ -26,7 +26,7 @@ Future<void> addDummyData() async {
         "end": {"hour": 22, "minute": 0}
       },
       "workDate": [],
-      "templateId": 0,
+      "templateId": "0",
       "desc": ""
     },
     {
@@ -38,7 +38,7 @@ Future<void> addDummyData() async {
         "end": {"hour": 20, "minute": 0}
       },
       "workDate": [],
-      "templateId": 0,
+      "templateId": "0",
       "desc": ""
     },
     {
@@ -50,7 +50,7 @@ Future<void> addDummyData() async {
         "end": {"hour": 18, "minute": 0}
       },
       "workDate": [],
-      "templateId": 1,
+      "templateId": "1",
       "desc": ""
     },
     {
@@ -62,7 +62,7 @@ Future<void> addDummyData() async {
         "end": {"hour": 18, "minute": 0}
       },
       "workDate": [],
-      "templateId": 1,
+      "templateId": "1",
       "desc": ""
     },
     {
@@ -74,7 +74,7 @@ Future<void> addDummyData() async {
         "end": {"hour": 15, "minute": 0}
       },
       "workDate": [],
-      "templateId": 1,
+      "templateId": "1",
       "desc": ""
     },
     {
@@ -86,7 +86,7 @@ Future<void> addDummyData() async {
         "end": {"hour": 19, "minute": 0}
       },
       "workDate": [],
-      "templateId": 1,
+      "templateId": "1",
       "desc": ""
     },
     {
@@ -98,7 +98,7 @@ Future<void> addDummyData() async {
         "end": {"hour": 17, "minute": 30}
       },
       "workDate": [],
-      "templateId": 0,
+      "templateId": "0",
       "desc": ""
     }
   ];
@@ -123,12 +123,12 @@ Future<void> addDummyData() async {
 
   for (var i = 0; i < dummyStaff.length; i++) {
     final staff = dummyStaff[i];
-    staff["id"] = i;
+    staff["id"] = i.toString();
     await staffCollection.add(staff);
 
     if (i < dummyTemplate.length) {
       final template = dummyTemplate[i];
-      template["id"] = i;
+      template["id"] = i.toString();
       await templateCollection.add(template);
     }
   }

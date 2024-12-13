@@ -4,11 +4,13 @@ class TemplateModel {
   final String name;
   final List<PayDetail> payDetails;
   List<Staff> staffList;
+  int templateId;
 
   TemplateModel({
     required this.name,
     required this.payDetails,
     required this.staffList,
+    required this.templateId,
   });
 
   // void getStaffList(List<Staff> staffList, String templateName) {
@@ -35,19 +37,55 @@ enum PayType { hourly, fixed }
 class SelectablePayDetail {
   final PayDetail payDetail;
   bool isSelected;
-  bool isShow;
+  bool isVisible;
 
   SelectablePayDetail({
     required this.payDetail,
     this.isSelected = false,
-    this.isShow = true,
+    this.isVisible = true,
   });
 
-  void setSelected() {
+  void toggleSelected() {
     isSelected = !isSelected;
   }
 
-  void setIsShow() {
-    isShow = !isShow;
+  void toggleVisibility() {
+    isVisible = !isVisible;
+  }
+}
+
+class SelectableTemplate {
+  final String name;
+  final List<SelectablePayDetail> payDetails; // 지급 세부사항
+  final List<String> staffIds; // 이 템플릿을 사용하는 스태프 ID
+
+  // UI 관련 상태 변수
+  bool isSelected; // 선택 여부
+  bool isVisible; // 보임 여부
+
+  SelectableTemplate({
+    required this.name,
+    required this.payDetails,
+    required this.staffIds,
+    this.isSelected = false, // 기본값: 선택되지 않음
+    this.isVisible = true, // 기본값: 보임
+  });
+
+  // Firestore 데이터를 기반으로 인스턴스를 생성하는 팩토리 메서드
+  factory SelectableTemplate.fromFirestore(Map<String, dynamic> data) {
+    return SelectableTemplate(
+      name: data["name"],
+      payDetails: List<SelectablePayDetail>.from(data["payDetails"]),
+      staffIds: List<String>.from(data["staffIds"]),
+    );
+  }
+
+  // 인스턴스를 Firestore 형식으로 변환
+  Map<String, dynamic> toFirestore() {
+    return {
+      "name": name,
+      "payDetails": payDetails,
+      "staffIds": staffIds,
+    };
   }
 }
