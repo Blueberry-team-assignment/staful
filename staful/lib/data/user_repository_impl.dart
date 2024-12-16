@@ -21,7 +21,6 @@ Future<void> saveUserToFirestore(String userId, String name) async {
   print('User saved to Firestore');
 }
 
-
 // 유저 데이터 조회
 Future<Map<String, dynamic>?> fetchUserFromFirestore() async {
   final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -40,9 +39,11 @@ Future<Map<String, dynamic>?> fetchUserFromFirestore() async {
   }
 
   return snapshot.data();
+  // return User.fromFirestore(snapshot.id, snapshot.data()!);
 }
 
-Future<void> registerAndSaveUser(String userId, String password, String name) async {
+Future<void> registerAndSaveUser(
+    String userId, String password, String name) async {
   await registerUser(userId, password); // Firebase Authentication 회원가입
   await saveUserToFirestore(userId, name); // Firestore에 추가 정보 저장
 }
@@ -54,7 +55,8 @@ Future<void> loginAndFetchUser(String userId, String password) async {
 }
 
 // SharedPreferences에 유저정보 저장(회원가입 성공 시, 로그인 시)
-Future<void> saveUserToPreferences(String uid, String userId, String name) async {
+Future<void> saveUserToPreferences(
+    String uid, String userId, String name) async {
   final prefs = await SharedPreferences.getInstance();
 
   await prefs.setString('uid', uid);
@@ -106,7 +108,8 @@ Future<void> loginUser(String userId, String password) async {
     final email = '$userId@custom.com';
 
     // Firebase Authentication 로그인
-    final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    final userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -116,4 +119,3 @@ Future<void> loginUser(String userId, String password) async {
     print('Error during login: $e');
   }
 }
-
