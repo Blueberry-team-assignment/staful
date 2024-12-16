@@ -1,5 +1,6 @@
 class User {
   final String id; // Firebase Authentication uid 또는 Firestore userId
+  // final String email;
   final String name;
   final String businessName;
   final DateTime createdAt;
