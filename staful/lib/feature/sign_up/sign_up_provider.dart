@@ -25,6 +25,8 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
     required DateTime openingDate,
   }) async {
     try {
+      state = state.copyWith(isLoading: true);
+
       final signUpDto = SignUpDto(
         id: id,
         password: password,
@@ -43,7 +45,7 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
         signUpDto: signUpDto,
       );
 
-      state = SignUpState();
+      state = state.copyWith(isLoading: false);
     } catch (e) {
       print(e);
     }
@@ -58,4 +60,14 @@ class SignUpState {
     this.signUpDto,
     this.isLoading = false,
   });
+
+  SignUpState copyWith({
+    SignUpDto? signUpDto,
+    bool? isLoading,
+  }) {
+    return SignUpState(
+      signUpDto: signUpDto ?? this.signUpDto,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
 }
