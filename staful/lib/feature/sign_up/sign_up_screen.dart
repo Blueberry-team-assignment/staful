@@ -82,7 +82,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           context: context,
           onConfirm: () {},
           showCancelButton: false,
-          message: "회원가입에 실패하였습니다. 다시 시도해주세요. \n에러코드 : $e ");
+          message: "회원가입에 실패했습니다. \n다시 시도해주세요.\n \n$e ");
     }
   }
 

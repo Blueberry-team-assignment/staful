@@ -41,13 +41,13 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
       );
 
       await _userInterface.saveUserToFirestore(
-        uid: signUpResult,
+        uid: signUpResult.user!.uid,
         signUpDto: signUpDto,
       );
-
-      state = state.copyWith(isLoading: false);
     } catch (e) {
-      print(e);
+      rethrow;
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 }

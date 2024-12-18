@@ -6,7 +6,7 @@ final authRepositoryProvider = Provider<AuthInterface>((ref) {
 });
 
 abstract class AuthInterface {
-  Future<String> signUp({
+  Future<UserCredential> signUp({
     required String userId,
     required String password,
   });
@@ -25,7 +25,7 @@ class AuthRepository implements AuthInterface {
 
   // 회원가입
   @override
-  Future<String> signUp({
+  Future<UserCredential> signUp({
     required String userId,
     required String password,
   }) async {
@@ -36,9 +36,9 @@ class AuthRepository implements AuthInterface {
         password: password,
       );
       print('User registered: ${userCredential.user?.uid}');
-      return userCredential.user!.uid;
+      return userCredential;
     } catch (e) {
-      throw Exception('회원가입 실패: $e');
+      throw Exception(e);
     }
   }
 
