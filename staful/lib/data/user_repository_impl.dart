@@ -13,8 +13,16 @@ abstract class UserInterface {
     required String uid,
     required SignUpDto signUpDto,
   });
-  Future<User?> fetchUserFromFirestore(String uid);
-  Future<void> saveUserToPreferences(String uid, SignUpDto signUpDto);
+  Future<User?> fetchUserFromFirestore({
+    required String uid,
+  });
+  Future<void> saveUserToPreferences({
+    required String uid,
+    required String id,
+    required String name,
+    required String businessName,
+    required DateTime openingDate,
+  });
   Future<Map<String, String?>> loadUserFromPreferences();
 }
 
@@ -45,27 +53,36 @@ class UserRepository implements UserInterface {
 
   // Firestore에서 유저 데이터 가져오기
   @override
-  Future<User?> fetchUserFromFirestore(String uid) async {
+  Future<User?> fetchUserFromFirestore({
+    required String uid,
+  }) async {
     final userDoc = _firestore.collection('users').doc(uid);
 
     final snapshot = await userDoc.get();
     if (!snapshot.exists) {
-      print('User document not found');
-      return null;
+      throw Exception('User data not found');
     }
     return User.fromFirestore(uid, snapshot.data()!);
   }
 
   // SharedPreferences에 유저 정보 저장
   @override
-  Future<void> saveUserToPreferences(String uid, SignUpDto signUpDto) async {
+  Future<void> saveUserToPreferences({
+    required String uid,
+    required String id,
+    required String name,
+    required String businessName,
+    required DateTime openingDate,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('uid', uid);
-    await prefs.setString('userId', signUpDto.id);
-    await prefs.setString('name', signUpDto.name);
-    await prefs.setString('businessName', signUpDto.businessName);
+    await prefs.setString('id', id);
+    await prefs.setString('name', name);
+    await prefs.setString('businessName', businessName);
     await prefs.setString(
-        'openingDate', signUpDto.openingDate.toIso8601String());
+      'openingDate',
+      openingDate.toIso8601String(),
+    );
     print("User data saved to SharedPreferences");
   }
 

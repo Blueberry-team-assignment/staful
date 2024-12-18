@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/sign_up/sign_up_provider.dart';
-import 'package:staful/ui/screens/login_screen.dart';
+import 'package:staful/feature/log_in/log_in_screen.dart';
 import 'package:staful/domain/utils/form_validators.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
@@ -55,7 +55,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     super.dispose();
   }
 
-  void handleSubmit() async {
+  Future<void> handleSubmit() async {
     try {
       await ref.read(signUpProvider.notifier).signUp(
             id: idInputController.text,

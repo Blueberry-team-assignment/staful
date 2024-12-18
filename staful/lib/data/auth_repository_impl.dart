@@ -10,7 +10,7 @@ abstract class AuthInterface {
     required String userId,
     required String password,
   });
-  Future<String> logIn({
+  Future<UserCredential> logIn({
     required String userId,
     required String password,
   });
@@ -44,7 +44,7 @@ class AuthRepository implements AuthInterface {
 
   // 로그인
   @override
-  Future<String> logIn({
+  Future<UserCredential> logIn({
     required String userId,
     required String password,
   }) async {
@@ -55,7 +55,7 @@ class AuthRepository implements AuthInterface {
         password: password,
       );
       print('User logged in: ${userCredential.user?.uid}');
-      return userCredential.user!.uid;
+      return userCredential;
     } catch (e) {
       throw Exception('로그인 실패: $e');
     }
