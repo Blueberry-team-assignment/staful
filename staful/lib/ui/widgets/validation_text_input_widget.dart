@@ -38,7 +38,6 @@ class _ValidationTextInputWidgetState extends State<ValidationTextInputWidget> {
   @override
   void dispose() {
     widget.controller.removeListener(onInputChanged);
-    widget.controller.dispose();
     super.dispose();
   }
 
