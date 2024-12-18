@@ -36,7 +36,7 @@ String? validateName(String? value) {
   return null;
 }
 
-String? validateStoreName(String? value) {
+String? validateBusinessName(String? value) {
   final RegExp nameRegExp = RegExp(
     r'^[a-zA-Z가-힣0-9\s]+$', // 한글, 영어, 숫자, 공백만 허용
     unicode: true,

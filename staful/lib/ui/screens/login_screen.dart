@@ -1,9 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/screens/calendar/calendar_screen.dart';
-import 'package:staful/ui/screens/join_screen.dart';
+import 'package:staful/feature/sign_up/sign_up_screen.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 import 'package:staful/ui/widgets/validation_text_input_widget.dart';
 import 'package:staful/domain/utils/navigation_helpers.dart';
@@ -18,17 +17,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isIdInputFilled = false;
   bool isPwInputFilled = false;
-  // bool get isLoginButtonEnabled => isIdInputFilled && isPwInputFilled;
   final idInputController = TextEditingController();
   final pwInputController = TextEditingController();
   bool get isLoginButtonEnabled =>
       idInputController.text.isNotEmpty && pwInputController.text.isNotEmpty;
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  // }
 
   @override
   void dispose() {
@@ -197,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const JoinScreen(),
+                          builder: (context) => const SignUpScreen(),
                           // fullscreenDialog: true,
                         ),
                       );

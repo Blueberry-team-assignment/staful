@@ -30,6 +30,7 @@ class User {
   // Firestore에 저장할 때 사용
   Map<String, dynamic> toFirestore() {
     return {
+      'uid': uid,
       'userId': userId,
       'name': name,
       'businessName': businessName,

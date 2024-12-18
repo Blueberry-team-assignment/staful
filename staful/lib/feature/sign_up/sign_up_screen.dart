@@ -1,41 +1,68 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/sign_up/sign_up_provider.dart';
 import 'package:staful/ui/screens/login_screen.dart';
 import 'package:staful/domain/utils/form_validators.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 import 'package:staful/ui/widgets/validation_text_input_widget.dart';
 
-class JoinScreen extends StatefulWidget {
-  const JoinScreen({super.key});
+class SignUpScreen extends ConsumerStatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<JoinScreen> createState() => _JoinScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _JoinScreenState extends State<JoinScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   bool isIdInputFilled = false;
   bool isPwInputFilled = false;
   bool isPwConfirmInputFilled = false;
-  bool isStoreNameInputFilled = false;
-  bool isStoreOwnerNameInputFilled = false;
-  bool isOpenDateInputFilled = false;
+  bool isBusinessNameInputFilled = false;
+  bool isBusinessOwnerNameInputFilled = false;
+  bool isOpeningDateInputFilled = false;
 
   final idInputController = TextEditingController();
   final pwInputController = TextEditingController();
   final pwConfirmInputController = TextEditingController();
-  final storeNameInputController = TextEditingController();
-  final storeOwnerNameInputController = TextEditingController();
-  final openDateInputController = TextEditingController();
+  final businessNameInputController = TextEditingController();
+  final businessOwnerNameInputController = TextEditingController();
+  final openingDateInputController = TextEditingController();
+  late final List<TextEditingController> controllers = [
+    idInputController,
+    pwInputController,
+    pwConfirmInputController,
+    businessNameInputController,
+    businessOwnerNameInputController,
+    openingDateInputController
+  ];
 
   bool get isSubmitButtonEnabled =>
       isIdInputFilled &&
       isPwInputFilled &&
       isPwConfirmInputFilled &&
-      isStoreNameInputFilled &&
-      isStoreOwnerNameInputFilled &&
-      isOpenDateInputFilled;
+      isBusinessNameInputFilled &&
+      isBusinessOwnerNameInputFilled &&
+      isOpeningDateInputFilled;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    for (var controller in controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void handleSubmit() async {
+    ref.read(signUpProvider.notifier).signUp(
+          id: idInputController.text,
+          password: pwInputController.text,
+          name: businessOwnerNameInputController.text,
+          businessName: businessNameInputController.text,
+          openingDate: DateTime.parse(openingDateInputController.text),
+        );
+  }
 
   void handleIdInputChanged(String text) {
     setState(() {
@@ -56,34 +83,25 @@ class _JoinScreenState extends State<JoinScreen> {
     });
   }
 
-  void handleStoreNameInputChanged(String text) {
+  void handleBusinessNameInputChanged(String text) {
     setState(() {
-      isStoreNameInputFilled = validateStoreName(text) == null;
+      isBusinessNameInputFilled = validateBusinessName(text) == null;
     });
   }
 
-  void handleStoreOwnerNameInputChanged(String text) {
+  void handleBusinessOwnerNameInputChanged(String text) {
     setState(() {
-      isStoreOwnerNameInputFilled = validateName(text) == null;
+      isBusinessOwnerNameInputFilled = validateName(text) == null;
     });
   }
 
-  void handleOpenDateInputChanged(String text) {
+  void handleOpeningDateInputChanged(String text) {
     setState(() {
-      isOpenDateInputFilled = text.isNotEmpty;
+      isOpeningDateInputFilled = text.isNotEmpty;
     });
   }
 
   void clearAllInputs() {
-    final controllers = [
-      idInputController,
-      pwInputController,
-      pwConfirmInputController,
-      storeNameInputController,
-      storeOwnerNameInputController,
-      openDateInputController
-    ];
-
     for (var controller in controllers) {
       controller.clear();
     }
@@ -102,7 +120,7 @@ class _JoinScreenState extends State<JoinScreen> {
       );
 
       if (date != null) {
-        openDateInputController.text = date.toString().split(" ")[0];
+        openingDateInputController.text = date.toIso8601String().split('T')[0];
       }
     }
 
@@ -231,10 +249,10 @@ class _JoinScreenState extends State<JoinScreen> {
                         ValidationTextInputWidget(
                           label: "storeName".tr(),
                           placeHolder: "매장명을 입력하세요.",
-                          onChanged: handleStoreNameInputChanged,
-                          errorText:
-                              validateStoreName(storeNameInputController.text),
-                          controller: storeNameInputController,
+                          onChanged: handleBusinessNameInputChanged,
+                          errorText: validateBusinessName(
+                              businessNameInputController.text),
+                          controller: businessNameInputController,
                         ),
                         const SizedBox(
                           height: inputGap,
@@ -242,10 +260,10 @@ class _JoinScreenState extends State<JoinScreen> {
                         ValidationTextInputWidget(
                           label: "ownerName".tr(),
                           placeHolder: "ownerNamePlaceholder".tr(),
-                          onChanged: handleStoreOwnerNameInputChanged,
-                          errorText:
-                              validateName(storeOwnerNameInputController.text),
-                          controller: storeOwnerNameInputController,
+                          onChanged: handleBusinessOwnerNameInputChanged,
+                          errorText: validateName(
+                              businessOwnerNameInputController.text),
+                          controller: businessOwnerNameInputController,
                         ),
                         const SizedBox(
                           height: inputGap,
@@ -257,8 +275,8 @@ class _JoinScreenState extends State<JoinScreen> {
                             child: ValidationTextInputWidget(
                               label: "openingDate".tr(),
                               placeHolder: "개업일을 입력하세요.",
-                              onChanged: handleOpenDateInputChanged,
-                              controller: openDateInputController,
+                              onChanged: handleOpeningDateInputChanged,
+                              controller: openingDateInputController,
                             ),
                           ),
                         )
@@ -274,6 +292,7 @@ class _JoinScreenState extends State<JoinScreen> {
                 onTap: () => {
                   if (isSubmitButtonEnabled)
                     {
+                      handleSubmit(),
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const LoginScreen(),

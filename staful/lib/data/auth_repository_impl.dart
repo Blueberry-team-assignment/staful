@@ -1,8 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final authRepositoryProvider = Provider<AuthInterface>((ref) {
+  return AuthRepository(FirebaseAuth.instance);
+});
 
 abstract class AuthInterface {
-  Future<String> registerUser(String userId, String password);
-  Future<String> loginUser(String userId, String password);
+  Future<String> signUp({
+    required String userId,
+    required String password,
+  });
+  Future<String> logIn({
+    required String userId,
+    required String password,
+  });
+  Future<User?> checkUser();
+  Future<void> logOut();
 }
 
 class AuthRepository implements AuthInterface {
@@ -12,7 +25,10 @@ class AuthRepository implements AuthInterface {
 
   // 회원가입
   @override
-  Future<String> registerUser(String userId, String password) async {
+  Future<String> signUp({
+    required String userId,
+    required String password,
+  }) async {
     try {
       final email = '$userId@staful.com'; // userId를 이메일처럼 처리
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -28,7 +44,10 @@ class AuthRepository implements AuthInterface {
 
   // 로그인
   @override
-  Future<String> loginUser(String userId, String password) async {
+  Future<String> logIn({
+    required String userId,
+    required String password,
+  }) async {
     try {
       final email = '$userId@staful.com';
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
@@ -40,5 +59,19 @@ class AuthRepository implements AuthInterface {
     } catch (e) {
       throw Exception('로그인 실패: $e');
     }
+  }
+
+  // 로그인된 유저 체크
+  @override
+  Future<User?> checkUser() async {
+    User? user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('User not found');
+    return user;
+  }
+
+  // 로그아웃
+  @override
+  Future<void> logOut() async {
+    await _firebaseAuth.signOut();
   }
 }

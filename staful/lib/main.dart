@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/firebase_options.dart';
 import 'package:staful/script/add_dummy_data.dart';
 import 'package:staful/ui/screens/login_screen.dart';
@@ -17,13 +18,15 @@ void main() async {
   await initializeDateFormatting();
 
   runApp(
-    EasyLocalization(
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('ko', 'KR'),
-      ],
-      path: 'lib/assets/translations',
-      child: const STAFull(),
+    ProviderScope(
+      child: EasyLocalization(
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('ko', 'KR'),
+        ],
+        path: 'lib/assets/translations',
+        child: const STAFull(),
+      ),
     ),
   );
 }
