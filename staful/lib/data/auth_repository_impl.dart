@@ -57,7 +57,7 @@ class AuthRepository implements AuthInterface {
       print('User logged in: ${userCredential.user?.uid}');
       return userCredential;
     } catch (e) {
-      throw Exception('로그인 실패: $e');
+      throw Exception(e);
     }
   }
 

@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/sign_up/sign_up_provider.dart';
-import 'package:staful/feature/log_in/log_in_screen.dart';
 import 'package:staful/domain/utils/form_validators.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
@@ -70,11 +69,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
       ConfirmationDialog.show(
           context: context,
-          onConfirm: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),
-                ),
-              ),
+          onConfirm: () => Navigator.of(context).pop(),
           showCancelButton: false,
           message: "회원가입이 완료되었습니다");
     } catch (e) {
@@ -148,27 +143,27 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     final signUpState = ref.watch(signUpProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.language_outlined),
-            onPressed: () => context.setLocale(
-              Localizations.localeOf(context).toString() == "ko_KR"
-                  ? const Locale('en', 'US')
-                  : const Locale('ko', 'KR'),
-            ),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.language_outlined),
+                onPressed: () => context.setLocale(
+                  Localizations.localeOf(context).toString() == "ko_KR"
+                      ? const Locale('en', 'US')
+                      : const Locale('ko', 'KR'),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Stack(
-        children: [
-          Container(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          body: Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 30,
-              vertical: 80,
+              vertical: 30,
             ),
             child: SingleChildScrollView(
               child: Column(
@@ -314,16 +309,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               ),
             ),
           ),
-          // 로딩 상태 오버레이
-          if (signUpState.isLoading)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+        ),
+        // 로딩 상태 오버레이
+        if (signUpState.isLoading)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(
+              child: CircularProgressIndicator(),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

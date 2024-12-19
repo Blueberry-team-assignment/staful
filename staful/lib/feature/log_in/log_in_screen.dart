@@ -78,24 +78,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final logInState = ref.watch(logInProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.language_outlined),
-            onPressed: () => context.setLocale(
-              Localizations.localeOf(context).toString() == "ko_KR"
-                  ? const Locale('en', 'US')
-                  : const Locale('ko', 'KR'),
-            ),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.language_outlined),
+                onPressed: () => context.setLocale(
+                  Localizations.localeOf(context).toString() == "ko_KR"
+                      ? const Locale('en', 'US')
+                      : const Locale('ko', 'KR'),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Stack(
-        children: [
-          Container(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          body: Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 30,
             ),
@@ -250,15 +250,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
           ),
-          if (logInState.isLoading)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+        ),
+        if (logInState.isLoading)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(
+              child: CircularProgressIndicator(),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }
