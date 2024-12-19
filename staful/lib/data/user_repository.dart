@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staful/domain/models/user_model.dart';
-import 'package:staful/dto/sign_up_dto.dart';
+import 'package:staful/dto/auth/sign_up_dto.dart';
 
 final userRepositoryProvider = Provider<UserInterface>((ref) {
   return UserRepository(FirebaseFirestore.instance);

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/staff_repository_impl.dart';
+import 'package:staful/data/staff_repository.dart';
 import 'package:staful/domain/models/staff_model.dart';
 import 'package:staful/domain/staff_repository.dart';
 

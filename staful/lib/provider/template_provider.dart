@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/template_repository_impl.dart';
+import 'package:staful/data/template_repository.dart';
 import 'package:staful/domain/models/template_model.dart';
 import 'package:staful/domain/template_repository.dart';
 

@@ -1,0 +1,3 @@
+class UpdateStaffDto {}
+
+class CreateStaffDto {}

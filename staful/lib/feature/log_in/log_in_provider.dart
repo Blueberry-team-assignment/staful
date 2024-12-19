@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/auth_repository_impl.dart';
-import 'package:staful/data/user_repository_impl.dart';
-import 'package:staful/dto/log_in_dto.dart';
+import 'package:staful/data/auth_repository.dart';
+import 'package:staful/data/user_repository.dart';
+import 'package:staful/dto/auth/log_in_dto.dart';
 
 final logInProvider =
     StateNotifierProvider.autoDispose<LogInNotifier, LogInState>((ref) {
