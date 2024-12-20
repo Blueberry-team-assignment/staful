@@ -3,7 +3,7 @@ import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 
 class OverlaySearchResultsWidget extends StatefulWidget {
-  final List<String> suggestions;
+  final List<String>? suggestions;
   final TextEditingController controller;
   final void Function(String) onSelect;
   final bool staffSearch;
@@ -57,7 +57,7 @@ class OverlaySearchResultsWidgetState
     final filteredSuggestions = _searchByChosung(inputText);
 
     // 필터링된 리스트가 비어 있으면 오버레이를 표시하지 않음
-    if (filteredSuggestions.isEmpty) return;
+    if (filteredSuggestions!.isEmpty) return;
 
     // 오버레이 생성
     _overlayEntry = _createOverlay(filteredSuggestions);
@@ -65,10 +65,10 @@ class OverlaySearchResultsWidgetState
   }
 
   // 초성 검색 로직 (초성+중성)
-  List<String> _searchByChosung(String input) {
+  List<String>? _searchByChosung(String input) {
     final inputChosung = decomposeHangul(input); // 입력된 텍스트를
 
-    return widget.suggestions.where((suggestion) {
+    return widget.suggestions?.where((suggestion) {
       String chosungName = decomposeHangul(suggestion);
       return chosungName.startsWith(inputChosung);
     }).toList();

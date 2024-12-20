@@ -1,4 +1,4 @@
-import 'package:staful/domain/models/staff_model.dart';
+import 'package:staful/data/models/staff_model.dart';
 
 // class Template {
 //   final String name;

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/domain/models/staff_model.dart';
+import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/ui/screens/staff/staff_screen.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:staful/domain/utils/time_utils.dart';

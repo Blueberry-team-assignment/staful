@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/domain/models/template_model.dart';
+import 'package:staful/data/models/template_model.dart';
 import 'package:staful/ui/screens/staff/staff_info_screen.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';

@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:staful/domain/models/staff_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/data/models/staff_model.dart';
+import 'package:staful/domain/utils/dummies.dart';
+import 'package:staful/feature/staff/staff_provider.dart';
 import 'package:staful/ui/screens/staff/staff_info_screen.dart';
 import 'package:staful/domain/utils/app_styles.dart';
-import 'package:staful/domain/utils/dummies.dart';
 import 'package:staful/domain/utils/navigation_helpers.dart';
 import 'package:staful/ui/widgets/overlay_search_results_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 
-class StaffScreen extends StatefulWidget {
+class StaffScreen extends ConsumerStatefulWidget {
   const StaffScreen({super.key});
 
   @override
-  StaffScreenState createState() => StaffScreenState();
+  ConsumerState<StaffScreen> createState() => StaffScreenState();
 }
 
-class StaffScreenState extends State<StaffScreen> {
+class StaffScreenState extends ConsumerState<StaffScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  List<String> searchSuggestions = (STAFFS.map((staff) => staff.name)).toList();
+  late List<String>? searchSuggestions;
+  late List<Staff>? searchedStaff;
 
-  late List<Staff> searchedStaff = STAFFS;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    searchedStaff = ref.read(staffNotifierProvider).staffList;
+    searchSuggestions = searchedStaff?.map((staff) => staff.name).toList();
+  }
 
   void onSearchInputChanged(String text) {
     // 검색어가 변경될 때마다 호출됨
     // print(text);
     if (text.isEmpty) {
       setState(() {
-        searchedStaff = STAFFS;
+        searchedStaff = ref.read(staffNotifierProvider).staffList;
       });
     }
   }
@@ -36,8 +45,11 @@ class StaffScreenState extends State<StaffScreen> {
     searchInputController.text = suggestion;
 
     setState(() {
-      searchedStaff =
-          STAFFS.where((staff) => staff.name == suggestion).toList();
+      searchedStaff = ref
+          .read(staffNotifierProvider)
+          .staffList
+          ?.where((staff) => staff.name == suggestion)
+          .toList();
     });
   }
 
@@ -85,16 +97,16 @@ class StaffScreenState extends State<StaffScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                "총 ${searchedStaff.length}명",
+                "총 ${searchedStaff?.length}명",
                 style: TextStyleConfig(size: 14).setTextStyle(),
               )
             ],
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: searchedStaff.length, // 스태프 수에 따라 아이템 수 결정
+              itemCount: searchedStaff?.length, // 스태프 수에 따라 아이템 수 결정
               itemBuilder: (context, index) {
-                final Staff staff = searchedStaff[index];
+                final Staff staff = searchedStaff![index];
                 return Container(
                     margin: const EdgeInsets.only(
                       top: 10,

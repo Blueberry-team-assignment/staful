@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/domain/models/staff_model.dart';
-import 'package:staful/domain/models/template_model.dart';
+import 'package:staful/data/models/staff_model.dart';
+import 'package:staful/data/models/template_model.dart';
 import 'package:staful/dto/template/create_template_dto.dart';
 import 'package:staful/dto/template/update_template_dto.dart';
 
