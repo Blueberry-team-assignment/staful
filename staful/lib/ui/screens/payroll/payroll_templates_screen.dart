@@ -16,7 +16,7 @@ final List<PayDetail> defaultList = [
   PayDetail(description: "시급", amount: 0, type: PayType.hourly),
 ];
 
-final emptyTemplate = TemplateModel(
+final emptyTemplate = Template(
   name: "",
   payDetails: defaultList,
   staffList: [],
@@ -35,7 +35,7 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
   List<String> searchSuggestions =
       TEMPLATES.map((template) => template.name).toList();
 
-  late List<TemplateModel> searchedTemplates = TEMPLATES;
+  late List<Template> searchedTemplates = TEMPLATES;
 
   @override
   void initState() {
@@ -45,14 +45,14 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
   Future<void> _navigateAndUpdateTemplate({
     required BuildContext context,
     required Widget Function(BuildContext) builder,
-    required void Function(TemplateModel) onResult,
+    required void Function(Template) onResult,
   }) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: builder),
     );
 
-    if (result != null && result is TemplateModel) {
+    if (result != null && result is Template) {
       onResult(result); // 결과값을 처리하는 콜백
       searchInputController.clear();
     }
@@ -84,7 +84,7 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
   }
 
   // 템플릿 추가 시 로직
-  void _onAddTemplate(TemplateModel newTemplate) {
+  void _onAddTemplate(Template newTemplate) {
     setState(() {
       TEMPLATES.add(newTemplate);
       searchSuggestions = TEMPLATES.map((template) => template.name).toList();
@@ -92,7 +92,7 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
   }
 
   // 템플릿 수정 시 로직
-  void _onUpdateTemplate(TemplateModel updatedTemplate, int index) {
+  void _onUpdateTemplate(Template updatedTemplate, int index) {
     setState(() {
       TEMPLATES[index] = updatedTemplate;
       searchSuggestions = TEMPLATES.map((template) => template.name).toList();
@@ -162,7 +162,7 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
               child: ListView.builder(
                 itemCount: searchedTemplates.length, // 템플릿 수에 따라 아이템 수 결정
                 itemBuilder: (context, index) {
-                  final TemplateModel template = searchedTemplates[index];
+                  final Template template = searchedTemplates[index];
                   return Container(
                     margin: const EdgeInsets.only(top: 10),
                     child: GestureDetector(
@@ -189,7 +189,7 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
 
 // 템플릿 카드 UI 빌드
 ColumnItemContainer buildTemplateCards(
-    BuildContext context, TemplateModel template) {
+    BuildContext context, Template template) {
   final staffList = template.staffList;
 
   return ColumnItemContainer(

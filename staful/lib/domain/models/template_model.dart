@@ -1,24 +1,24 @@
 import 'package:staful/domain/models/staff_model.dart';
 
-class TemplateModel {
-  final String name;
-  final List<PayDetail> payDetails;
-  List<Staff> staffList;
-  int templateId;
+// class Template {
+//   final String name;
+//   final List<PayDetail> payDetails;
+//   List<String> staffIds;
+//   int templateId;
 
-  TemplateModel({
-    required this.name,
-    required this.payDetails,
-    required this.staffList,
-    required this.templateId,
-  });
+//   Template({
+//     required this.name,
+//     required this.payDetails,
+//     required this.staffIds,
+//     required this.templateId,
+//   });
 
-  // void getStaffList(List<Staff> staffList, String templateName) {
-  //   this.staffList = staffList
-  //       .where((staff) => staff.template.name == templateName)
-  //       .toList();
-  // }
-}
+// void getStaffList(List<Staff> staffList, String templateName) {
+//   this.staffList = staffList
+//       .where((staff) => staff.template.name == templateName)
+//       .toList();
+// }
+// }
 
 class PayDetail {
   final PayType type;
@@ -54,29 +54,32 @@ class SelectablePayDetail {
   }
 }
 
-class SelectableTemplate {
+class Template {
   final String name;
-  final List<SelectablePayDetail> payDetails; // 지급 세부사항
-  final List<String> staffIds; // 이 템플릿을 사용하는 스태프 ID
+  final List<SelectablePayDetail>? payDetails; // 지급 세부사항
+  final List<String>? staffIds; // 이 템플릿을 사용하는 스태프 ID
+  final List<String> templateId;
 
   // UI 관련 상태 변수
   bool isSelected; // 선택 여부
   bool isVisible; // 보임 여부
 
-  SelectableTemplate({
+  Template({
     required this.name,
     required this.payDetails,
-    required this.staffIds,
+    this.staffIds,
+    required this.templateId,
     this.isSelected = false, // 기본값: 선택되지 않음
     this.isVisible = true, // 기본값: 보임
   });
 
   // Firestore 데이터를 기반으로 인스턴스를 생성하는 팩토리 메서드
-  factory SelectableTemplate.fromFirestore(Map<String, dynamic> data) {
-    return SelectableTemplate(
+  factory Template.fromFirestore(Map<String, dynamic> data) {
+    return Template(
       name: data["name"],
       payDetails: List<SelectablePayDetail>.from(data["payDetails"]),
       staffIds: List<String>.from(data["staffIds"]),
+      templateId: data["templateId"],
     );
   }
 
@@ -86,6 +89,7 @@ class SelectableTemplate {
       "name": name,
       "payDetails": payDetails,
       "staffIds": staffIds,
+      "templateId": templateId,
     };
   }
 }

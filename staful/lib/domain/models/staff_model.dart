@@ -49,11 +49,13 @@ import 'package:staful/domain/utils/time_utils.dart';
 
 class Staff {
   final String name;
-  final String image;
-  final List<String> workDays;
-  final TimeRange workHours;
+  final String? image;
+  final List<String>? workDays;
+  final TimeRange? workHours;
   final List<String>? workDate;
-  final int templateId;
+  final String templateId;
+  final String staffId;
+  final String? desc;
 
   // UI 관련 상태 변수
   bool isSelected; // 선택 여부
@@ -61,11 +63,13 @@ class Staff {
 
   Staff({
     required this.name,
-    required this.image,
-    required this.workDays,
-    required this.workHours,
+    this.image,
+    this.workDays,
+    this.workHours,
     this.workDate,
+    this.desc,
     required this.templateId,
+    required this.staffId,
     this.isSelected = false, // 기본값: 선택되지 않음
     this.isVisible = true, // 기본값: 보임
   });
@@ -97,6 +101,7 @@ class Staff {
       workHours: newWorkHour,
       workDate: List<String>.from(data["workDate"]),
       templateId: data["templateId"],
+      staffId: data["staffId"],
     );
   }
 
@@ -109,6 +114,7 @@ class Staff {
       "workHours": workHours,
       "workDate": workDate,
       "templateId": templateId,
+      "staffId": staffId,
     };
   }
 }

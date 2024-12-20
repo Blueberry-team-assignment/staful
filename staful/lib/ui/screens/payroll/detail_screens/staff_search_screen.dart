@@ -29,26 +29,26 @@ class StaffSearchScreen extends ConsumerStatefulWidget {
 
 class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  late List<SelectableStaff> selectableStaffs = [];
+  late List<Staff> Staffs = [];
 
   @override
   void initState() {
     super.initState();
-    _initializeSelectableStaffs();
+    _initializeStaffs();
   }
 
-  void _initializeSelectableStaffs() {
+  void _initializeStaffs() {
     final selectedStaffNames =
         widget.staffList.map((staff) => staff.name).toSet();
 
-    selectableStaffs = STAFFS
-        .map((staff) => SelectableStaff(
+    Staffs = STAFFS
+        .map((staff) => Staff(
               name: staff.name,
               image: staff.image,
               workDays: staff.workDays,
               workHours: staff.workHours,
               isSelected: selectedStaffNames.contains(staff.name),
-              templateId: staff.template.templateId,
+              templateId: staff.templateId,
             ))
         .toList();
   }
@@ -64,13 +64,13 @@ class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
   }
 
   void _showAllStaffs() {
-    for (var staff in selectableStaffs) {
+    for (var staff in Staffs) {
       staff.toggleVisibility(true);
     }
   }
 
   void _filterStaffsByName(String name) {
-    for (var staff in selectableStaffs) {
+    for (var staff in Staffs) {
       staff.toggleVisibility(staff.name.contains(name));
     }
   }
@@ -84,14 +84,13 @@ class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
 
   void _handleStaffTap(int index) {
     setState(() {
-      selectableStaffs[index].toggleSelected();
+      Staffs[index].toggleSelected();
     });
   }
 
   void _onTapSaveBtn(BuildContext context) {
-    final List<SelectableStaff> selectedStaffs = selectableStaffs
-        .where((staff) => staff.isSelected)
-        .toList();
+    final List<Staff> selectedStaffs =
+        Staffs.where((staff) => staff!.isSelected).toList();
 
     // widget.onListChange(selectedStaffs);
     Navigator.of(context).pop(selectedStaffs);
@@ -162,9 +161,9 @@ class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
 
   Widget _buildStaffList(Color lightColor) {
     return ListView.builder(
-      itemCount: selectableStaffs.length,
+      itemCount: Staffs.length,
       itemBuilder: (context, index) {
-        final staff = selectableStaffs[index];
+        final staff = Staffs[index];
         if (!staff.isVisible) return const SizedBox.shrink();
 
         return GestureDetector(
@@ -178,14 +177,13 @@ class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
     );
   }
 
-  Widget _buildStaffRow(SelectableStaff staff) {
+  Widget _buildStaffRow(Staff staff) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
-            StaffProfileWidget(
-                imagePath: "lib/assets/images/${staff.image}"),
+            StaffProfileWidget(imagePath: "lib/assets/images/${staff.image}"),
             const SizedBox(width: 10),
             Text(
               staff.name,

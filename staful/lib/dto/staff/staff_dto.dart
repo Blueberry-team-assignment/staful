@@ -1,3 +1,0 @@
-class UpdateStaffDto {}
-
-class CreateStaffDto {}

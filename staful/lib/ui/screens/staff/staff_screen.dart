@@ -136,7 +136,7 @@ class StaffScreenState extends State<StaffScreen> {
             ),
           ),
           WorkDaysRow(
-            workDays: staff.workDays,
+            workDays: staff.workDays!,
           )
         ],
       ),

@@ -34,10 +34,10 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
   late XFile imageController;
   late List<String> workDaysController;
 
-  String get weeklyWorkTime => widget.staffInfo.weeklyWorkingHours["minute"]! >
-          0
-      ? "${widget.staffInfo.weeklyWorkingHours["hour"]}시간 ${widget.staffInfo.weeklyWorkingHours["minute"]}분"
-      : "${widget.staffInfo.weeklyWorkingHours["hour"]}시간";
+  // String get weeklyWorkTime => widget.staffInfo.weeklyWorkingHours["minute"]! >
+  //         0
+  //     ? "${widget.staffInfo.weeklyWorkingHours["hour"]}시간 ${widget.staffInfo.weeklyWorkingHours["minute"]}분"
+  //     : "${widget.staffInfo.weeklyWorkingHours["hour"]}시간";
 
   @override
   void initState() {
@@ -46,12 +46,12 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
 
     // 수정화면에 보여줄 입력값들 초기화
     updatedSchedule = TimeRange(
-        startTime: widget.staffInfo.workHours.startTime,
-        endTime: widget.staffInfo.workHours.endTime);
+        startTime: widget.staffInfo.workHours!.startTime,
+        endTime: widget.staffInfo.workHours!.endTime);
     imageController = XFile("lib/assets/images/${widget.staffInfo.image}");
     nameController.text = widget.staffInfo.name;
-    memoFieldController.text = widget.staffInfo.memo;
-    workDaysController = widget.staffInfo.workDays;
+    memoFieldController.text = widget.staffInfo.desc!;
+    workDaysController = widget.staffInfo.workDays!;
   }
 
   void handleOnUpdateOpeningHour(DateTime time) {
@@ -245,7 +245,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                             height: 10,
                           ),
                           WorkDaysRow(
-                            workDays: widget.staffInfo.workDays,
+                            workDays: widget.staffInfo.workDays!,
                             disabled: !isOnEditMode,
                           )
                         ],
@@ -307,7 +307,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                     children: [
                                       const TextSpan(text: "해당 직원은"),
                                       TextSpan(
-                                          text: " 주 $weeklyWorkTime ",
+                                          // text: " 주 $weeklyWorkTime ",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColor)),

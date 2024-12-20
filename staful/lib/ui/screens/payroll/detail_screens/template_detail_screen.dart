@@ -16,7 +16,7 @@ import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
-  final TemplateModel template;
+  final Template template;
   // final VoidCallback onSave;
 
   const TemplateDetailScreen({
@@ -44,7 +44,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
   void _initializeTemplateDetails() {
     templateNameController.text = widget.template.name;
-    payDetails = List.from(widget.template.payDetails);
+    payDetails = List.from(widget.template.payDetails!.toList());
     staffs = List.from(widget.template.staffList);
   }
 
@@ -74,10 +74,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
 
   void _handleSave(BuildContext context) {
     final payDetails = _collectPayDetailsFromInput();
-    final newTemplate = TemplateModel(
+    final newTemplate = Template(
       name: templateNameController.text,
       payDetails: payDetails,
-      staffList: staffs,
+      staffIds: staffs,
       templateId: 99,
     );
 
