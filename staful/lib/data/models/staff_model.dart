@@ -53,7 +53,6 @@ class Staff {
   final List<String>? workDays;
   final TimeRange? workHours;
   final List<String>? workDate;
-  final String templateId;
   final String staffId;
   final String? desc;
 
@@ -68,7 +67,6 @@ class Staff {
     this.workHours,
     this.workDate,
     this.desc,
-    required this.templateId,
     required this.staffId,
     this.isSelected = false, // 기본값: 선택되지 않음
     this.isVisible = true, // 기본값: 보임
@@ -100,7 +98,6 @@ class Staff {
       workDays: List<String>.from(data["workDays"]),
       workHours: newWorkHour,
       workDate: List<String>.from(data["workDate"]),
-      templateId: data["templateId"],
       staffId: data["staffId"],
     );
   }
@@ -113,8 +110,32 @@ class Staff {
       "workDays": workDays,
       "workHours": workHours,
       "workDate": workDate,
-      "templateId": templateId,
       "staffId": staffId,
     };
+  }
+
+  Staff copyWith({
+    String? name,
+    String? templateId,
+    String? staffId,
+    String? desc,
+    String? image,
+    List<String>? workDate,
+    List<String>? workDays,
+    TimeRange? workHours,
+    bool? isSelected,
+    bool? isVisible,
+  }) {
+    return Staff(
+      name: name ?? this.name,
+      staffId: staffId ?? this.staffId,
+      desc: desc ?? this.desc,
+      image: image ?? this.image,
+      workDate: workDate ?? this.workDate,
+      workDays: workDays ?? this.workDays,
+      workHours: workHours ?? this.workHours,
+      isSelected: isSelected ?? this.isSelected,
+      isVisible: isVisible ?? this.isVisible,
+    );
   }
 }

@@ -15,34 +15,49 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
 
   StaffInfoNotifier(this._staffRepository) : super(StaffInfoState());
 
-  void toggleEditMode() {
-    state = state.copyWith(isEditMode: !state.isEditMode);
+  void loadStaffInfo(Staff staff) {
+    state = state.copyWith(
+        originalStaffInfo: staff, editableStaffInfo: staff.copyWith());
   }
 
   void updateStaffInfoState(Staff? staffInfo) {
-    if (staffInfo != null) {
-      state = state.copyWith(staffInfo: staffInfo);
-    }
+    state = state.copyWith(editableStaffInfo: staffInfo);
   }
 
-  Future<void> updateStaff(String uid, UpdateStaffDto updateStaffDto) async {
+  void saveStaffInfo() {
+    state = state.copyWith(originalStaffInfo: state.editableStaffInfo);
+    // 서버 업데이트 로직 추가
+  }
+
+  void resetEditableStaff() {
+    state =
+        state.copyWith(editableStaffInfo: state.originalStaffInfo!.copyWith());
+  }
+
+  Future<void> updateStaff({
+    required String uid,
+    required UpdateStaffDto updateStaffDto,
+  }) async {
     try {
       state = state.copyWith(isLoading: true);
       final updatedStaff = await _staffRepository.updateStaff(
           uid: uid, updateStaffDto: updateStaffDto);
-      state = state.copyWith(staffInfo: updatedStaff, isLoading: false);
+      state = state.copyWith(originalStaffInfo: updatedStaff, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
       throw Exception('Failed to update staff: $e');
     }
   }
 
-  Future<void> createStaff(String uid, CreateStaffDto createStaffDto) async {
+  Future<void> createStaff({
+    required String uid,
+    required CreateStaffDto createStaffDto,
+  }) async {
     try {
       state = state.copyWith(isLoading: true);
       final newStaff = await _staffRepository.createStaff(
           uid: uid, createStaffDto: createStaffDto);
-      state = state.copyWith(staffInfo: newStaff, isLoading: false);
+      state = state.copyWith(originalStaffInfo: newStaff, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
       throw Exception('Failed to create staff: $e');
@@ -51,25 +66,25 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
 }
 
 class StaffInfoState {
-  final Staff? staffInfo;
+  final Staff? originalStaffInfo;
+  final Staff? editableStaffInfo;
   final bool isLoading;
-  final bool isEditMode;
 
   StaffInfoState({
-    this.isEditMode = false,
     this.isLoading = false,
-    this.staffInfo,
+    this.originalStaffInfo,
+    this.editableStaffInfo,
   });
 
   StaffInfoState copyWith({
-    bool? isEditMode,
     bool? isLoading,
-    Staff? staffInfo,
+    Staff? originalStaffInfo,
+    Staff? editableStaffInfo,
   }) {
     return StaffInfoState(
-      isEditMode: isEditMode ?? this.isEditMode,
       isLoading: isLoading ?? this.isLoading,
-      staffInfo: staffInfo ?? this.staffInfo,
+      originalStaffInfo: originalStaffInfo ?? this.originalStaffInfo,
+      editableStaffInfo: editableStaffInfo ?? this.editableStaffInfo,
     );
   }
 }

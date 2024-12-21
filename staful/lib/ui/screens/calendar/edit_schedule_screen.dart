@@ -22,7 +22,7 @@ class EditScheduleScreen extends StatefulWidget {
 class _EditScheduleScreenState extends State<EditScheduleScreen> {
   bool isOnEditMode = false;
 
-  List<List<dynamic>> get scheduleInfo => [
+  List<TimeOfDay> get scheduleInfo => [
         widget.workHours[0].split(":").map(int.parse).toList(),
         widget.workHours[1].split(":").map(int.parse).toList()
       ];
@@ -342,7 +342,7 @@ class DeleteScheduleBtn extends StatelessWidget {
 }
 
 class TimePicker extends StatelessWidget {
-  final List scheduleInfo;
+  final TimeOfDay scheduleInfo;
   final Function(DateTime) onDateTimeChanged;
 
   const TimePicker({
@@ -363,8 +363,8 @@ class TimePicker extends StatelessWidget {
           DateTime.now().year,
           DateTime.now().month,
           DateTime.now().day,
-          scheduleInfo[0],
-          scheduleInfo[1],
+          scheduleInfo.hour,
+          scheduleInfo.minute,
         ),
         use24hFormat: true,
       ),

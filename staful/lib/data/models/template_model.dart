@@ -56,9 +56,9 @@ class SelectablePayDetail {
 
 class Template {
   final String name;
-  final List<SelectablePayDetail>? payDetails; // 지급 세부사항
+  final List<PayDetail>? payDetails; // 지급 세부사항
   final List<String>? staffIds; // 이 템플릿을 사용하는 스태프 ID
-  final List<String> templateId;
+  final String templateId;
 
   // UI 관련 상태 변수
   bool isSelected; // 선택 여부
@@ -77,7 +77,7 @@ class Template {
   factory Template.fromFirestore(Map<String, dynamic> data) {
     return Template(
       name: data["name"],
-      payDetails: List<SelectablePayDetail>.from(data["payDetails"]),
+      payDetails: List<PayDetail>.from(data["payDetails"]),
       staffIds: List<String>.from(data["staffIds"]),
       templateId: data["templateId"],
     );

@@ -19,8 +19,8 @@
 // final emptyTemplate = Template(
 //   name: "",
 //   payDetails: defaultList,
-//   staffList: [],
-//   templateId: 99,
+//   staffIds: [],
+//   templateId: "99",
 // );
 
 // class PayrollTemplatesScreen extends StatefulWidget {

@@ -1,23 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/staff/staff_info_provider.dart';
-import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/ui/screens/staff/staff_screen.dart';
+import 'package:staful/feature/staff/staff_info_provider.dart';
 import 'package:staful/domain/utils/app_styles.dart';
-import 'package:staful/domain/utils/time_utils.dart';
-import 'package:staful/ui/widgets/simple_text_button_widget.dart';
-import 'package:staful/ui/widgets/simple_text_input_widget.dart';
-import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:image_picker/image_picker.dart';
 
 class StaffInfoScreen extends ConsumerStatefulWidget {
-  final Staff? staffInfo; // null이면 직원 등록, 값이 있으면 조회/수정 모드
+  final Staff staffInfo; // 직원 정보는 필수 전달
 
   const StaffInfoScreen({
     super.key,
-    this.staffInfo,
+    required this.staffInfo,
   });
 
   @override
@@ -28,372 +24,143 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController memoFieldController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  bool get isCreateM
-
-  // String get weeklyWorkTime => widget.staffInfo.weeklyWorkingHours["minute"]! >
-  //         0
-  //     ? "${widget.staffInfo.weeklyWorkingHours["hour"]}시간 ${widget.staffInfo.weeklyWorkingHours["minute"]}분"
-  //     : "${widget.staffInfo.weeklyWorkingHours["hour"]}시간";
+  bool isEditMode = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    nameController.text = widget.staffInfo?.name ?? "";
-    memoFieldController.text = widget.staffInfo?.desc ?? "";
+    // StaffInfo 초기화
+    final notifier = ref.read(staffInfoNotifierProvider.notifier);
+    notifier.loadStaffInfo(widget.staffInfo);
+
+    // 컨트롤러 초기화
+    nameController.text = widget.staffInfo.name;
+    memoFieldController.text = widget.staffInfo.desc ?? "";
   }
 
-  void handleOnUpdateOpeningHour(DateTime time) {
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    nameController.dispose();
+    memoFieldController.dispose();
+    super.dispose();
+  }
+
+  // 수정 모드 토글
+  void toggleEditMode() {
     setState(() {
-      updatedSchedule = TimeRange(
-        startTime: TimeOfDay(hour: time.hour, minute: time.minute),
-        endTime: updatedSchedule.endTime,
-      );
+      isEditMode = !isEditMode;
     });
   }
 
-  void handleOnUpdateClosingHour(DateTime time) {
-    setState(() {
-      updatedSchedule = TimeRange(
-        startTime: updatedSchedule.startTime,
-        endTime: TimeOfDay(hour: time.hour, minute: time.minute),
-      );
-    });
+  // 저장 버튼 클릭
+  void onSave() {
+    final notifier = ref.read(staffInfoNotifierProvider.notifier);
+    notifier.saveStaffInfo();
+
+    // 저장 완료 후 보기 모드로 전환
+    toggleEditMode();
   }
 
-  void onTabEditBtn() {
-    setState(() {
-      isOnEditMode = true;
-      lastNameController = TextEditingController();
-      firstNameController = TextEditingController();
-    });
-  }
-
+  // 이미지 변경 버튼 클릭
   Future<void> onTapImgChangeBtn() async {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      setState(() {
-        imageController = XFile(pickedFile.path);
-      });
+      final notifier = ref.read(staffInfoNotifierProvider.notifier);
+      final currentStaff =
+          ref.read(staffInfoNotifierProvider).editableStaffInfo;
+      final updatedStaff = currentStaff?.copyWith(image: pickedFile.path);
+      notifier.updateStaffInfoState(updatedStaff);
     }
-  }
-
-  void onTabUndoBtn() {
-    setState(() {
-      isOnEditMode = false;
-    });
-  }
-
-  void onTapSaveBtn() {
-    setState(() {
-      isOnEditMode = false;
-    });
-  }
-
-  void handleFirstNameChanged(String inputText) {
-    print(inputText);
-  }
-
-  void handleLastNameChanged(String inputText) {
-    print(inputText);
   }
 
   @override
   Widget build(BuildContext context) {
-    final staff = ref.watch(staffInfoNotifierProvider).staffInfo;
+    final notifier = ref.read(staffInfoNotifierProvider.notifier);
+    final state = ref.watch(staffInfoNotifierProvider);
+
+    final editableStaff = state.editableStaffInfo;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: navigateBackAppBar(context),
+      appBar: AppBar(
+        title: const Text("직원 정보"),
+        actions: [
+          if (!isEditMode)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: toggleEditMode, // 수정 모드 활성화
+            ),
+        ],
+      ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-          vertical: 5,
-        ),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
-                          "직원 정보",
-                          style: TextStyleConfig(size: 24).setTextStyle(),
-                        ),
-                        isOnEditMode
-                            ? const SizedBox.shrink()
-                            : SizedBox(
-                                height: 29,
-                                child: SimpleTextButtonWidget(
-                                  onPressed: onTabEditBtn,
-                                  text: "수정",
-                                ),
-                              ),
-                      ],
+            // 직원 이름 입력 필드
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: "이름"),
+              readOnly: !isEditMode,
+              onChanged: (value) {
+                notifier.updateStaffInfoState(
+                  editableStaff?.copyWith(name: value),
+                );
+              },
+            ),
+            const SizedBox(height: 10),
+
+            // 직원 메모 입력 필드
+            TextField(
+              controller: memoFieldController,
+              decoration: const InputDecoration(labelText: "메모"),
+              readOnly: !isEditMode,
+              onChanged: (value) {
+                notifier.updateStaffInfoState(
+                  editableStaff?.copyWith(desc: value),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // 직원 이미지 표시 및 변경
+            Center(
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: editableStaff?.image != null
+                        ? FileImage(File(editableStaff!.image!))
+                        : null,
+                    child: editableStaff?.image == null
+                        ? const Icon(Icons.person, size: 40)
+                        : null,
+                  ),
+                  if (isEditMode)
+                    TextButton(
+                      onPressed: onTapImgChangeBtn,
+                      child: const Text("사진 변경"),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            StaffProfileWidget(
-                                imagePath: imageController.path, size: 64),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            if (widget.staffInfo?.isEditMode)
-                              SizedBox(
-                                height: 24,
-                                child: SimpleTextButtonWidget(
-                                  onPressed: onTapImgChangeBtn,
-                                  text: "사진 변경",
-                                ),
-                              ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    ColumnItemContainer(
-                      content: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "이름",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                isOnEditMode
-                                    ? Row(
-                                        children: [
-                                          Expanded(
-                                            child: SimpleTextInputWidget(
-                                              placeHolder: "성",
-                                              onChanged: handleLastNameChanged,
-                                              controller: lastNameController,
-                                              onlyBottomBorder: true,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 15,
-                                          ),
-                                          Expanded(
-                                            child: SimpleTextInputWidget(
-                                              placeHolder: "이름",
-                                              onChanged: handleFirstNameChanged,
-                                              controller: firstNameController,
-                                              onlyBottomBorder: true,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : Text(
-                                        widget.staffInfo.name,
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    ColumnItemContainer(
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "근무 요일",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          WorkDaysRow(
-                            workDays: widget.staffInfo.workDays!,
-                            disabled: !isOnEditMode,
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    ColumnItemContainer(
-                      content: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "근무 시간",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                if (isOnEditMode)
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TimePicker(
-                                          scheduleInfo:
-                                              updatedSchedule.startTime,
-                                          onDateTimeChanged:
-                                              handleOnUpdateOpeningHour,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        child: TimePicker(
-                                          scheduleInfo: updatedSchedule.endTime,
-                                          onDateTimeChanged:
-                                              handleOnUpdateClosingHour,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                else
-                                  WorkScheduleForDisplay(
-                                    workHours: updatedSchedule,
-                                  ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                RichText(
-                                  text: TextSpan(
-                                    style: TextStyleConfig(size: 13)
-                                        .setTextStyle(),
-                                    children: [
-                                      const TextSpan(text: "해당 직원은"),
-                                      TextSpan(
-                                          // text: " 주 $weeklyWorkTime ",
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor)),
-                                      const TextSpan(text: "근무입니다"),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          child: Text(
-                            "메모",
-                            style: TextStyleConfig(
-                              size: 14,
-                            ).setTextStyle(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    ColumnItemContainer(
-                      content: TextField(
-                        controller: memoFieldController,
-                        readOnly: !isOnEditMode,
-                        maxLines: null,
-                        minLines: 4,
-                        keyboardType: TextInputType.multiline,
-                        decoration: const InputDecoration(
-                          hintText: "직원에 대해 알아야 할 점을 자유롭게 기록하세요",
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
             ),
-            if (isOnEditMode)
+            const Spacer(),
+
+            // 저장 버튼
+            if (isEditMode)
               Row(
                 children: [
                   Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                            Theme.of(context).disabledColor),
-                      ),
-                      onPressed: onTabUndoBtn,
-                      child: const Text(
-                        "취소",
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                            Theme.of(context).primaryColor),
-                      ),
-                      onPressed: onTapSaveBtn,
-                      child: const Text(
-                        "저장",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+                    child: ElevatedButton(
+                      onPressed: onSave,
+                      child: const Text("저장"),
                     ),
                   ),
                 ],
               ),
-            const SizedBox(
-              height: bottomMargin,
-            ),
           ],
         ),
       ),
@@ -420,99 +187,6 @@ class ColumnItemContainer extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       child: content,
-    );
-  }
-}
-
-class DeleteScheduleBtn extends StatelessWidget {
-  final Function(BuildContext) onPressed;
-
-  const DeleteScheduleBtn({
-    super.key,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => onPressed(context),
-      style: ButtonStyle(
-        backgroundColor:
-            WidgetStateProperty.all<Color>(Theme.of(context).disabledColor),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-      ),
-      child: const Text(
-        "근무 삭제",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
-}
-
-class TimePicker extends StatelessWidget {
-  final TimeOfDay scheduleInfo;
-  final Function(DateTime) onDateTimeChanged;
-
-  const TimePicker({
-    super.key,
-    required this.scheduleInfo,
-    required this.onDateTimeChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: CupertinoDatePicker(
-        mode: CupertinoDatePickerMode.time,
-        minuteInterval: 10,
-        onDateTimeChanged: onDateTimeChanged,
-        initialDateTime: DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          scheduleInfo.hour,
-          scheduleInfo.minute,
-        ),
-        use24hFormat: true,
-      ),
-    );
-  }
-}
-
-class WorkScheduleForDisplay extends StatelessWidget {
-  final TimeRange workHours;
-
-  const WorkScheduleForDisplay({
-    super.key,
-    required this.workHours,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Text(
-          formatTimeOfDay(workHours.startTime),
-          style: TextStyleConfig(size: 20).setTextStyle(),
-        ),
-        Text(
-          "-",
-          style: TextStyleConfig(size: 20).setTextStyle(),
-        ),
-        Text(
-          formatTimeOfDay(workHours.endTime),
-          style: TextStyleConfig(size: 20).setTextStyle(),
-        )
-      ],
     );
   }
 }

@@ -34,7 +34,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
         createStaffDto: createStaffDto,
       );
       state = state.copyWith(
-        staffList: [...?state.staffList, newStaff],
+        staffList: [...state.staffList!, newStaff],
         isLoading: false,
       );
     } catch (e) {

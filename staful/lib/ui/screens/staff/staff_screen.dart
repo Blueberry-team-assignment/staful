@@ -6,6 +6,7 @@ import 'package:staful/feature/staff/staff_provider.dart';
 import 'package:staful/ui/screens/staff/staff_info_screen.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:staful/domain/utils/navigation_helpers.dart';
+import 'package:staful/ui/screens/staff/staff_register_screen.dart';
 import 'package:staful/ui/widgets/overlay_search_results_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
@@ -87,8 +88,11 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
           const SizedBox(
             height: 10,
           ),
-          const SubmitButtonWidget(
-            text: "직원 등록",
+          GestureDetector(
+            onTap: () => openPage(context, const StaffRegisterScreen()),
+            child: const SubmitButtonWidget(
+              text: "직원 등록",
+            ),
           ),
           const SizedBox(
             height: 20,

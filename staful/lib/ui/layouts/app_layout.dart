@@ -28,7 +28,7 @@ class _AppLayoutState extends State<AppLayout> {
   final List<Widget> _screens = [
     const CalendarScreen(),
     const StaffScreen(),
-    // const PayrollScreen(),
+    const PayrollScreen(),
     const SettingScreen(),
   ];
 
