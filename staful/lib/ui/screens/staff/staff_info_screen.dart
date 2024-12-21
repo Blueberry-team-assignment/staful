@@ -1,6 +1,7 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/staff/staff_info_provider.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/ui/screens/staff/staff_screen.dart';
@@ -11,28 +12,23 @@ import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:image_picker/image_picker.dart';
 
-class StaffInfoScreen extends StatefulWidget {
-  final Staff staffInfo;
+class StaffInfoScreen extends ConsumerStatefulWidget {
+  final Staff? staffInfo; // null이면 직원 등록, 값이 있으면 조회/수정 모드
 
   const StaffInfoScreen({
     super.key,
-    required this.staffInfo,
+    this.staffInfo,
   });
 
   @override
-  State<StaffInfoScreen> createState() => _StaffInfoScreenState();
+  ConsumerState<StaffInfoScreen> createState() => _StaffInfoScreenState();
 }
 
-class _StaffInfoScreenState extends State<StaffInfoScreen> {
-  bool isOnEditMode = false;
-  late TextEditingController lastNameController = TextEditingController();
-  late TextEditingController firstNameController = TextEditingController();
-  late TextEditingController nameController = TextEditingController();
+class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController memoFieldController = TextEditingController();
-  late TimeRange updatedSchedule;
   final ImagePicker _picker = ImagePicker();
-  late XFile imageController;
-  late List<String> workDaysController;
+  bool get isCreateM
 
   // String get weeklyWorkTime => widget.staffInfo.weeklyWorkingHours["minute"]! >
   //         0
@@ -44,14 +40,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
     // TODO: implement initState
     super.initState();
 
-    // 수정화면에 보여줄 입력값들 초기화
-    updatedSchedule = TimeRange(
-        startTime: widget.staffInfo.workHours!.startTime,
-        endTime: widget.staffInfo.workHours!.endTime);
-    imageController = XFile("lib/assets/images/${widget.staffInfo.image}");
-    nameController.text = widget.staffInfo.name;
-    memoFieldController.text = widget.staffInfo.desc!;
-    workDaysController = widget.staffInfo.workDays!;
+    nameController.text = widget.staffInfo?.name ?? "";
+    memoFieldController.text = widget.staffInfo?.desc ?? "";
   }
 
   void handleOnUpdateOpeningHour(DateTime time) {
@@ -113,6 +103,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final staff = ref.watch(staffInfoNotifierProvider).staffInfo;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: navigateBackAppBar(context),
@@ -160,7 +152,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                             const SizedBox(
                               height: 5,
                             ),
-                            if (isOnEditMode)
+                            if (widget.staffInfo?.isEditMode)
                               SizedBox(
                                 height: 24,
                                 child: SimpleTextButtonWidget(

@@ -1,26 +1,30 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/staff/staff_provider.dart';
 import 'package:staful/ui/screens/calendar/schedule_screen.dart';
 import 'package:staful/domain/utils/dummies.dart';
 import 'package:staful/domain/utils/navigation_helpers.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CalendarScreen extends StatefulWidget {
+class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({
     super.key,
   });
 
   @override
-  State<CalendarScreen> createState() => _CalendarScreenState();
+  ConsumerState<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-class _CalendarScreenState extends State<CalendarScreen> {
+class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
   List<Widget> staffProfileWidgets(BuildContext context) {
-    return STAFFS
+    return ref
+        .watch(staffNotifierProvider)
+        .staffList!
         .map((staff) => Padding(
               padding: const EdgeInsets.all(15),
               child: GestureDetector(
