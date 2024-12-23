@@ -73,10 +73,11 @@ class LogInNotifier extends StateNotifier<LogInState> {
   Future<void> checkAutoLogin() async {
     final user = _authInterface.checkUser();
     final savedUser = await _userInterface.loadUserFromPreferences();
-    
+
     if (user?.uid == savedUser["uid"]) {
       state = state.copyWith(isLoggedIn: true);
     } else {
+      _authInterface.logOut();
       state = state.copyWith(isLoggedIn: false);
     }
   }
