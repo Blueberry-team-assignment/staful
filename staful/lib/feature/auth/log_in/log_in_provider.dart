@@ -69,28 +69,43 @@ class LogInNotifier extends StateNotifier<LogInState> {
       rethrow;
     }
   }
+
+  Future<void> checkAutoLogin() async {
+    final user = _authInterface.checkUser();
+    final savedUser = await _userInterface.loadUserFromPreferences();
+    
+    if (user?.uid == savedUser["uid"]) {
+      state = state.copyWith(isLoggedIn: true);
+    } else {
+      state = state.copyWith(isLoggedIn: false);
+    }
+  }
 }
 
 class LogInState {
   final LogInDto? logInDto;
   final bool isLoading;
   final User? user;
+  final bool isLoggedIn;
 
   LogInState({
     this.logInDto,
     this.isLoading = false,
     this.user,
+    this.isLoggedIn = false,
   });
 
   LogInState copyWith({
     LogInDto? logInDto,
     bool? isLoading,
     User? user,
+    bool? isLoggedIn,
   }) {
     return LogInState(
       logInDto: logInDto ?? this.logInDto,
       isLoading: isLoading ?? this.isLoading,
       user: user ?? this.user,
+      isLoggedIn: isLoggedIn ?? this.isLoggedIn,
     );
   }
 }

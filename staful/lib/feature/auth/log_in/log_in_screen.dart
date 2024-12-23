@@ -76,7 +76,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.read(logInProvider.notifier).checkAutoLogin();
     final logInState = ref.watch(logInProvider);
+
+    if (logInState.isLoggedIn) {}
 
     return Stack(
       children: [

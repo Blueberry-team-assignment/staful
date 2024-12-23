@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final authRepositoryProvider = Provider<AuthInterface>((ref) {
   return AuthRepository(FirebaseAuth.instance);
@@ -14,7 +15,7 @@ abstract class AuthInterface {
     required String userId,
     required String password,
   });
-  Future<User?> checkUser();
+  User? checkUser();
   Future<void> logOut();
 }
 
@@ -63,8 +64,9 @@ class AuthRepository implements AuthInterface {
 
   // 로그인된 유저 체크
   @override
-  Future<User?> checkUser() async {
+  User? checkUser() {
     User? user = _firebaseAuth.currentUser;
+
     if (user == null) throw Exception('User not found');
     return user;
   }

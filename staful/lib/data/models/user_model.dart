@@ -1,10 +1,10 @@
 class User {
-  final String uid;          // Firebase Authentication에서 생성된 uid
-  final String userId;       // 사용자 ID
-  final String name;         // 사용자 이름
+  final String uid; // Firebase Authentication에서 생성된 uid
+  final String userId; // 사용자 ID
+  final String name; // 사용자 이름
   final String businessName; // 매장명
   final DateTime openingDate; // 개업일
-  final DateTime createdAt;  // 계정 생성일
+  final DateTime createdAt; // 계정 생성일
 
   User({
     required this.uid,
