@@ -22,9 +22,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
 
   List<Widget> staffProfileWidgets(BuildContext context) {
-    return ref
-        .watch(staffNotifierProvider)
-        .staffList!
+    final staffList = ref.watch(staffNotifierProvider).staffList;
+
+    if (staffList == null) {
+      return [const SizedBox.shrink()];
+    }
+
+    return staffList
         .map((staff) => Padding(
               padding: const EdgeInsets.all(15),
               child: GestureDetector(
@@ -35,7 +39,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   ),
                 ),
                 child: StaffProfileWidget(
-                  imagePath: "lib/assets/images/${staff.image}",
+                  imagePath: staff.image != null
+                      ? "lib/assets/images/${staff.image}"
+                      : null,
                   name: staff.name,
                 ),
               ),

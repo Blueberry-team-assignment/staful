@@ -140,7 +140,9 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
             child: Row(
               children: [
                 StaffProfileWidget(
-                    imagePath: "lib/assets/images/${staff.image}"),
+                    imagePath: staff.image != null
+                        ? "lib/assets/images/${staff.image}"
+                        : null),
                 const SizedBox(
                   width: 10,
                 ),

@@ -82,22 +82,31 @@ class Staff {
 
   // Firestore 데이터를 기반으로 인스턴스를 생성하는 팩토리 메서드
   factory Staff.fromFirestore(Map<String, dynamic> data) {
-    final workHour = Map<String, dynamic>.from(data["workHours"]);
-    final newWorkHour = TimeRange(
-      startTime: TimeOfDay(
-          hour: workHour["start"]["hour"], minute: workHour["start"]["minute"]),
-      endTime: TimeOfDay(
-        hour: workHour["end"]["hour"],
-        minute: workHour["end"]["minute"],
-      ),
-    );
+    final workHourData = data["workHours"] as Map<String, dynamic>?;
+
+    // workHours 처리
+    final newWorkHour = workHourData != null
+        ? TimeRange(
+            startTime: TimeOfDay(
+                hour: workHourData["start"]["hour"],
+                minute: workHourData["start"]["minute"]),
+            endTime: TimeOfDay(
+                hour: workHourData["end"]["hour"],
+                minute: workHourData["end"]["minute"]),
+          )
+        : TimeRange(
+            startTime: const TimeOfDay(hour: 9, minute: 0), // 기본값
+            endTime: const TimeOfDay(hour: 18, minute: 0), // 기본값
+          );
 
     return Staff(
       name: data["name"],
       image: data["image"],
-      workDays: List<String>.from(data["workDays"]),
+      workDays:
+          data["workDays"] != null ? List<String>.from(data["workDays"]) : [],
       workHours: newWorkHour,
-      workDate: List<String>.from(data["workDate"]),
+      workDate:
+          data["workDate"] != null ? List<String>.from(data["workDate"]) : [],
       staffId: data["staffId"],
     );
   }
