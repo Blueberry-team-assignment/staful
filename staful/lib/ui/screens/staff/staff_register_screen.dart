@@ -201,6 +201,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                           ),
                           const WorkDaysRow(
                             workDays: [],
+                            disabled: false,
                           )
                         ],
                       ),

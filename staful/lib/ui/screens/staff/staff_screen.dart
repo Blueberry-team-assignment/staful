@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/domain/utils/dummies.dart';
+import 'package:staful/feature/staff/staff_info_provider.dart';
 import 'package:staful/feature/staff/staff_provider.dart';
 import 'package:staful/ui/screens/staff/staff_info_screen.dart';
 import 'package:staful/domain/utils/app_styles.dart';
@@ -155,6 +156,7 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
           ),
           WorkDaysRow(
             workDays: staff.workDays!,
+            disabled: true,
           )
         ],
       ),
@@ -169,7 +171,7 @@ class WorkDaysRow extends StatelessWidget {
   const WorkDaysRow({
     super.key,
     required this.workDays,
-    this.disabled = true,
+    required this.disabled,
   });
 
   @override
@@ -186,7 +188,7 @@ class WorkDaysRow extends StatelessWidget {
   }
 }
 
-class WorkDaysRowItem extends StatefulWidget {
+class WorkDaysRowItem extends ConsumerStatefulWidget {
   final String text;
   final bool isSelected;
   final bool disabled;
@@ -199,10 +201,10 @@ class WorkDaysRowItem extends StatefulWidget {
   });
 
   @override
-  State<WorkDaysRowItem> createState() => WorkDaysRowItemState();
+  ConsumerState<WorkDaysRowItem> createState() => WorkDaysRowItemState();
 }
 
-class WorkDaysRowItemState extends State<WorkDaysRowItem> {
+class WorkDaysRowItemState extends ConsumerState<WorkDaysRowItem> {
   late bool isSelected;
 
   @override
@@ -217,6 +219,25 @@ class WorkDaysRowItemState extends State<WorkDaysRowItem> {
     setState(() {
       isSelected = !isSelected;
     });
+
+    final state = ref.watch(staffInfoNotifierProvider);
+    final staffInfoNotifier = ref.read(staffInfoNotifierProvider.notifier);
+    final currentWorkDays = List<String>.from(
+        ref.watch(staffInfoNotifierProvider).editableStaffInfo?.workDays ?? []);
+
+    if (isSelected) {
+      currentWorkDays.add(widget.text);
+    } else {
+      currentWorkDays.remove(widget.text);
+    }
+
+    // 상태 업데이트
+    final updatedStaff = state.editableStaffInfo?.copyWith(
+      workDays: currentWorkDays,
+    );
+    staffInfoNotifier.updateStaffInfoState(updatedStaff);
+
+    print('Updated workDays: ${updatedStaff?.workDays}');
   }
 
   @override
