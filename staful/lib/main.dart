@@ -24,20 +24,20 @@ void main() async {
           Locale('ko', 'KR'),
         ],
         path: 'lib/assets/translations',
-        child: const STAFull(),
+        child: const STAFFul(),
       ),
     ),
   );
 }
 
-class STAFull extends StatefulWidget {
-  const STAFull({super.key});
+class STAFFul extends StatefulWidget {
+  const STAFFul({super.key});
 
   @override
-  State<STAFull> createState() => _STAFullState();
+  State<STAFFul> createState() => _STAFFulState();
 }
 
-class _STAFullState extends State<STAFull> {
+class _STAFFulState extends State<STAFFul> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

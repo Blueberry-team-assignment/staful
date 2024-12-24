@@ -47,13 +47,7 @@ class LogInNotifier extends StateNotifier<LogInState> {
       final authUser = await _userInterface.fetchUserFromFirestore(uid: uid);
 
       // sharedPreference에 유저정보 저장
-      await _userInterface.saveUserToPreferences(
-        uid: uid,
-        id: authUser!.userId,
-        businessName: authUser.businessName,
-        name: authUser.name,
-        openingDate: authUser.openingDate,
-      );
+      await _userInterface.saveUserToPreferences(user: authUser);
 
       state = state.copyWith(
         user: authUser,
@@ -74,7 +68,7 @@ class LogInNotifier extends StateNotifier<LogInState> {
     final user = _authInterface.checkUser();
     final savedUser = await _userInterface.loadUserFromPreferences();
 
-    if (user?.uid == savedUser["uid"]) {
+    if (user?.uid == savedUser.uid) {
       state = state.copyWith(isLoggedIn: true);
     } else {
       _authInterface.logOut();

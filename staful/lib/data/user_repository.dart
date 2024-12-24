@@ -13,17 +13,13 @@ abstract class UserInterface {
     required String uid,
     required SignUpDto signUpDto,
   });
-  Future<User?> fetchUserFromFirestore({
+  Future<User> fetchUserFromFirestore({
     required String uid,
   });
   Future<void> saveUserToPreferences({
-    required String uid,
-    required String id,
-    required String name,
-    required String businessName,
-    required DateTime openingDate,
+    required User user,
   });
-  Future<Map<String, String?>> loadUserFromPreferences();
+  Future<User> loadUserFromPreferences();
 }
 
 class UserRepository implements UserInterface {
@@ -53,7 +49,7 @@ class UserRepository implements UserInterface {
 
   // Firestore에서 유저 데이터 가져오기
   @override
-  Future<User?> fetchUserFromFirestore({
+  Future<User> fetchUserFromFirestore({
     required String uid,
   }) async {
     final userDoc = _firestore.collection('users').doc(uid);
@@ -67,46 +63,41 @@ class UserRepository implements UserInterface {
 
   // SharedPreferences에 유저 정보 저장
   @override
-  Future<void> saveUserToPreferences({
-    required String uid,
-    required String id,
-    required String name,
-    required String businessName,
-    required DateTime openingDate,
-  }) async {
+  Future<void> saveUserToPreferences({required User user}) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('uid', uid);
-    await prefs.setString('id', id);
-    await prefs.setString('name', name);
-    await prefs.setString('businessName', businessName);
+    await prefs.setString('uid', user.uid);
+    await prefs.setString('userId', user.userId);
+    await prefs.setString('name', user.name);
+    await prefs.setString('businessName', user.businessName);
     await prefs.setString(
       'openingDate',
-      openingDate.toIso8601String(),
+      user.openingDate.toIso8601String(),
     );
+    await prefs.setString('createdAt', user.createdAt.toIso8601String());
     print("User data saved to SharedPreferences");
   }
 
   // SharedPreferences에서 유저 정보 불러오기
   @override
-  Future<Map<String, String?>> loadUserFromPreferences() async {
+  Future<User> loadUserFromPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     final uid = prefs.getString('uid');
     final userId = prefs.getString('userId');
     final name = prefs.getString('name');
     final businessName = prefs.getString('businessName');
     final openingDate = prefs.getString('openingDate');
+    final createdAt = prefs.getString('createdAt');
 
-    if (uid == null) {
-      print("No user data found in SharedPreferences");
-      return {};
+    if (uid == null || userId == null) {
+      throw Exception("No user data found in SharedPreferences");
     }
 
-    return {
-      'uid': uid,
-      'userId': userId,
-      'name': name,
-      'businessName': businessName,
-      'openingDate': openingDate,
-    };
+    return User(
+        uid: uid,
+        userId: userId,
+        name: name!,
+        businessName: businessName!,
+        openingDate: DateTime.parse(openingDate!),
+        createdAt: DateTime.parse(createdAt!));
   }
 }

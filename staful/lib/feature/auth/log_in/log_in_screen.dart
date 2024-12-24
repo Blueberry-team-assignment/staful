@@ -26,11 +26,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       idInputController.text.isNotEmpty && pwInputController.text.isNotEmpty;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAutoLogin();
+    });
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
     idInputController.dispose();
     pwInputController.dispose();
     super.dispose();
+  }
+
+  Future<void> _checkAutoLogin() async {
+    final loginProvider = ref.read(logInProvider.notifier);
+    await loginProvider.checkAutoLogin();
+    final loginState = ref.read(logInProvider);
+
+    if (loginState.isLoggedIn) {
+      openPage(
+        context,
+        const AppLayout(
+          appBarType: "logo",
+          showBottomNavigationBar: true,
+          child: CalendarScreen(),
+        ),
+      );
+    }
   }
 
   Future<void> handleLogin() async {
@@ -76,10 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.read(logInProvider.notifier).checkAutoLogin();
     final logInState = ref.watch(logInProvider);
-
-    if (logInState.isLoggedIn) {}
 
     return Stack(
       children: [
@@ -173,20 +196,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     height: 40,
                   ),
                   GestureDetector(
-                    onTap: () => {
-                      if (isLoginButtonEnabled)
-                        handleLogin()
-                      // test용
-                      else
-                        openPage(
-                          context,
-                          const AppLayout(
-                            appBarType: "logo",
-                            showBottomNavigationBar: true,
-                            child: CalendarScreen(),
-                          ),
-                        )
-                    },
+                    onTap: () => {if (isLoginButtonEnabled) handleLogin()},
                     child: SubmitButtonWidget(
                       color: isLoginButtonEnabled
                           ? null

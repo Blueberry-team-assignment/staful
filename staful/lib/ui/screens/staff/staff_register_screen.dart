@@ -108,7 +108,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 30,
-          vertical: 30,
+          vertical: 10,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

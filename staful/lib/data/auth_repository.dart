@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final authRepositoryProvider = Provider<AuthInterface>((ref) {
   return AuthRepository(FirebaseAuth.instance);
@@ -31,7 +30,7 @@ class AuthRepository implements AuthInterface {
     required String password,
   }) async {
     try {
-      final email = '$userId@staful.com'; // userId를 이메일처럼 처리
+      final email = '$userId@stafful.com'; // userId를 이메일처럼 처리
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -50,7 +49,7 @@ class AuthRepository implements AuthInterface {
     required String password,
   }) async {
     try {
-      final email = '$userId@staful.com';
+      final email = '$userId@stafful.com';
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,

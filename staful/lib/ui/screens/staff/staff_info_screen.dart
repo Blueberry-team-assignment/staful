@@ -121,7 +121,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 30,
-          vertical: 30,
+          vertical: 10,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
