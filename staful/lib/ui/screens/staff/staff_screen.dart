@@ -13,6 +13,9 @@ import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 
+final searchedStaffProvider = StateProvider<List<Staff>?>(
+    (ref) => ref.read(staffNotifierProvider).staffList);
+
 class StaffScreen extends ConsumerStatefulWidget {
   const StaffScreen({super.key});
 
@@ -22,41 +25,43 @@ class StaffScreen extends ConsumerStatefulWidget {
 
 class StaffScreenState extends ConsumerState<StaffScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  late List<String>? searchSuggestions;
-  late List<Staff>? searchedStaff;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    searchedStaff = ref.read(staffNotifierProvider).staffList;
-    searchSuggestions = searchedStaff?.map((staff) => staff.name).toList();
+  void dispose() {
+    // TODO: implement dispose
+    searchInputController.dispose();
+    super.dispose();
   }
 
   void onSearchInputChanged(String text) {
     // 검색어가 변경될 때마다 호출됨
-    // print(text);
+    final staffList = ref.read(staffNotifierProvider).staffList ?? [];
+
     if (text.isEmpty) {
-      setState(() {
-        searchedStaff = ref.read(staffNotifierProvider).staffList;
-      });
+      ref.read(searchedStaffProvider.notifier).state = staffList;
+    } else {
+      ref.read(searchedStaffProvider.notifier).state = staffList.where((staff) {
+        final chosungName = decomposeHangul(staff.name);
+        final chosungInput = decomposeHangul(text);
+        return chosungName.startsWith(chosungInput);
+      }).toList();
     }
   }
 
-  void onSuggestionSelected(String suggestion) {
-    searchInputController.text = suggestion;
+  // void onSuggestionSelected(String suggestion) {
+  //   searchInputController.text = suggestion;
 
-    setState(() {
-      searchedStaff = ref
-          .read(staffNotifierProvider)
-          .staffList
-          ?.where((staff) => staff.name == suggestion)
-          .toList();
-    });
-  }
+  //   searchedStaff = ref
+  //       .read(staffNotifierProvider)
+  //       .staffList
+  //       ?.where((staff) => staff.name == suggestion)
+  //       .toList();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final searchedStaff = ref.watch(searchedStaffProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 30,
@@ -79,11 +84,11 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
                 onChanged: onSearchInputChanged,
                 controller: searchInputController,
               ),
-              OverlaySearchResultsWidget(
-                suggestions: searchSuggestions,
-                controller: searchInputController,
-                onSelect: onSuggestionSelected,
-              ),
+              // OverlaySearchResultsWidget(
+              //   suggestions: searchSuggestions,
+              //   controller: searchInputController,
+              //   onSelect: onSuggestionSelected,
+              // ),
             ],
           ),
           const SizedBox(
@@ -113,6 +118,7 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
               itemBuilder: (context, index) {
                 final Staff staff = searchedStaff![index];
                 return Container(
+                    key: ValueKey(staff.staffId),
                     margin: const EdgeInsets.only(
                       top: 10,
                     ),
@@ -164,7 +170,7 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
   }
 }
 
-class WorkDaysRow extends StatelessWidget {
+class WorkDaysRow extends ConsumerWidget {
   final List<String> workDays;
   final bool disabled;
 
@@ -175,12 +181,12 @@ class WorkDaysRow extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
-      children: mapOfWorkDays.keys
-          .map((key) => WorkDaysRowItem(
-                text: mapOfWorkDays[key] ?? "",
-                isSelected: workDays.contains(key),
+      children: mapOfWorkDays.values
+          .map((value) => WorkDaysRowItem(
+                text: value,
+                isSelected: workDays.contains(value),
                 disabled: disabled,
               ))
           .toList(),
@@ -204,6 +210,7 @@ class WorkDaysRowItem extends ConsumerStatefulWidget {
   ConsumerState<WorkDaysRowItem> createState() => WorkDaysRowItemState();
 }
 
+// 분리
 class WorkDaysRowItemState extends ConsumerState<WorkDaysRowItem> {
   late bool isSelected;
 

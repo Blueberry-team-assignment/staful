@@ -45,26 +45,32 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
   }
 
   // 저장 버튼 클릭
-  void onSave() {
-    final notifier = ref.read(staffInfoNotifierProvider.notifier);
+  Future<void> onSave(context) async {
+    try {
+      final notifier = ref.read(staffInfoNotifierProvider.notifier);
 
-    if (nameController.text.isEmpty) {
-      return;
+      if (nameController.text.isEmpty) {
+        return;
+      }
+
+      // Staff 인스턴스 생성 후 저장
+      final newStaff = CreateStaffDto(
+        name: nameController.text,
+        desc: memoFieldController.text,
+        image: imagePath,
+      );
+
+      await notifier.createStaff(
+        uid: ref.read(logInProvider).user!.uid,
+        createStaffDto: newStaff,
+      );
+
+      if (mounted) {
+        Navigator.of(context).pop(); // 등록 후 이전 화면으로 돌아가기
+      }
+    } catch (e) {
+      throw Exception(e);
     }
-
-    // Staff 인스턴스 생성 후 저장
-    final newStaff = CreateStaffDto(
-      name: nameController.text,
-      desc: memoFieldController.text,
-      image: imagePath,
-    );
-
-    notifier.createStaff(
-      uid: ref.read(logInProvider).user!.uid,
-      createStaffDto: newStaff,
-    );
-
-    Navigator.of(context).pop(); // 등록 후 이전 화면으로 돌아가기
   }
 
   // 되돌리기
@@ -106,9 +112,11 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: navigateBackAppBar(context),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-          vertical: 10,
+        padding: const EdgeInsets.fromLTRB(
+          30,
+          10,
+          30,
+          30,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -333,7 +341,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                       backgroundColor: WidgetStateProperty.all<Color>(
                           Theme.of(context).primaryColor),
                     ),
-                    onPressed: onSave,
+                    onPressed: () => onSave(context),
                     child: const Text(
                       "저장",
                       style: TextStyle(

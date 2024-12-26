@@ -72,7 +72,7 @@ class LogInNotifier extends StateNotifier<LogInState> {
       await _ref
           .watch(staffNotifierProvider.notifier)
           .fetchStaffList(user!.uid);
-      state = state.copyWith(isLoggedIn: true);
+      state = state.copyWith(user: savedUser, isLoggedIn: true);
     } else {
       _authInterface.logOut();
       state = state.copyWith(isLoggedIn: false);

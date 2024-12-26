@@ -243,3 +243,103 @@ class OverlaySearchResultsWidgetState
     return Container();
   }
 }
+
+String decomposeHangul(String input) {
+  const int baseCode = 44032; // '가'의 유니코드
+  const int chosungBase = 588;
+  const int jungseongBase = 28;
+
+  const List<String> chosungList = [
+    "ㄱ",
+    "ㄲ",
+    "ㄴ",
+    "ㄷ",
+    "ㄸ",
+    "ㄹ",
+    "ㅁ",
+    "ㅂ",
+    "ㅃ",
+    "ㅅ",
+    "ㅆ",
+    "ㅇ",
+    "ㅈ",
+    "ㅉ",
+    "ㅊ",
+    "ㅋ",
+    "ㅌ",
+    "ㅍ",
+    "ㅎ"
+  ];
+  const List<String> jungseongList = [
+    "ㅏ",
+    "ㅐ",
+    "ㅑ",
+    "ㅒ",
+    "ㅓ",
+    "ㅔ",
+    "ㅕ",
+    "ㅖ",
+    "ㅗ",
+    "ㅘ",
+    "ㅙ",
+    "ㅚ",
+    "ㅛ",
+    "ㅜ",
+    "ㅝ",
+    "ㅞ",
+    "ㅟ",
+    "ㅠ",
+    "ㅡ",
+    "ㅢ",
+    "ㅣ"
+  ];
+  const List<String> jongseongList = [
+    "",
+    "ㄱ",
+    "ㄲ",
+    "ㄳ",
+    "ㄴ",
+    "ㄵ",
+    "ㄶ",
+    "ㄷ",
+    "ㄹ",
+    "ㄺ",
+    "ㄻ",
+    "ㄼ",
+    "ㄽ",
+    "ㄾ",
+    "ㄿ",
+    "ㅀ",
+    "ㅁ",
+    "ㅂ",
+    "ㅄ",
+    "ㅅ",
+    "ㅆ",
+    "ㅇ",
+    "ㅈ",
+    "ㅊ",
+    "ㅋ",
+    "ㅌ",
+    "ㅍ",
+    "ㅎ"
+  ];
+
+  String result = '';
+  for (int i = 0; i < input.length; i++) {
+    int charCode = input.codeUnitAt(i);
+
+    if (charCode >= baseCode && charCode <= baseCode + 11171) {
+      int syllableIndex = charCode - baseCode;
+      int chosungIndex = syllableIndex ~/ chosungBase;
+      int jungseongIndex = (syllableIndex % chosungBase) ~/ jungseongBase;
+      int jongseongIndex = syllableIndex % jungseongBase;
+
+      result += chosungList[chosungIndex] +
+          jungseongList[jungseongIndex] +
+          jongseongList[jongseongIndex];
+    } else {
+      if (input[i].isNotEmpty) result += input[i]; // 한글이 아닌 경우 그대로 추가
+    }
+  }
+  return result.toLowerCase();
+}
