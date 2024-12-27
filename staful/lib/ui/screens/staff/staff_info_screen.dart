@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/domain/utils/time_utils.dart';
 import 'package:staful/domain/utils/app_styles.dart';
@@ -12,7 +11,7 @@ import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
-class StaffInfoScreen extends ConsumerStatefulWidget {
+class StaffInfoScreen extends StatefulWidget {
   final Staff originalStaff;
   final Staff editableStaff;
   final void Function(Staff) onUpdate;
@@ -29,15 +28,15 @@ class StaffInfoScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<StaffInfoScreen> createState() => _StaffInfoScreenState();
+  State<StaffInfoScreen> createState() => _StaffInfoScreenState();
 }
 
-class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
+class _StaffInfoScreenState extends State<StaffInfoScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController memoFieldController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   bool isEditMode = false;
-  late TimeRange updatedSchedule = TimeRange(
+  TimeRange updatedSchedule = TimeRange(
       startTime: const TimeOfDay(hour: 0, minute: 0),
       endTime: const TimeOfDay(hour: 24, minute: 0));
 
@@ -72,7 +71,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
     toggleEditMode();
   }
 
-  // 변경사항 되돌리기
+  // 변경사항 되돌리고 수정모드 종료하기
   void onUndo() {
     widget.onReset();
     toggleEditMode();
@@ -361,7 +360,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                       ),
                       onPressed: onUndo,
                       child: const Text(
-                        "취소",
+                        "수정 취소",
                         style: TextStyle(
                           color: Colors.black,
                         ),
