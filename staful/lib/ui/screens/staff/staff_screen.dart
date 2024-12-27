@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/feature/staff/staff_info_container.dart';
+import 'package:staful/feature/staff/staff_info_screen_container.dart';
 import 'package:staful/feature/staff/staff_provider.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/domain/utils/app_styles.dart';
@@ -13,45 +13,20 @@ import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 
-final searchedStaffProvider = StateProvider<List<Staff>?>(
-    (ref) => ref.watch(staffNotifierProvider).staffList);
+class StaffScreen extends StatelessWidget {
+  final List<Staff>? searchedStaff;
+  final TextEditingController searchInputController;
+  final ValueChanged<String> onSearchInputChanged;
 
-class StaffScreen extends ConsumerStatefulWidget {
-  const StaffScreen({super.key});
-
-  @override
-  ConsumerState<StaffScreen> createState() => StaffScreenState();
-}
-
-class StaffScreenState extends ConsumerState<StaffScreen> {
-  final TextEditingController searchInputController = TextEditingController();
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    searchInputController.dispose();
-    super.dispose();
-  }
-
-  void onSearchInputChanged(String text) {
-    // 검색어가 변경될 때마다 호출됨
-    final staffList = ref.read(staffNotifierProvider).staffList ?? [];
-
-    if (text.isEmpty) {
-      ref.read(searchedStaffProvider.notifier).state = staffList;
-    } else {
-      ref.read(searchedStaffProvider.notifier).state = staffList.where((staff) {
-        final chosungName = decomposeHangul(staff.name);
-        final chosungInput = decomposeHangul(text);
-        return chosungName.startsWith(chosungInput);
-      }).toList();
-    }
-  }
+  const StaffScreen({
+    super.key,
+    this.searchedStaff,
+    required this.searchInputController,
+    required this.onSearchInputChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final searchedStaff = ref.watch(searchedStaffProvider);
-
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 30,
@@ -126,7 +101,7 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
                 context,
                 // 상태를 로컬 범위에서 분리하고 독립적으로 관리하기 위해. 상태 초기화를 보장하기 위해. 프로바이더를 재정의하거나 테스트에서 활용하기 위해.
                 ProviderScope(
-                  child: StaffInfoContainer(staff: staff),
+                  child: StaffInfoScreenContainer(staff: staff),
                 ),
               );
             },

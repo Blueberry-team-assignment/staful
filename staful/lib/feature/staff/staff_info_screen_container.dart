@@ -6,10 +6,10 @@ import 'package:staful/feature/auth/sign_up/sign_up_screen.dart';
 import 'package:staful/feature/staff/staff_info_provider.dart';
 import 'package:staful/ui/screens/staff/staff_info_screen.dart';
 
-class StaffInfoContainer extends ConsumerWidget {
+class StaffInfoScreenContainer extends ConsumerWidget {
   final Staff staff;
 
-  const StaffInfoContainer({
+  const StaffInfoScreenContainer({
     super.key,
     required this.staff,
   });

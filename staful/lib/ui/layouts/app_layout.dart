@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:staful/feature/staff/staff_screen_container.dart';
 import 'package:staful/ui/screens/calendar/calendar_screen.dart';
 import 'package:staful/ui/screens/payroll/payroll_screen.dart';
 import 'package:staful/ui/screens/setting/setting_screen.dart';
@@ -27,7 +28,7 @@ class _AppLayoutState extends State<AppLayout> {
 
   final List<Widget> _screens = [
     const CalendarScreen(),
-    const StaffScreen(),
+    const StaffScreenContainer(),
     const PayrollScreen(),
     const SettingScreen(),
   ];
