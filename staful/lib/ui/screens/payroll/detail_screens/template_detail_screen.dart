@@ -6,6 +6,7 @@ import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/models/template_model.dart';
 import 'package:staful/ui/screens/payroll/detail_screens/payroll_search_screen.dart';
 import 'package:staful/ui/screens/payroll/detail_screens/staff_search_screen.dart';
+import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/ui/screens/staff/staff_info_screen.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:staful/domain/utils/currency_formatter.dart';

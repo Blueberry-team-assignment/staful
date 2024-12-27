@@ -11,8 +11,10 @@ import 'package:staful/feature/staff/staff_info_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';
+import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/ui/screens/staff/staff_info_screen.dart';
 import 'package:staful/ui/screens/staff/staff_screen.dart';
+import 'package:staful/ui/widgets/work_days_row.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
@@ -45,33 +47,33 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
   }
 
   // 저장 버튼 클릭
-  Future<void> onSave(context) async {
-    try {
-      final notifier = ref.read(staffInfoNotifierProvider.notifier);
+  // Future<void> onSave(context) async {
+  //   try {
+  //     final notifier = ref.read(staffInfoNotifierProvider.notifier);
 
-      if (nameController.text.isEmpty) {
-        return;
-      }
+  //     if (nameController.text.isEmpty) {
+  //       return;
+  //     }
 
-      // Staff 인스턴스 생성 후 저장
-      final newStaff = CreateStaffDto(
-        name: nameController.text,
-        desc: memoFieldController.text,
-        image: imagePath,
-      );
+  //     // Staff 인스턴스 생성 후 저장
+  //     final newStaff = CreateStaffDto(
+  //       name: nameController.text,
+  //       desc: memoFieldController.text,
+  //       image: imagePath,
+  //     );
 
-      await notifier.createStaff(
-        uid: ref.read(logInProvider).user!.uid,
-        createStaffDto: newStaff,
-      );
+  //     await notifier.createStaff(
+  //       uid: ref.read(logInProvider).user!.uid,
+  //       createStaffDto: newStaff,
+  //     );
 
-      if (mounted) {
-        Navigator.of(context).pop(); // 등록 후 이전 화면으로 돌아가기
-      }
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
+  //     if (mounted) {
+  //       Navigator.of(context).pop(); // 등록 후 이전 화면으로 돌아가기
+  //     }
+  //   } catch (e) {
+  //     throw Exception(e);
+  //   }
+  // }
 
   // 되돌리기
   void onUndo() {}
@@ -207,10 +209,10 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const WorkDaysRow(
-                            workDays: [],
-                            disabled: false,
-                          )
+                          // const WorkDaysRow(
+                          //   workDays: [],
+                          //   disabled: false,
+                          // )
                         ],
                       ),
                     ),
@@ -341,7 +343,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                       backgroundColor: WidgetStateProperty.all<Color>(
                           Theme.of(context).primaryColor),
                     ),
-                    onPressed: () => onSave(context),
+                    onPressed: () => {},
                     child: const Text(
                       "저장",
                       style: TextStyle(

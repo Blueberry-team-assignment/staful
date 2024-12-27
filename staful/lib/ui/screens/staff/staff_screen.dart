@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/domain/utils/dummies.dart';
-import 'package:staful/feature/staff/staff_info_provider.dart';
+import 'package:staful/feature/staff/staff_info_container.dart';
 import 'package:staful/feature/staff/staff_provider.dart';
-import 'package:staful/ui/screens/staff/staff_info_screen.dart';
+import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:staful/domain/utils/navigation_helpers.dart';
 import 'package:staful/ui/screens/staff/staff_register_screen.dart';
+import 'package:staful/ui/widgets/work_days_row.dart';
 import 'package:staful/ui/widgets/overlay_search_results_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 
 final searchedStaffProvider = StateProvider<List<Staff>?>(
-    (ref) => ref.read(staffNotifierProvider).staffList);
+    (ref) => ref.watch(staffNotifierProvider).staffList);
 
 class StaffScreen extends ConsumerStatefulWidget {
   const StaffScreen({super.key});
@@ -48,16 +48,6 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
     }
   }
 
-  // void onSuggestionSelected(String suggestion) {
-  //   searchInputController.text = suggestion;
-
-  //   searchedStaff = ref
-  //       .read(staffNotifierProvider)
-  //       .staffList
-  //       ?.where((staff) => staff.name == suggestion)
-  //       .toList();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final searchedStaff = ref.watch(searchedStaffProvider);
@@ -84,11 +74,6 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
                 onChanged: onSearchInputChanged,
                 controller: searchInputController,
               ),
-              // OverlaySearchResultsWidget(
-              //   suggestions: searchSuggestions,
-              //   controller: searchInputController,
-              //   onSelect: onSuggestionSelected,
-              // ),
             ],
           ),
           const SizedBox(
@@ -136,13 +121,14 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
       content: Column(
         children: [
           GestureDetector(
-            onTap: () => {
+            onTap: () {
               openPage(
                 context,
-                StaffInfoScreen(
-                  staffInfo: staff,
+                // 상태를 로컬 범위에서 분리하고 독립적으로 관리하기 위해. 상태 초기화를 보장하기 위해. 프로바이더를 재정의하거나 테스트에서 활용하기 위해.
+                ProviderScope(
+                  child: StaffInfoContainer(staff: staff),
                 ),
-              )
+              );
             },
             child: Row(
               children: [
@@ -161,111 +147,10 @@ class StaffScreenState extends ConsumerState<StaffScreen> {
             ),
           ),
           WorkDaysRow(
-            workDays: staff.workDays!,
+            staff: staff,
             disabled: true,
           )
         ],
-      ),
-    );
-  }
-}
-
-class WorkDaysRow extends ConsumerWidget {
-  final List<String> workDays;
-  final bool disabled;
-
-  const WorkDaysRow({
-    super.key,
-    required this.workDays,
-    required this.disabled,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: mapOfWorkDays.values
-          .map((value) => WorkDaysRowItem(
-                text: value,
-                isSelected: workDays.contains(value),
-                disabled: disabled,
-              ))
-          .toList(),
-    );
-  }
-}
-
-class WorkDaysRowItem extends ConsumerStatefulWidget {
-  final String text;
-  final bool isSelected;
-  final bool disabled;
-
-  const WorkDaysRowItem({
-    super.key,
-    this.text = "",
-    this.isSelected = false,
-    required this.disabled,
-  });
-
-  @override
-  ConsumerState<WorkDaysRowItem> createState() => WorkDaysRowItemState();
-}
-
-// 분리
-class WorkDaysRowItemState extends ConsumerState<WorkDaysRowItem> {
-  late bool isSelected;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isSelected = widget.isSelected;
-  }
-
-  void handleOnPressed() {
-    if (widget.disabled) return;
-    setState(() {
-      isSelected = !isSelected;
-    });
-
-    final state = ref.watch(staffInfoNotifierProvider);
-    final staffInfoNotifier = ref.read(staffInfoNotifierProvider.notifier);
-    final currentWorkDays = List<String>.from(
-        ref.watch(staffInfoNotifierProvider).editableStaffInfo?.workDays ?? []);
-
-    if (isSelected) {
-      currentWorkDays.add(widget.text);
-    } else {
-      currentWorkDays.remove(widget.text);
-    }
-
-    // 상태 업데이트
-    final updatedStaff = state.editableStaffInfo?.copyWith(
-      workDays: currentWorkDays,
-    );
-    staffInfoNotifier.updateStaffInfoState(updatedStaff);
-
-    print('Updated workDays: ${updatedStaff?.workDays}');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: TextButton(
-        onPressed: handleOnPressed,
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all<Color>(
-            isSelected ? Theme.of(context).primaryColorLight : Colors.white,
-          ),
-        ),
-        child: Text(
-          widget.text,
-          style: TextStyleConfig(
-            size: 16,
-            color: isSelected
-                ? Theme.of(context).primaryColorDark
-                : Theme.of(context).disabledColor,
-          ).setTextStyle(),
-        ),
       ),
     );
   }

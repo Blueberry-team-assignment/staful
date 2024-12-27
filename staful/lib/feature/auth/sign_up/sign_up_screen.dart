@@ -311,14 +311,24 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           ),
         ),
         // 로딩 상태 오버레이
-        if (signUpState.isLoading)
-          Container(
-            color: Colors.black.withOpacity(0.5),
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
+        if (signUpState.isLoading) const LoadingIndicator(),
       ],
+    );
+  }
+}
+
+class LoadingIndicator extends StatelessWidget {
+  const LoadingIndicator({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black.withOpacity(0.5),
+      child: const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }

@@ -1,26 +1,31 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/domain/utils/time_utils.dart';
-import 'package:staful/feature/staff/staff_info_provider.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';
-import 'package:staful/ui/screens/staff/staff_screen.dart';
+import 'package:staful/ui/widgets/column_item_container.dart';
+import 'package:staful/ui/widgets/work_days_row.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
 class StaffInfoScreen extends ConsumerStatefulWidget {
-  final Staff staffInfo; // 직원 정보는 필수 전달
+  final Staff originalStaff;
+  final Staff editableStaff;
+  final void Function(Staff) onUpdate;
+  final VoidCallback onSave;
+  final VoidCallback onReset;
 
   const StaffInfoScreen({
     super.key,
-    required this.staffInfo,
+    required this.originalStaff,
+    required this.editableStaff,
+    required this.onReset,
+    required this.onSave,
+    required this.onUpdate,
   });
 
   @override
@@ -40,13 +45,9 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
   void initState() {
     super.initState();
 
-    // StaffInfo 초기화
-    // final notifier = ref.read(staffInfoNotifierProvider.notifier);
-    // notifier.loadStaffInfo(widget.staffInfo);
-
     // 컨트롤러 초기화
-    nameController.text = widget.staffInfo.name;
-    memoFieldController.text = widget.staffInfo.desc ?? "";
+    nameController.text = widget.originalStaff.name;
+    memoFieldController.text = widget.originalStaff.desc ?? "";
   }
 
   @override
@@ -66,15 +67,16 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
 
   // 저장 버튼 클릭
   void onSave() {
-    final notifier = ref.read(staffInfoNotifierProvider.notifier);
-    notifier.saveStaffInfo();
-
+    widget.onSave();
     // 저장 완료 후 보기 모드로 전환
     toggleEditMode();
   }
 
-  // 되돌리기
-  void onUndo() {}
+  // 변경사항 되돌리기
+  void onUndo() {
+    widget.onReset();
+    toggleEditMode();
+  }
 
   // 이미지 변경 버튼 클릭
   Future<void> onTapImgChangeBtn() async {
@@ -82,39 +84,30 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
         await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      final notifier = ref.read(staffInfoNotifierProvider.notifier);
-      final currentStaff =
-          ref.read(staffInfoNotifierProvider).editableStaffInfo;
-      final updatedStaff = currentStaff?.copyWith(image: pickedFile.path);
-      notifier.updateStaffInfoState(updatedStaff);
+      // widget.onUpdate(widget.editableStaff.copyWith(image: pickedFile))
     }
   }
 
   void handleOnUpdateOpeningHour(DateTime time) {
-    setState(() {
-      updatedSchedule = TimeRange(
-        startTime: TimeOfDay(hour: time.hour, minute: time.minute),
-        endTime: updatedSchedule.endTime,
-      );
-    });
+    updatedSchedule = TimeRange(
+      startTime: TimeOfDay(hour: time.hour, minute: time.minute),
+      endTime:
+          widget.editableStaff.workHours?.endTime ?? updatedSchedule.endTime,
+    );
+    widget.onUpdate(widget.editableStaff.copyWith(workHours: updatedSchedule));
   }
 
   void handleOnUpdateClosingHour(DateTime time) {
-    setState(() {
-      updatedSchedule = TimeRange(
-        startTime: updatedSchedule.startTime,
-        endTime: TimeOfDay(hour: time.hour, minute: time.minute),
-      );
-    });
+    updatedSchedule = TimeRange(
+      startTime: widget.editableStaff.workHours?.startTime ??
+          updatedSchedule.startTime,
+      endTime: TimeOfDay(hour: time.hour, minute: time.minute),
+    );
+    widget.onUpdate(widget.editableStaff.copyWith(workHours: updatedSchedule));
   }
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.read(staffInfoNotifierProvider.notifier);
-    final state = ref.watch(staffInfoNotifierProvider);
-
-    final editableStaff = state.editableStaffInfo;
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: navigateBackAppBar(context),
@@ -158,7 +151,8 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                         Column(
                           children: [
                             StaffProfileWidget(
-                                imagePath: editableStaff?.image, size: 64),
+                                imagePath: widget.editableStaff.image,
+                                size: 64),
                             const SizedBox(
                               height: 5,
                             ),
@@ -202,17 +196,16 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                               controller: nameController,
                                               onlyBottomBorder: true,
                                               onChanged: (value) {
-                                                notifier.updateStaffInfoState(
-                                                  editableStaff?.copyWith(
-                                                      name: value),
-                                                );
+                                                widget.onUpdate(widget
+                                                    .editableStaff
+                                                    .copyWith(name: value));
                                               },
                                             ),
                                           )
                                         ],
                                       )
                                     : Text(
-                                        widget.staffInfo.name,
+                                        widget.originalStaff.name,
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -241,8 +234,9 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                             height: 10,
                           ),
                           WorkDaysRow(
-                            workDays: widget.staffInfo.workDays!,
+                            staff: widget.editableStaff,
                             disabled: !isEditMode,
+                            onUpdate: widget.onUpdate,
                           )
                         ],
                       ),
@@ -271,7 +265,8 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                     children: [
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo:
+                                          scheduleInfo: widget.editableStaff
+                                                  .workHours?.startTime ??
                                               updatedSchedule.startTime,
                                           onDateTimeChanged:
                                               handleOnUpdateOpeningHour,
@@ -282,7 +277,9 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                       ),
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: updatedSchedule.endTime,
+                                          scheduleInfo: widget.editableStaff
+                                                  .workHours?.endTime ??
+                                              updatedSchedule.endTime,
                                           onDateTimeChanged:
                                               handleOnUpdateClosingHour,
                                         ),
@@ -290,13 +287,13 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                     ],
                                   )
                                 else
-                                  // WorkScheduleForDisplay(
-                                  //   widget: EditScheduleScreen(workDate: workDate, workHours: workHours),
-
-                                  // ),
-                                  const SizedBox(
-                                    height: 15,
+                                  WorkScheduleForDisplay(
+                                    workHours: widget.originalStaff.workHours ??
+                                        updatedSchedule,
                                   ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
                                 RichText(
                                   text: TextSpan(
                                     style: TextStyleConfig(size: 13)
@@ -402,29 +399,6 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ColumnItemContainer extends StatelessWidget {
-  final Widget? content;
-  final Color? color;
-
-  const ColumnItemContainer({
-    super.key,
-    this.content,
-    this.color = Colors.white,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-      child: content,
     );
   }
 }

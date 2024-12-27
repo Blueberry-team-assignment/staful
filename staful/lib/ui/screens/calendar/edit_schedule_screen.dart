@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:staful/domain/utils/time_utils.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:staful/ui/widgets/bottom_sheet_widget.dart';
@@ -229,7 +230,14 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                       ),
                                     ],
                                   )
-                                : WorkScheduleForDisplay(widget: widget)
+                                : WorkScheduleForDisplay(
+                                    workHours: TimeRange(
+                                        startTime:
+                                            const TimeOfDay(hour: 9, minute: 0),
+                                        endTime: const TimeOfDay(
+                                            hour: 18, minute: 0)),
+                                  )
+                            // (workHours: widget.workHours)
                           ],
                         ),
                       )
@@ -373,21 +381,46 @@ class TimePicker extends StatelessWidget {
 }
 
 class WorkScheduleForDisplay extends StatelessWidget {
+  final TimeRange workHours;
+
   const WorkScheduleForDisplay({
     super.key,
-    required this.widget,
+    required this.workHours,
   });
 
-  final EditScheduleScreen widget;
+  String formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      "${widget.workHours[0]} - ${widget.workHours[1]}",
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text(
+          formatTimeOfDay(workHours.startTime),
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const Text(
+          "~",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          formatTimeOfDay(workHours.endTime),
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }
