@@ -1,7 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/firebase_options.dart';
 import 'package:staful/feature/auth/log_in/log_in_screen.dart';
@@ -11,7 +9,6 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await addDummyData(); // firestore에 더미데이터 넣기
 
   await EasyLocalization.ensureInitialized();
   await initializeDateFormatting();
@@ -30,14 +27,9 @@ void main() async {
   );
 }
 
-class STAFFul extends StatefulWidget {
+class STAFFul extends StatelessWidget {
   const STAFFul({super.key});
 
-  @override
-  State<STAFFul> createState() => _STAFFulState();
-}
-
-class _STAFFulState extends State<STAFFul> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
