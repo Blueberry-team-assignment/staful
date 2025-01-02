@@ -29,23 +29,25 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     }
 
     return staffList
-        .map((staff) => Padding(
-              padding: const EdgeInsets.all(15),
-              child: GestureDetector(
-                onTap: () => openPage(
-                  context,
-                  ScheduleScreen(
-                    date: _selectedDay,
-                  ),
-                ),
-                child: StaffProfileWidget(
-                  imagePath: staff.image != null
-                      ? "lib/assets/images/${staff.image}"
-                      : null,
-                  name: staff.name,
-                ),
+        .map(
+          (staff) => GestureDetector(
+            onTap: () => openPage(
+              context,
+              ScheduleScreen(
+                date: _selectedDay,
               ),
-            ))
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: StaffProfileWidget(
+                imagePath: staff.image != null
+                    ? "lib/assets/images/${staff.image}"
+                    : null,
+                name: staff.name,
+              ),
+            ),
+          ),
+        )
         .toList();
   }
 
