@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/ui/screens/staff/staff_info_screen.dart';
-import 'package:staful/domain/utils/app_styles.dart';
+import 'package:staful/feature/staff/ui/staff_info_screen.dart';
+import 'package:staful/utils/app_styles.dart';
 
 class LanguageSettingsScreen extends StatefulWidget {
   const LanguageSettingsScreen({

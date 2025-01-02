@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';
-import 'package:staful/domain/utils/navigation_helpers.dart';
-import 'package:staful/domain/utils/time_utils.dart';
+import 'package:staful/utils/navigation_helpers.dart';
+import 'package:staful/utils/time_utils.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 

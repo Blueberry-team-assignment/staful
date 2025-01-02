@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/staff_repository.dart';
-import 'package:staful/dto/staff/create_staff_dto.dart';
-import 'package:staful/dto/staff/update_staff_dto.dart';
+import 'package:staful/data/dto/staff/create_staff_dto.dart';
+import 'package:staful/data/dto/staff/update_staff_dto.dart';
 
 // family를 사용하여 각 staff에 대해 별도의 상태를 관리할 수 있습니다.
 // 동일한 구조로 여러 staff에 대해 독립적으로 상태를 관리할 수 있습니다.
@@ -102,6 +102,18 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
     } catch (e) {
       state = state.copyWith(isLoading: false);
       throw Exception('Failed to create staff: $e');
+    }
+  }
+
+  Future<void> deleteStaff(String uid, String staffId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      await _staffRepository.deleteStaff(uid: uid, staffId: staffId);
+      print('deleted staff id : $staffId');
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      throw Exception('Failed to delete staff: $e');
     }
   }
 }

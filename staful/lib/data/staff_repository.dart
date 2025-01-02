@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/dto/staff/create_staff_dto.dart';
-import 'package:staful/dto/staff/update_staff_dto.dart';
+import 'package:staful/data/dto/staff/create_staff_dto.dart';
+import 'package:staful/data/dto/staff/update_staff_dto.dart';
 
 final staffRepositoryProvider = Provider<StaffInterface>((ref) {
   return StaffRepository(FirebaseFirestore.instance);

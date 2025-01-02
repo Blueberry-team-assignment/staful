@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/staff/staff_provider.dart';
+import 'package:staful/feature/staff/provider/staff_provider.dart';
 import 'package:staful/ui/screens/calendar/schedule_screen.dart';
-import 'package:staful/domain/utils/dummies.dart';
-import 'package:staful/domain/utils/navigation_helpers.dart';
+import 'package:staful/utils/dummies.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 

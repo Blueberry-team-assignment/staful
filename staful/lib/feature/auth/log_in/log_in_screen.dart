@@ -8,7 +8,7 @@ import 'package:staful/feature/auth/sign_up/sign_up_screen.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 import 'package:staful/ui/widgets/validation_text_input_widget.dart';
-import 'package:staful/domain/utils/navigation_helpers.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

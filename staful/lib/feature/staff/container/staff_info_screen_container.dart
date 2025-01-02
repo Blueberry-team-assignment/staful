@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/feature/auth/log_in/log_in_provider.dart';
 import 'package:staful/feature/auth/sign_up/sign_up_screen.dart';
-import 'package:staful/feature/staff/staff_info_provider.dart';
-import 'package:staful/ui/screens/staff/staff_info_screen.dart';
+import 'package:staful/feature/staff/provider/staff_info_provider.dart';
+import 'package:staful/feature/staff/ui/staff_info_screen.dart';
 
 class StaffInfoScreenContainer extends ConsumerWidget {
   final Staff staff;
@@ -16,6 +16,7 @@ class StaffInfoScreenContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final uid = ref.read(logInProvider).user!.uid;
     final state = ref.watch(staffInfoNotifierProvider(staff));
 
     return Stack(
@@ -31,12 +32,17 @@ class StaffInfoScreenContainer extends ConsumerWidget {
           onSave: () {
             ref
                 .read(staffInfoNotifierProvider(staff).notifier)
-                .saveChanges(ref.read(logInProvider).user!.uid);
+                .saveChanges(uid);
           },
           onReset: () {
             ref
                 .read(staffInfoNotifierProvider(staff).notifier)
                 .resetToOriginal();
+          },
+          onDelete: () {
+            ref
+                .read(staffInfoNotifierProvider(staff).notifier)
+                .deleteStaff(uid, state.originalStaffInfo!.staffId);
           },
         ),
         if (state.isLoading) const LoadingIndicator()

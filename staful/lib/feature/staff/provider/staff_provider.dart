@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/staff_repository.dart';
-import 'package:staful/dto/staff/create_staff_dto.dart';
-import 'package:staful/dto/staff/update_staff_dto.dart';
+import 'package:staful/data/dto/staff/create_staff_dto.dart';
+import 'package:staful/data/dto/staff/update_staff_dto.dart';
 
 final staffNotifierProvider =
     StateNotifierProvider.autoDispose<StaffNotifier, StaffState>((ref) {
@@ -59,22 +59,6 @@ class StaffNotifier extends StateNotifier<StaffState> {
     } catch (e) {
       state = state.copyWith(isLoading: false);
       throw Exception('Failed to update staff: $e');
-    }
-  }
-
-  Future<void> deleteStaff(String uid, String staffId) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      await _staffInterface.deleteStaff(uid: uid, staffId: staffId);
-      state = state.copyWith(
-        staffList: state.staffList
-            ?.where((staff) => staff.staffId != staffId)
-            .toList(),
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(isLoading: false);
-      throw Exception('Failed to delete staff: $e');
     }
   }
 }

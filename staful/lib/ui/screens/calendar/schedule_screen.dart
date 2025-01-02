@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/domain/utils/time_utils.dart';
+import 'package:staful/utils/time_utils.dart';
 import 'package:staful/ui/widgets/schedule_table_widget.dart';
 
 class ScheduleScreen extends StatefulWidget {

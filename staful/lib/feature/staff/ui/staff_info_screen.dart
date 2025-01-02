@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/domain/utils/time_utils.dart';
-import 'package:staful/domain/utils/app_styles.dart';
+import 'package:staful/ui/widgets/confirmation_dialog.dart';
+import 'package:staful/utils/time_utils.dart';
+import 'package:staful/utils/app_styles.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';
@@ -17,6 +19,7 @@ class StaffInfoScreen extends StatefulWidget {
   final void Function(Staff) onUpdate;
   final VoidCallback onSave;
   final VoidCallback onReset;
+  final VoidCallback onDelete;
 
   const StaffInfoScreen({
     super.key,
@@ -25,6 +28,7 @@ class StaffInfoScreen extends StatefulWidget {
     required this.onReset,
     required this.onSave,
     required this.onUpdate,
+    required this.onDelete,
   });
 
   @override
@@ -75,6 +79,18 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
   void onUndo() {
     widget.onReset();
     toggleEditMode();
+  }
+
+  void onDelete() {
+    ConfirmationDialog.show(
+      context: context,
+      message: "직원 정보를 삭제하시겠습니까?",
+      onConfirm: () {
+        widget.onDelete();
+        Navigator.of(context).pop();
+      },
+      showCancelButton: true,
+    );
   }
 
   // 이미지 변경 버튼 클릭
@@ -344,54 +360,81 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                 ),
               ),
             ),
-            if (isEditMode)
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+            isEditMode
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          style: ButtonStyle(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            backgroundColor: WidgetStateProperty.all<Color>(
+                                Theme.of(context).disabledColor),
+                          ),
+                          onPressed: onUndo,
+                          child: const Text(
+                            "수정 취소",
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                            Theme.of(context).disabledColor),
                       ),
-                      onPressed: onUndo,
-                      child: const Text(
-                        "수정 취소",
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
+                      const SizedBox(
+                        width: 10,
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+                      Expanded(
+                        child: TextButton(
+                          style: ButtonStyle(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            backgroundColor: WidgetStateProperty.all<Color>(
+                                Theme.of(context).primaryColor),
+                          ),
+                          onPressed: onSave,
+                          child: const Text(
+                            "저장",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                            Theme.of(context).primaryColor),
                       ),
-                      onPressed: onSave,
-                      child: const Text(
-                        "저장",
-                        style: TextStyle(
-                          color: Colors.white,
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          style: ButtonStyle(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            backgroundColor: WidgetStateProperty.all<Color>(
+                                Theme.of(context).disabledColor),
+                          ),
+                          onPressed: onDelete,
+                          child: const Text(
+                            "직원 삭제",
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
             const SizedBox(
               height: bottomMargin,
             ),

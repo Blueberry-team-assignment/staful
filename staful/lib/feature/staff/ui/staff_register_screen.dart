@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/domain/utils/app_styles.dart';
-import 'package:staful/domain/utils/time_utils.dart';
+import 'package:staful/utils/app_styles.dart';
+import 'package:staful/utils/time_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';

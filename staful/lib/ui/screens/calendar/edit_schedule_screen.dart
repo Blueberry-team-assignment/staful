@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:staful/domain/utils/time_utils.dart';
+import 'package:staful/utils/time_utils.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/domain/utils/app_styles.dart';
+import 'package:staful/utils/app_styles.dart';
 import 'package:staful/ui/widgets/bottom_sheet_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 

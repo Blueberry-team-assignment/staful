@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/models/template_model.dart';
-import 'package:staful/dto/template/create_template_dto.dart';
-import 'package:staful/dto/template/update_template_dto.dart';
+import 'package:staful/data/dto/template/create_template_dto.dart';
+import 'package:staful/data/dto/template/update_template_dto.dart';
 
 final templateRepositoryProvider = Provider<TemplateInterface>((ref) {
   return TemplateRepository(FirebaseFirestore.instance);

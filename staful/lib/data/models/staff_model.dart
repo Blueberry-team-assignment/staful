@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staful/data/models/template_model.dart';
-import 'package:staful/domain/utils/time_utils.dart';
+import 'package:staful/utils/time_utils.dart';
 
 // class Staff {
 //   final String name;

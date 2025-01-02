@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/auth_repository.dart';
 import 'package:staful/data/user_repository.dart';
-import 'package:staful/dto/auth/sign_up_dto.dart';
+import 'package:staful/data/dto/auth/sign_up_dto.dart';
 
 final signUpProvider =
     StateNotifierProvider.autoDispose<SignUpNotifier, SignUpState>((ref) {

@@ -4,9 +4,9 @@ import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/ui/screens/payroll/payroll_templates_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/ui/screens/staff/staff_info_screen.dart';
-import 'package:staful/domain/utils/app_styles.dart';
-import 'package:staful/domain/utils/navigation_helpers.dart';
+import 'package:staful/feature/staff/ui/staff_info_screen.dart';
+import 'package:staful/utils/app_styles.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
 class PayrollDetailScreen extends StatefulWidget {

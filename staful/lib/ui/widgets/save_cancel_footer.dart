@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:staful/domain/utils/app_styles.dart';
+import 'package:staful/utils/app_styles.dart';
 
 class SaveCancelFooter extends StatelessWidget {
   final VoidCallback onTabUndoBtn;
