@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/auth/log_in/log_in_provider.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/feature/calendar/ui/calendar_screen.dart';
+import 'package:staful/feature/calendar/presentation/calendar_screen.dart';
 import 'package:staful/feature/auth/sign_up/sign_up_screen.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';

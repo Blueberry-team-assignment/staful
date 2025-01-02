@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-Map<String, dynamic> getCurrentDateTimeInfo() {
-  DateTime now = DateTime.now();
+Map<String, dynamic> getTimeInfo({DateTime? date}) {
+  DateTime now = date ?? DateTime.now();
 
   int year = now.year;
   int month = now.month;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:staful/feature/calendar/ui/widgets/filtered_staff_grid.dart';
-import 'package:staful/feature/calendar/ui/widgets/table_calendar.dart';
+import 'package:staful/feature/calendar/presentation/widgets/filtered_staff_grid.dart';
+import 'package:staful/feature/calendar/presentation/widgets/table_calendar.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({

@@ -388,12 +388,6 @@ class WorkScheduleForDisplay extends StatelessWidget {
     required this.workHours,
   });
 
-  String formatTimeOfDay(TimeOfDay time) {
-    final hour = time.hour.toString().padLeft(2, '0');
-    final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -407,7 +401,7 @@ class WorkScheduleForDisplay extends StatelessWidget {
           ),
         ),
         const Text(
-          "~",
+          "-",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
