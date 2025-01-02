@@ -12,7 +12,7 @@ final signUpProvider =
 
 class SignUpNotifier extends StateNotifier<SignUpState> {
   final AuthInterface _authInterface;
-  final UserInterface _userInterface;
+  final UserRepository _userInterface;
 
   SignUpNotifier(this._authInterface, this._userInterface)
       : super(SignUpState());

@@ -11,7 +11,7 @@ final staffNotifierProvider =
 });
 
 class StaffNotifier extends StateNotifier<StaffState> {
-  final StaffInterface _staffInterface;
+  final StaffRepository _staffInterface;
 
   StaffNotifier(this._staffInterface) : super(StaffState());
 
