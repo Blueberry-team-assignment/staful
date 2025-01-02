@@ -11,14 +11,14 @@ final staffNotifierProvider =
 });
 
 class StaffNotifier extends StateNotifier<StaffState> {
-  final StaffInterface _staffInterface;
+  final StaffRepository _staffInterface;
 
   StaffNotifier(this._staffInterface) : super(StaffState());
 
   Future<void> fetchStaffList(String uid) async {
     try {
       state = state.copyWith(isLoading: true);
-      final staffList = await _staffInterface.fetchAllStaffs(uid: uid);
+      final staffList = await _staffInterface.fetchAllStaffs();
       state = state.copyWith(staffList: staffList, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);

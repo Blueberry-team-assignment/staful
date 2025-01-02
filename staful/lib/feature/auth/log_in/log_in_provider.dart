@@ -16,7 +16,7 @@ final logInProvider =
 
 class LogInNotifier extends StateNotifier<LogInState> {
   final AuthInterface _authInterface;
-  final UserInterface _userInterface;
+  final UserRepository _userInterface;
   final Ref _ref;
 
   LogInNotifier(
