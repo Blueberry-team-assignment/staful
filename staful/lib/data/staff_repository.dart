@@ -1,17 +1,18 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/dto/staff/create_staff_dto.dart';
 import 'package:staful/data/dto/staff/update_staff_dto.dart';
+import 'package:staful/feature/auth/log_in/log_in_provider.dart';
 
 final staffRepositoryProvider = Provider<StaffInterface>((ref) {
-  return StaffRepository(FirebaseFirestore.instance);
+  return StaffRepository(FirebaseFirestore.instance, ref);
 });
 
 abstract class StaffInterface {
-  Future<List<Staff>> fetchAllStaffs({
-    required String uid,
-  });
+  Future<List<Staff>> fetchAllStaffs();
 
   Future<Staff> updateStaff({
     required String uid,
@@ -28,13 +29,14 @@ abstract class StaffInterface {
 
 class StaffRepository implements StaffInterface {
   final FirebaseFirestore _firestore;
+  final Ref _ref;
 
-  StaffRepository(this._firestore);
+  StaffRepository(this._firestore, this._ref);
 
   @override
-  Future<List<Staff>> fetchAllStaffs({
-    required String uid,
-  }) async {
+  Future<List<Staff>> fetchAllStaffs() async {
+    final uid = _ref.read(logInProvider).user?.uid;
+
     final staffList =
         await _firestore.collection('users').doc(uid).collection('staff').get();
 

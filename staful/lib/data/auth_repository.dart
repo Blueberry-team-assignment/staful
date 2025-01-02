@@ -14,7 +14,7 @@ abstract class AuthInterface {
     required String userId,
     required String password,
   });
-  User? checkUser();
+  User checkUser();
   Future<void> logOut();
 }
 
@@ -63,7 +63,7 @@ class AuthRepository implements AuthInterface {
 
   // 로그인된 유저 체크
   @override
-  User? checkUser() {
+  User checkUser() {
     User? user = _firebaseAuth.currentUser;
 
     if (user == null) throw Exception('User not found');
