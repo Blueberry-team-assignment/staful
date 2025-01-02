@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
+import 'package:staful/feature/schedule_table/domain/build_cell_usecase.dart';
 import 'package:staful/feature/schedule_table/domain/scroll_to_current_time_usecase.dart';
-import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';
-import 'package:staful/utils/constants.dart';
-import 'package:staful/utils/navigation_helpers.dart';
-import 'package:staful/utils/time_utils.dart';
-import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
-class ScheduleTableWidget extends ConsumerStatefulWidget {
+class ScheduleTableWidget extends ConsumerWidget {
   final DateTime date;
 
   const ScheduleTableWidget({
@@ -19,46 +14,36 @@ class ScheduleTableWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ScheduleTableWidget> createState() =>
-      ScheduleTableWidgetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final ScrollController scrollController = ScrollController();
+    const double normalCellWidth = 28;
+    const double profileCellWidth = 74;
 
-class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
-  late final double screenWidth = MediaQuery.of(context).size.width;
-  final timeInfo = getTimeInfo();
-  final ScrollController _scrollController = ScrollController();
-  final double normalCellWidth = 28;
-  final double profileCellWidth = 74;
-  final List<int> _numbers = List.generate(
-      27,
-      (index) =>
-          index - 1); // -1 ~ 24까지 리스트. -1은 0번째 컬럼을 위함. 시간표는 1번째 행(0)부터 시작함.
-
-  @override
-  Widget build(BuildContext context) {
     final state = ref.watch(calendarViewModelProvider);
     final schedules =
         state.filteredStaff.map((staff) => staff.workHours).toList();
 
-    final scrollToCurrentTime = ScrollToCurrentTimeUsecase(
-      controller: _scrollController,
-      screenWidth: MediaQuery.of(context).size.width,
-      cellWidth: normalCellWidth,
-      profileWidth: profileCellWidth,
-    );
+    final buildCellUseCase = BuildCellUseCase(normalCellWidth: normalCellWidth);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final scrollToCurrentTime = ScrollToCurrentTimeUsecase(
+        controller: scrollController,
+        screenWidth: screenWidth,
+        cellWidth: normalCellWidth,
+        profileWidth: profileCellWidth,
+      );
       scrollToCurrentTime.call();
     });
 
     return Scaffold(
         body: TableView.builder(
       horizontalDetails: ScrollableDetails(
-        controller: _scrollController,
+        controller: scrollController,
         direction: AxisDirection.right,
       ),
-      cellBuilder: (context, vicinity) =>
-          _buildCell(context, vicinity, schedules, state.filteredStaff),
+      cellBuilder: (context, vicinity) => buildCellUseCase.build(
+          context, vicinity, schedules, state.filteredStaff, date),
       columnCount: 27,
       pinnedColumnCount: 1,
       columnBuilder: _buildColumnSpan,
@@ -68,100 +53,9 @@ class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
     ));
   }
 
-  TableViewCell _buildCell(BuildContext context, TableVicinity vicinity,
-      List<TimeRange?> schedules, List<Staff> staffList) {
-    if (vicinity.row == 0) {
-      if (vicinity.column == 0) return const TableViewCell(child: Text(""));
-      final int number = _numbers[vicinity.column];
-      return TableViewCell(
-        child: SizedBox(
-          height: 10,
-          width: 50,
-          child: Center(
-            child: Text(
-              number.toString(),
-              style: const TextStyle(
-                fontSize: 13.0,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (vicinity.column == 0) {
-      return TableViewCell(
-        child: Container(
-          color: Colors.white,
-          child: Center(
-            child: StaffProfileWidget(
-              imagePath: staffList[vicinity.yIndex - 1].image,
-              name: staffList[vicinity.yIndex - 1].name,
-            ),
-          ),
-        ),
-      );
-    }
-
-    final int start = schedules[vicinity.yIndex - 1]?.startTime.hour ?? 9 + 1;
-    final int end = schedules[vicinity.yIndex - 1]?.endTime.hour ?? 18 + 1;
-    final [startMinute, endMinute] = [
-      schedules[vicinity.yIndex - 1]?.startTime.minute ?? 0,
-      schedules[vicinity.yIndex - 1]?.endTime.minute ?? 0,
-    ];
-    if (vicinity.column >= start + 1 && vicinity.column <= end) {
-      return TableViewCell(
-        columnMergeStart: start + 1,
-        columnMergeSpan: end - start + 2, // Span for merging columns
-        child: GestureDetector(
-          onTap: () => openPage(
-            context,
-            // 선택한 일정의 시간으로 수정해야함.
-            EditScheduleScreen(
-              workDate: {
-                "month": timeInfo["month"],
-                "day": timeInfo["day"],
-                "dayOfWeekKorean": timeInfo["dayOfWeekKorean"]
-              },
-              workHours: schedules[vicinity.yIndex - 1],
-            ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-                10 + normalCellWidth * (startMinute / 60),
-                20,
-                10 + normalCellWidth * ((60 - endMinute) / 60),
-                20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: ColoredBox(
-                color: _isEmployeeOnSchedule(schedules[vicinity.yIndex - 1]!)
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).colorScheme.secondary,
-                child: Center(
-                  child: Text(
-                    "${formatTimeOfDay(schedules[vicinity.yIndex - 1]!.startTime)} - ${formatTimeOfDay(schedules[vicinity.yIndex - 1]!.endTime)}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return const TableViewCell(child: SizedBox.shrink());
-  }
-
   TableSpan _buildColumnSpan(int index) {
     return TableSpan(
-      extent:
-          FixedTableSpanExtent(index == 0 ? profileCellWidth : normalCellWidth),
+      extent: FixedTableSpanExtent(index == 0 ? 74 : 28),
       foregroundDecoration: index == 0
           ? TableSpanDecoration(
               border: TableSpanBorder(
@@ -180,24 +74,5 @@ class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
       extent: FixedTableSpanExtent(index == 0 ? 40 : 80),
       padding: index > 0 ? const TableSpanPadding(leading: 5.0) : null,
     );
-  }
-
-  bool _isEmployeeOnSchedule(TimeRange schedule) {
-    final [start, end] = [schedule.startTime, schedule.endTime];
-    final [sHour, sMinute] = [start.hour, start.minute];
-    final [eHour, eMinute] = [end.hour, end.minute];
-
-    bool isOnSchedule = false;
-    if (timeInfo["hour"] > sHour && timeInfo["hour"] < eHour) {
-      isOnSchedule = true;
-    }
-    if (timeInfo["hour"] == sHour && timeInfo["minute"] >= sMinute) {
-      isOnSchedule = true;
-    }
-    if (timeInfo["hour"] == eHour && timeInfo["minute"] <= eMinute) {
-      isOnSchedule = true;
-    }
-
-    return isOnSchedule;
   }
 }
