@@ -196,7 +196,7 @@ class _StaffRegisterScreenState extends State<StaffRegisterScreen> {
                           ),
                           WorkDaysRow(
                             staff: widget.staff,
-                            // onUpdate: ,
+                            onUpdate: widget.onUpdate,
                             disabled: false,
                           )
                         ],
@@ -291,6 +291,9 @@ class _StaffRegisterScreenState extends State<StaffRegisterScreen> {
                           hintText: "직원에 대해 알아야 할 점을 자유롭게 기록하세요",
                           border: InputBorder.none,
                         ),
+                        onChanged: (value) => {
+                          widget.onUpdate(widget.staff.copyWith(desc: value))
+                        },
                       ),
                     ),
                   ],

@@ -21,10 +21,15 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
       : super(StaffInfoState(
           originalStaffInfo: _staff,
           editableStaffInfo: _staff.copyWith(),
+          createdStaffInfo: _staff.copyWith(),
         ));
 
   void updateEditableStaff(Staff updatedStaff) {
     state = state.copyWith(editableStaffInfo: updatedStaff);
+  }
+
+  void updateCreatedStaff(Staff createdStaff) {
+    state = state.copyWith(createdStaffInfo: createdStaff);
   }
 
   void resetToOriginal() {
@@ -76,29 +81,28 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
     required Staff staff,
   }) async {
     try {
-      state = state.copyWith(editableStaffInfo: staff, isLoading: true);
+      state = state.copyWith(createdStaffInfo: staff, isLoading: true);
       final createStaffDto = CreateStaffDto(
-        name: state.editableStaffInfo!.name,
-        image: state.editableStaffInfo?.image,
-        workDays: state.editableStaffInfo?.workDays,
-        workHours: state.editableStaffInfo?.workHours != null
+        name: state.createdStaffInfo!.name,
+        image: state.createdStaffInfo?.image,
+        workDays: state.createdStaffInfo?.workDays,
+        workHours: state.createdStaffInfo?.workHours != null
             ? {
                 "start": {
-                  "hour": state.editableStaffInfo!.workHours!.startTime.hour,
-                  "minute":
-                      state.editableStaffInfo!.workHours!.startTime.minute,
+                  "hour": state.createdStaffInfo!.workHours!.startTime.hour,
+                  "minute": state.createdStaffInfo!.workHours!.startTime.minute,
                 },
                 "end": {
-                  "hour": state.editableStaffInfo!.workHours!.endTime.hour,
-                  "minute": state.editableStaffInfo!.workHours!.endTime.minute,
+                  "hour": state.createdStaffInfo!.workHours!.endTime.hour,
+                  "minute": state.createdStaffInfo!.workHours!.endTime.minute,
                 },
               }
             : null,
-        desc: state.editableStaffInfo?.desc ?? "",
+        desc: state.createdStaffInfo?.desc ?? "",
       );
       final newStaff = await _staffRepository.createStaff(
           uid: uid, createStaffDto: createStaffDto);
-      state = state.copyWith(originalStaffInfo: newStaff, isLoading: false);
+      state = state.copyWith(createdStaffInfo: newStaff, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
       throw Exception('Failed to create staff: $e');
@@ -121,23 +125,27 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
 class StaffInfoState {
   final Staff? originalStaffInfo;
   final Staff? editableStaffInfo;
+  final Staff? createdStaffInfo;
   final bool isLoading;
 
   StaffInfoState({
     this.isLoading = false,
     this.originalStaffInfo,
     this.editableStaffInfo,
+    this.createdStaffInfo,
   });
 
   StaffInfoState copyWith({
     bool? isLoading,
     Staff? originalStaffInfo,
     Staff? editableStaffInfo,
+    Staff? createdStaffInfo,
   }) {
     return StaffInfoState(
       isLoading: isLoading ?? this.isLoading,
       originalStaffInfo: originalStaffInfo ?? this.originalStaffInfo,
       editableStaffInfo: editableStaffInfo ?? this.editableStaffInfo,
+      createdStaffInfo: createdStaffInfo ?? this.createdStaffInfo,
     );
   }
 }

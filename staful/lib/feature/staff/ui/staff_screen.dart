@@ -56,8 +56,11 @@ class StaffScreen extends StatelessWidget {
             height: 10,
           ),
           GestureDetector(
-            onTap: () =>
-                openPage(context, const StaffRegisterScreenContainer()),
+            onTap: () => openPage(
+                context,
+                StaffRegisterScreenContainer(
+                  staff: Staff(name: "", staffId: ""),
+                )),
             child: const SubmitButtonWidget(
               text: "직원 등록",
             ),

@@ -354,6 +354,10 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                           hintText: "직원에 대해 알아야 할 점을 자유롭게 기록하세요",
                           border: InputBorder.none,
                         ),
+                        onChanged: (value) => {
+                          widget.onUpdate(
+                              widget.editableStaff.copyWith(desc: value))
+                        },
                       ),
                     ),
                   ],

@@ -108,6 +108,7 @@ class Staff {
       workDate:
           data["workDate"] != null ? List<String>.from(data["workDate"]) : [],
       staffId: data["staffId"] ?? "",
+      desc: data["desc"] ?? "",
     );
   }
 
@@ -120,6 +121,7 @@ class Staff {
       "workHours": workHours,
       "workDate": workDate,
       "staffId": staffId,
+      "desc": desc,
     };
   }
 

@@ -7,26 +7,30 @@ import 'package:staful/feature/staff/provider/staff_info_provider.dart';
 import 'package:staful/feature/staff/ui/staff_register_screen.dart';
 
 class StaffRegisterScreenContainer extends ConsumerWidget {
-  const StaffRegisterScreenContainer({super.key});
+  final Staff staff;
+
+  const StaffRegisterScreenContainer({
+    super.key,
+    required this.staff,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Staff nullStaff = Staff(name: "", staffId: "");
-    final state = ref.watch(staffInfoNotifierProvider(nullStaff));
+    final state = ref.watch(staffInfoNotifierProvider(staff));
 
     return Stack(
       children: [
         StaffRegisterScreen(
-          staff: state.editableStaffInfo!,
-          onUpdate: (updatedStaff) {
+          staff: state.createdStaffInfo!,
+          onUpdate: (createdStaff) {
             ref
-                .read(staffInfoNotifierProvider(nullStaff).notifier)
-                .updateEditableStaff(updatedStaff);
+                .read(staffInfoNotifierProvider(staff).notifier)
+                .updateCreatedStaff(createdStaff);
           },
           onSave: () {
-            ref.read(staffInfoNotifierProvider(nullStaff).notifier).createStaff(
+            ref.read(staffInfoNotifierProvider(staff).notifier).createStaff(
                 uid: ref.read(logInProvider).user!.uid,
-                staff: state.editableStaffInfo!);
+                staff: state.createdStaffInfo!);
           },
         ),
         if (state.isLoading) const LoadingIndicator()
