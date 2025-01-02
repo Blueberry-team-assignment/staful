@@ -107,7 +107,7 @@ class Staff {
       workHours: newWorkHour,
       workDate:
           data["workDate"] != null ? List<String>.from(data["workDate"]) : [],
-      staffId: data["staffId"],
+      staffId: data["staffId"] ?? "",
     );
   }
 

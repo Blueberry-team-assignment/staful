@@ -18,25 +18,29 @@ class StaffInfoScreenContainer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(staffInfoNotifierProvider(staff));
 
-    return Stack(children: [
-      StaffInfoScreen(
-        originalStaff: state.originalStaffInfo!,
-        editableStaff: state.editableStaffInfo!,
-        onUpdate: (updatedStaff) {
-          ref
-              .read(staffInfoNotifierProvider(staff).notifier)
-              .updateEditableStaff(updatedStaff);
-        },
-        onSave: () {
-          ref
-              .read(staffInfoNotifierProvider(staff).notifier)
-              .saveChanges(ref.read(logInProvider).user!.uid);
-        },
-        onReset: () {
-          ref.read(staffInfoNotifierProvider(staff).notifier).resetToOriginal();
-        },
-      ),
-      if (state.isLoading) const LoadingIndicator()
-    ]);
+    return Stack(
+      children: [
+        StaffInfoScreen(
+          originalStaff: state.originalStaffInfo!,
+          editableStaff: state.editableStaffInfo!,
+          onUpdate: (updatedStaff) {
+            ref
+                .read(staffInfoNotifierProvider(staff).notifier)
+                .updateEditableStaff(updatedStaff);
+          },
+          onSave: () {
+            ref
+                .read(staffInfoNotifierProvider(staff).notifier)
+                .saveChanges(ref.read(logInProvider).user!.uid);
+          },
+          onReset: () {
+            ref
+                .read(staffInfoNotifierProvider(staff).notifier)
+                .resetToOriginal();
+          },
+        ),
+        if (state.isLoading) const LoadingIndicator()
+      ],
+    );
   }
 }

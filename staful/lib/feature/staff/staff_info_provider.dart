@@ -73,10 +73,29 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
 
   Future<void> createStaff({
     required String uid,
-    required CreateStaffDto createStaffDto,
+    required Staff staff,
   }) async {
     try {
-      state = state.copyWith(isLoading: true);
+      state = state.copyWith(editableStaffInfo: staff, isLoading: true);
+      final createStaffDto = CreateStaffDto(
+        name: state.editableStaffInfo!.name,
+        image: state.editableStaffInfo?.image,
+        workDays: state.editableStaffInfo?.workDays,
+        workHours: state.editableStaffInfo?.workHours != null
+            ? {
+                "start": {
+                  "hour": state.editableStaffInfo!.workHours!.startTime.hour,
+                  "minute":
+                      state.editableStaffInfo!.workHours!.startTime.minute,
+                },
+                "end": {
+                  "hour": state.editableStaffInfo!.workHours!.endTime.hour,
+                  "minute": state.editableStaffInfo!.workHours!.endTime.minute,
+                },
+              }
+            : null,
+        desc: state.editableStaffInfo?.desc ?? "",
+      );
       final newStaff = await _staffRepository.createStaff(
           uid: uid, createStaffDto: createStaffDto);
       state = state.copyWith(originalStaffInfo: newStaff, isLoading: false);

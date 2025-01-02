@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/feature/staff/staff_info_screen_container.dart';
 import 'package:staful/feature/staff/staff_provider.dart';
+import 'package:staful/feature/staff/staff_register_screen_container.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:staful/domain/utils/navigation_helpers.dart';
@@ -55,7 +56,8 @@ class StaffScreen extends StatelessWidget {
             height: 10,
           ),
           GestureDetector(
-            onTap: () => openPage(context, const StaffRegisterScreen()),
+            onTap: () =>
+                openPage(context, const StaffRegisterScreenContainer()),
             child: const SubmitButtonWidget(
               text: "직원 등록",
             ),

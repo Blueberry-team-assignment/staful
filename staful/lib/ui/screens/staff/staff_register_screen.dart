@@ -1,35 +1,33 @@
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/domain/utils/app_styles.dart';
 import 'package:staful/domain/utils/time_utils.dart';
-import 'package:staful/dto/staff/create_staff_dto.dart';
-import 'package:staful/feature/auth/log_in/log_in_provider.dart';
-import 'package:staful/feature/staff/staff_info_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/ui/screens/staff/staff_info_screen.dart';
-import 'package:staful/ui/screens/staff/staff_screen.dart';
 import 'package:staful/ui/widgets/work_days_row.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
-class StaffRegisterScreen extends ConsumerStatefulWidget {
+class StaffRegisterScreen extends StatefulWidget {
+  final Staff staff;
+  final VoidCallback onSave;
+  final void Function(Staff) onUpdate;
+
   const StaffRegisterScreen({
     super.key,
+    required this.staff,
+    required this.onSave,
+    required this.onUpdate,
   });
 
   @override
-  ConsumerState<StaffRegisterScreen> createState() =>
-      _StaffRegisterScreenState();
+  State<StaffRegisterScreen> createState() => _StaffRegisterScreenState();
 }
 
-class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
+class _StaffRegisterScreenState extends State<StaffRegisterScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController memoFieldController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
@@ -47,33 +45,21 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
   }
 
   // 저장 버튼 클릭
-  // Future<void> onSave(context) async {
-  //   try {
-  //     final notifier = ref.read(staffInfoNotifierProvider.notifier);
+  void onSave(context) {
+    try {
+      if (nameController.text.isEmpty) {
+        return;
+      }
 
-  //     if (nameController.text.isEmpty) {
-  //       return;
-  //     }
+      widget.onSave();
 
-  //     // Staff 인스턴스 생성 후 저장
-  //     final newStaff = CreateStaffDto(
-  //       name: nameController.text,
-  //       desc: memoFieldController.text,
-  //       image: imagePath,
-  //     );
-
-  //     await notifier.createStaff(
-  //       uid: ref.read(logInProvider).user!.uid,
-  //       createStaffDto: newStaff,
-  //     );
-
-  //     if (mounted) {
-  //       Navigator.of(context).pop(); // 등록 후 이전 화면으로 돌아가기
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e);
-  //   }
-  // }
+      if (mounted) {
+        Navigator.of(context).pop(); // 등록 후 이전 화면으로 돌아가기
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 
   // 되돌리기
   void onUndo() {}
@@ -84,28 +70,24 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
         await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      setState(() {
-        imagePath = pickedFile.path;
-      });
+      // widget.onUpdate(widget.staff.copyWith(image: pickedFile));
     }
   }
 
   void handleOnUpdateOpeningHour(DateTime time) {
-    setState(() {
-      updatedSchedule = TimeRange(
-        startTime: TimeOfDay(hour: time.hour, minute: time.minute),
-        endTime: updatedSchedule.endTime,
-      );
-    });
+    updatedSchedule = TimeRange(
+      startTime: TimeOfDay(hour: time.hour, minute: time.minute),
+      endTime: widget.staff.workHours?.endTime ?? updatedSchedule.endTime,
+    );
+    widget.onUpdate(widget.staff.copyWith(workHours: updatedSchedule));
   }
 
   void handleOnUpdateClosingHour(DateTime time) {
-    setState(() {
-      updatedSchedule = TimeRange(
-        startTime: updatedSchedule.startTime,
-        endTime: TimeOfDay(hour: time.hour, minute: time.minute),
-      );
-    });
+    updatedSchedule = TimeRange(
+      startTime: widget.staff.workHours?.startTime ?? updatedSchedule.startTime,
+      endTime: TimeOfDay(hour: time.hour, minute: time.minute),
+    );
+    widget.onUpdate(widget.staff.copyWith(workHours: updatedSchedule));
   }
 
   @override
@@ -118,7 +100,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
           30,
           10,
           30,
-          30,
+          50,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -182,7 +164,10 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                                     Expanded(
                                       child: SimpleTextInputWidget(
                                         placeHolder: "이름을 입력해주세요",
-                                        onChanged: (e) => {},
+                                        onChanged: (value) => {
+                                          widget.onUpdate(widget.staff
+                                              .copyWith(name: value))
+                                        },
                                         controller: nameController,
                                         onlyBottomBorder: true,
                                       ),
@@ -209,10 +194,11 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          // const WorkDaysRow(
-                          //   workDays: [],
-                          //   disabled: false,
-                          // )
+                          WorkDaysRow(
+                            staff: widget.staff,
+                            // onUpdate: ,
+                            disabled: false,
+                          )
                         ],
                       ),
                     ),
@@ -237,7 +223,9 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                                   children: [
                                     Expanded(
                                       child: TimePicker(
-                                        scheduleInfo: updatedSchedule.startTime,
+                                        scheduleInfo:
+                                            widget.staff.workHours?.startTime ??
+                                                updatedSchedule.startTime,
                                         onDateTimeChanged:
                                             handleOnUpdateOpeningHour,
                                       ),
@@ -247,7 +235,9 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                                     ),
                                     Expanded(
                                       child: TimePicker(
-                                        scheduleInfo: updatedSchedule.endTime,
+                                        scheduleInfo:
+                                            widget.staff.workHours?.endTime ??
+                                                updatedSchedule.endTime,
                                         onDateTimeChanged:
                                             handleOnUpdateClosingHour,
                                       ),
@@ -309,26 +299,6 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
             ),
             Row(
               children: [
-                Expanded(
-                  child: TextButton(
-                    style: ButtonStyle(
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      backgroundColor: WidgetStateProperty.all<Color>(
-                          Theme.of(context).disabledColor),
-                    ),
-                    onPressed: onUndo,
-                    child: const Text(
-                      "취소",
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(
                   width: 10,
                 ),
@@ -343,7 +313,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                       backgroundColor: WidgetStateProperty.all<Color>(
                           Theme.of(context).primaryColor),
                     ),
-                    onPressed: () => {},
+                    onPressed: () => onSave(context),
                     child: const Text(
                       "저장",
                       style: TextStyle(
