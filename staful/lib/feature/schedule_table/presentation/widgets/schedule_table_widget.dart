@@ -37,10 +37,8 @@ class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(calendarViewModelProvider);
-    final schedules = [
-      defaultTimeRange,
-      ...state.filteredStaff.map((staff) => staff.workHours)
-    ];
+    final schedules =
+        state.filteredStaff.map((staff) => staff.workHours).toList();
 
     final scrollToCurrentTime = ScrollToCurrentTimeUsecase(
       controller: _scrollController,
@@ -64,7 +62,7 @@ class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
       columnCount: 27,
       pinnedColumnCount: 1,
       columnBuilder: _buildColumnSpan,
-      rowCount: schedules.length,
+      rowCount: schedules.length + 1,
       rowBuilder: _buildRowSpan,
       pinnedRowCount: 1,
     ));
@@ -105,11 +103,11 @@ class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
       );
     }
 
-    final int start = schedules[vicinity.yIndex]?.startTime.hour ?? 9 + 1;
-    final int end = schedules[vicinity.yIndex]?.endTime.hour ?? 18 + 1;
+    final int start = schedules[vicinity.yIndex - 1]?.startTime.hour ?? 9 + 1;
+    final int end = schedules[vicinity.yIndex - 1]?.endTime.hour ?? 18 + 1;
     final [startMinute, endMinute] = [
-      schedules[vicinity.yIndex]?.startTime.minute ?? 0,
-      schedules[vicinity.yIndex]?.endTime.minute ?? 0,
+      schedules[vicinity.yIndex - 1]?.startTime.minute ?? 0,
+      schedules[vicinity.yIndex - 1]?.endTime.minute ?? 0,
     ];
     if (vicinity.column >= start + 1 && vicinity.column <= end) {
       return TableViewCell(
@@ -118,13 +116,14 @@ class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
         child: GestureDetector(
           onTap: () => openPage(
             context,
+            // 선택한 일정의 시간으로 수정해야함.
             EditScheduleScreen(
               workDate: {
                 "month": timeInfo["month"],
                 "day": timeInfo["day"],
                 "dayOfWeekKorean": timeInfo["dayOfWeekKorean"]
               },
-              workHours: schedules[vicinity.yIndex],
+              workHours: schedules[vicinity.yIndex - 1],
             ),
           ),
           child: Padding(
@@ -136,12 +135,12 @@ class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: ColoredBox(
-                color: _isEmployeeOnSchedule(schedules[vicinity.yIndex]!)
+                color: _isEmployeeOnSchedule(schedules[vicinity.yIndex - 1]!)
                     ? Theme.of(context).primaryColor
                     : Theme.of(context).colorScheme.secondary,
                 child: Center(
                   child: Text(
-                    "${formatTimeOfDay(schedules[vicinity.yIndex]!.startTime)} - ${formatTimeOfDay(schedules[vicinity.yIndex]!.endTime)}",
+                    "${formatTimeOfDay(schedules[vicinity.yIndex - 1]!.startTime)} - ${formatTimeOfDay(schedules[vicinity.yIndex - 1]!.endTime)}",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
