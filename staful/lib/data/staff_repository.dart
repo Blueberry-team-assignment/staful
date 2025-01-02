@@ -5,7 +5,7 @@ import 'package:staful/data/dto/staff/create_staff_dto.dart';
 import 'package:staful/data/dto/staff/update_staff_dto.dart';
 import 'package:staful/feature/auth/log_in/log_in_provider.dart';
 
-final staffRepositoryProvider = Provider<StaffRepository>((ref) {
+final staffRepositoryProvider = Provider<StaffInterface>((ref) {
   return StaffRepository(FirebaseFirestore.instance, ref);
 });
 

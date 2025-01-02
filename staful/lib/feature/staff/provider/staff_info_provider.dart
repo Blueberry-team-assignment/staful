@@ -15,7 +15,7 @@ final staffInfoNotifierProvider = StateNotifierProvider.autoDispose
 });
 
 class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
-  final StaffRepository _staffRepository;
+  final StaffInterface _staffRepository;
   final Staff _staff;
   final Ref _ref;
 

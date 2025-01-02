@@ -5,10 +5,10 @@ import 'package:staful/data/models/user_model.dart';
 import 'package:staful/data/dto/auth/sign_up_dto.dart';
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
-  return UserRepositoryImpl(FirebaseFirestore.instance);
+  return UserRepository(FirebaseFirestore.instance);
 });
 
-abstract class UserRepository {
+abstract class UserInterface {
   Future<void> saveUserToFirestore({
     required String uid,
     required SignUpDto signUpDto,
@@ -22,10 +22,10 @@ abstract class UserRepository {
   Future<User> loadUserFromPreferences();
 }
 
-class UserRepositoryImpl implements UserRepository {
+class UserRepository implements UserInterface {
   final FirebaseFirestore _firestore;
 
-  UserRepositoryImpl(this._firestore);
+  UserRepository(this._firestore);
 
   // Firestore에 유저 데이터 저장
   @override
