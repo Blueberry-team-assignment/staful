@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';

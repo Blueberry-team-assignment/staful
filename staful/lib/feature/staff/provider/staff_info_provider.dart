@@ -3,6 +3,7 @@ import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/staff_repository.dart';
 import 'package:staful/data/dto/staff/create_staff_dto.dart';
 import 'package:staful/data/dto/staff/update_staff_dto.dart';
+import 'package:staful/feature/staff/provider/staff_provider.dart';
 
 // family를 사용하여 각 staff에 대해 별도의 상태를 관리할 수 있습니다.
 // 동일한 구조로 여러 staff에 대해 독립적으로 상태를 관리할 수 있습니다.
@@ -10,15 +11,19 @@ import 'package:staful/data/dto/staff/update_staff_dto.dart';
 final staffInfoNotifierProvider = StateNotifierProvider.autoDispose
     .family<StaffInfoNotifier, StaffInfoState, Staff>((ref, staff) {
   final staffRepository = ref.read(staffRepositoryProvider);
-  return StaffInfoNotifier(staffRepository, staff);
+  return StaffInfoNotifier(staffRepository, staff, ref);
 });
 
 class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
   final StaffInterface _staffRepository;
   final Staff _staff;
+  final Ref _ref;
 
-  StaffInfoNotifier(this._staffRepository, this._staff)
-      : super(StaffInfoState(
+  StaffInfoNotifier(
+    this._staffRepository,
+    this._staff,
+    this._ref,
+  ) : super(StaffInfoState(
           originalStaffInfo: _staff,
           editableStaffInfo: _staff.copyWith(),
           createdStaffInfo: _staff.copyWith(),
@@ -69,6 +74,14 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
       state = state.copyWith(isLoading: true);
       final updatedStaff = await _staffRepository.updateStaff(
           uid: uid, updateStaffDto: updateStaffDto);
+
+      // sync staffList
+      final staffNotifier = _ref.read(staffNotifierProvider.notifier);
+      staffNotifier.state = staffNotifier.state.copyWith(
+        staffList: staffNotifier.state.staffList?.map((staff) {
+          return staff.staffId == updatedStaff.staffId ? updatedStaff : staff;
+        }).toList(),
+      );
       state = state.copyWith(originalStaffInfo: updatedStaff, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
@@ -102,6 +115,12 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
       );
       final newStaff = await _staffRepository.createStaff(
           uid: uid, createStaffDto: createStaffDto);
+
+      // sync staffList
+      final staffNotifier = _ref.read(staffNotifierProvider.notifier);
+      staffNotifier.state = staffNotifier.state.copyWith(
+        staffList: [...?staffNotifier.state.staffList, newStaff],
+      );
       state = state.copyWith(createdStaffInfo: newStaff, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
@@ -114,6 +133,14 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
       state = state.copyWith(isLoading: true);
       await _staffRepository.deleteStaff(uid: uid, staffId: staffId);
       print('deleted staff id : $staffId');
+
+      // sync staffList
+      final staffNotifier = _ref.read(staffNotifierProvider.notifier);
+      staffNotifier.state = staffNotifier.state.copyWith(
+        staffList: staffNotifier.state.staffList
+            ?.where((staff) => staff.staffId != staffId)
+            .toList(),
+      );
       state = state.copyWith(isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
