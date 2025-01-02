@@ -11,6 +11,8 @@ const mapOfWorkDays = {
   "sat": "토",
 };
 
+const weekDays = ["월", "화", "수", "목", "금", "토", "일"];
+
 final defaultTimeRange = TimeRange(
   startTime: const TimeOfDay(hour: 9, minute: 0),
   endTime: const TimeOfDay(hour: 18, minute: 0),

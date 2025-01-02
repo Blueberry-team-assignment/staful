@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/feature/staff/provider/staff_provider.dart';
 import 'package:staful/ui/screens/calendar/schedule_screen.dart';
 import 'package:staful/utils/constants.dart';
@@ -28,7 +29,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       return [const SizedBox.shrink()];
     }
 
-    return staffList
+    final selectedWeekDay = weekDays[_selectedDay.weekday - 1];
+
+    final filteredStaff = staffList.where((staff) {
+      return staff.workDays?.contains(selectedWeekDay) ?? false;
+    }).toList();
+
+    return filteredStaff
         .map(
           (staff) => GestureDetector(
             onTap: () => openPage(
