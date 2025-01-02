@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
+import 'package:staful/feature/schedule_table/domain/scroll_to_current_time_usecase.dart';
 import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';
 import 'package:staful/utils/constants.dart';
 import 'package:staful/utils/navigation_helpers.dart';
@@ -34,44 +35,23 @@ class ScheduleTableWidgetState extends ConsumerState<ScheduleTableWidget> {
           index - 1); // -1 ~ 24까지 리스트. -1은 0번째 컬럼을 위함. 시간표는 1번째 행(0)부터 시작함.
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollToCurrentTime();
-    });
-  }
-
-  void scrollToCurrentTime() {
-    final timeInfo = getTimeInfo(date: DateTime.now());
-    final int currentHour = timeInfo["hour"];
-    final int currentMinute = timeInfo["minute"];
-    final int columnIndex = currentHour + 2;
-
-    // 각 시간 셀의 중간에 해당하는 분 위치 계산
-    final double minuteOffset = (currentMinute / 60.0) * normalCellWidth;
-
-    // 화면 중앙에 오도록 스크롤할 위치 계산
-    final double targetScrollOffset = columnIndex * normalCellWidth +
-        minuteOffset -
-        (screenWidth / 2 + normalCellWidth / 2) +
-        profileCellWidth;
-
-    _scrollController.animateTo(
-      targetScrollOffset,
-      duration: const Duration(milliseconds: 1300),
-      curve: Curves.easeInOutBack,
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     final state = ref.watch(calendarViewModelProvider);
     final schedules = [
       defaultTimeRange,
       ...state.filteredStaff.map((staff) => staff.workHours)
     ];
-    print(schedules);
+
+    final scrollToCurrentTime = ScrollToCurrentTimeUsecase(
+      controller: _scrollController,
+      screenWidth: MediaQuery.of(context).size.width,
+      cellWidth: normalCellWidth,
+      profileWidth: profileCellWidth,
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToCurrentTime.call();
+    });
 
     return Scaffold(
         body: TableView.builder(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:staful/feature/schedule_table/presentation/date_title_row.dart';
+import 'package:staful/feature/schedule_table/presentation/widgets/date_title_row.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/ui/widgets/schedule_table_widget.dart';
+import 'package:staful/feature/schedule_table/presentation/widgets/schedule_table_widget.dart';
 
 class ScheduleScreen extends StatelessWidget {
   final DateTime date;

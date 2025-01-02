@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:staful/ui/screens/calendar/schedule_screen.dart';
+import 'package:staful/feature/schedule_table/presentation/schedule_screen.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
 class DailyCalendarScreen extends StatelessWidget {
