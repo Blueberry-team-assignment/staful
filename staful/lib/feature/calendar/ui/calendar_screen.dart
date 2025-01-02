@@ -1,84 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/feature/staff/provider/staff_provider.dart';
-import 'package:staful/ui/screens/calendar/schedule_screen.dart';
-import 'package:staful/utils/constants.dart';
-import 'package:staful/utils/navigation_helpers.dart';
-import 'package:staful/ui/widgets/staff_profile_widget.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:staful/feature/calendar/ui/widgets/filtered_staff_grid.dart';
+import 'package:staful/feature/calendar/ui/widgets/table_calendar.dart';
 
-class CalendarScreen extends ConsumerStatefulWidget {
+class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
     super.key,
   });
-
-  @override
-  ConsumerState<CalendarScreen> createState() => _CalendarScreenState();
-}
-
-class _CalendarScreenState extends ConsumerState<CalendarScreen> {
-  DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
-
-  List<Widget> staffProfileWidgets(BuildContext context) {
-    final staffList = ref.watch(staffNotifierProvider).staffList;
-
-    if (staffList == null) {
-      return [const SizedBox.shrink()];
-    }
-
-    final selectedWeekDay = weekDays[_selectedDay.weekday - 1];
-
-    final filteredStaff = staffList.where((staff) {
-      return staff.workDays?.contains(selectedWeekDay) ?? false;
-    }).toList();
-
-    return filteredStaff
-        .map(
-          (staff) => GestureDetector(
-            onTap: () => openPage(
-              context,
-              ScheduleScreen(
-                date: _selectedDay,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: StaffProfileWidget(
-                imagePath: staff.image != null
-                    ? "lib/assets/images/${staff.image}"
-                    : null,
-                name: staff.name,
-              ),
-            ),
-          ),
-        )
-        .toList();
-  }
-
-  void onDaySelected(selectedDay) {
-    setState(() {
-      _selectedDay = selectedDay;
-      _focusedDay = selectedDay;
-    });
-  }
-
-  // 헤더 한번 탭할 시, 선택했던 날짜로 포커스
-  void handleOnHeaderTapped(DateTime _) {
-    setState(() {
-      _focusedDay = _selectedDay;
-    });
-  }
-
-  // 헤더 길게 탭할 시, 리셋
-  void handleOnHeaderLongPressed(DateTime _) {
-    setState(() {
-      _selectedDay = DateTime.now();
-      _focusedDay = DateTime.now();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,29 +26,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               const SizedBox(
                 height: 15,
               ),
-              TableCalendar(
-                onHeaderLongPressed: handleOnHeaderLongPressed,
-                onHeaderTapped: handleOnHeaderTapped,
-                onDaySelected: (selectedDay, focusedDay) => {
-                  onDaySelected(selectedDay),
-                },
-                calendarStyle: CalendarStyle(
-                  todayTextStyle: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  todayDecoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                headerStyle: calendarHeaderStyle(),
-                locale: Localizations.localeOf(context).toString(),
-                currentDay: _selectedDay,
-                focusedDay: _focusedDay,
-                firstDay: DateTime(1950),
-                lastDay: DateTime(2150),
-              ),
+              const TableCalendarWidget(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -142,58 +47,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-                  GridView.count(
-                    crossAxisCount: 4,
-                    shrinkWrap: true, // 자식 위젯들의 크기에 맞게 자신의 크기를 줄이도록 함.
-                    physics:
-                        const NeverScrollableScrollPhysics(), // GridView 자체 스크롤 비활성화.
-                    children: staffProfileWidgets(context),
-                  ),
+                  const FilteredStaffGrid()
                 ],
               )
             ],
           ),
         ),
       ),
-    );
-  }
-
-  HeaderStyle calendarHeaderStyle() {
-    return HeaderStyle(
-      rightChevronIcon: ChevronIconStyle("r"),
-      rightChevronMargin: const EdgeInsets.only(
-        right: 70,
-      ),
-      leftChevronIcon: ChevronIconStyle("l"),
-      leftChevronMargin: const EdgeInsets.only(
-        left: 70,
-      ),
-      headerPadding: const EdgeInsets.only(bottom: 15),
-      formatButtonVisible: false,
-      titleCentered: true,
-      titleTextFormatter: (date, locale) => DateFormat("y.MM").format(date),
-      titleTextStyle: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        // decoration: TextDecoration.underline,
-        // color: Colors.transparent,
-        // shadows: [
-        //   Shadow(
-        //     // color: Colors.transparent,
-        //     offset: Offset(0, -8),
-        //   )
-        // ],
-      ),
-    );
-  }
-
-  Icon ChevronIconStyle(direction) {
-    return Icon(
-      direction == "l"
-          ? Icons.chevron_left_outlined
-          : Icons.chevron_right_outlined,
-      size: 30,
-      color: Colors.black,
     );
   }
 }

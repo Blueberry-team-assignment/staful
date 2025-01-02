@@ -1,6 +1,11 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/staff_repository.dart';
 import 'package:staful/utils/constants.dart';
+
+// final getFilteredStaffUsecaseProvider = Provider((ref) {
+//   return GetFilteredStaffUseCase(ref.watch(staffRepositoryProvider));
+// });
 
 class GetFilteredStaffUseCase {
   final StaffInterface _staffRepository;

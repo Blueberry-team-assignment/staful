@@ -5,8 +5,8 @@ import 'package:staful/ui/screens/calendar/schedule_screen.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/navigation_helpers.dart';
 
-class MyWidget extends ConsumerWidget {
-  const MyWidget({super.key});
+class FilteredStaffGrid extends ConsumerWidget {
+  const FilteredStaffGrid({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
