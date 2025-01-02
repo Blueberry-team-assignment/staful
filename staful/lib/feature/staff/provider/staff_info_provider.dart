@@ -45,7 +45,7 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
 
   void saveChanges(String uid) {
     state = state.copyWith(originalStaffInfo: state.editableStaffInfo);
-    print('update staff id : ${state.editableStaffInfo?.staffId}');
+
     final updateStaffDto = UpdateStaffDto(
       staffId: state.editableStaffInfo!.staffId,
       name: state.editableStaffInfo?.name,
@@ -119,7 +119,7 @@ class StaffInfoNotifier extends StateNotifier<StaffInfoState> {
       // sync staffList
       final staffNotifier = _ref.read(staffNotifierProvider.notifier);
       staffNotifier.state = staffNotifier.state.copyWith(
-        staffList: [...?staffNotifier.state.staffList, newStaff],
+        staffList: [newStaff, ...?staffNotifier.state.staffList],
       );
       state = state.copyWith(createdStaffInfo: newStaff, isLoading: false);
     } catch (e) {

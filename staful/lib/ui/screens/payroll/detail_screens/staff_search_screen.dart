@@ -5,7 +5,7 @@ import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/feature/staff/ui/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
-import 'package:staful/utils/dummies.dart';
+import 'package:staful/utils/constants.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/ui/widgets/overlay_search_results_widget.dart';
 import 'package:staful/ui/widgets/save_cancel_footer.dart';

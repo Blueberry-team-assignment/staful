@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/utils/app_styles.dart';
+import 'package:staful/utils/constants.dart';
 import 'package:staful/utils/time_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
@@ -32,9 +33,7 @@ class _StaffRegisterScreenState extends State<StaffRegisterScreen> {
   final TextEditingController memoFieldController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   String? imagePath; // 선택된 이미지 경로
-  late TimeRange updatedSchedule = TimeRange(
-      startTime: const TimeOfDay(hour: 0, minute: 0),
-      endTime: const TimeOfDay(hour: 24, minute: 0));
+  late TimeRange updatedSchedule = defaultTimeRange;
 
   @override
   void dispose() {
@@ -254,10 +253,25 @@ class _StaffRegisterScreenState extends State<StaffRegisterScreen> {
                                     children: [
                                       const TextSpan(text: "해당 직원은"),
                                       TextSpan(
-                                          // text: " 주 $weeklyWorkTime ",
+                                          text:
+                                              " 주 ${widget.staff.weeklyWorkingHours["hour"]}",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColor)),
+                                      const TextSpan(text: "시간 "),
+                                      if (widget.staff
+                                              .weeklyWorkingHours["minute"] !=
+                                          0)
+                                        TextSpan(
+                                            text:
+                                                "${widget.staff.weeklyWorkingHours["minute"]}",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
+                                      if (widget.staff
+                                              .weeklyWorkingHours["minute"] !=
+                                          0)
+                                        const TextSpan(text: "분 "),
                                       const TextSpan(text: "근무입니다"),
                                     ],
                                   ),

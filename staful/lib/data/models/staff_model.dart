@@ -80,6 +80,18 @@ class Staff {
     isVisible = show;
   }
 
+  // 주간 근무 시간을 계산하는 메서드
+  Map<String, int> get weeklyWorkingHours {
+    if (workDays == null || workDays?.length == 0) {
+      return {"hour": 0, "minute": 0};
+    }
+    final dailyWorkMinutes = workHours?.workDurationInMinutes ?? 0;
+    final totalWorkMinutes =
+        dailyWorkMinutes * workDays!.length; // 모든 요일의 근무시간은 동일하다고 가정
+
+    return {"hour": totalWorkMinutes ~/ 60, "minute": totalWorkMinutes % 60};
+  }
+
   // Firestore 데이터를 기반으로 인스턴스를 생성하는 팩토리 메서드
   factory Staff.fromFirestore(Map<String, dynamic> data) {
     final workHourData = data["workHours"] as Map<String, dynamic>?;
