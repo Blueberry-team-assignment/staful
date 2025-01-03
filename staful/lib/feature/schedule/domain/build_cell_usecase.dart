@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/ui/screens/calendar/edit_schedule_screen.dart';
+import 'package:staful/feature/schedule/presentation/edit_schedule_screen.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/utils/time_utils.dart';

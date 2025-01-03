@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
-import 'package:staful/feature/schedule_table/domain/build_cell_usecase.dart';
-import 'package:staful/feature/schedule_table/domain/scroll_to_current_time_usecase.dart';
+import 'package:staful/feature/schedule/domain/build_cell_usecase.dart';
+import 'package:staful/feature/schedule/domain/scroll_to_current_time_usecase.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
 class ScheduleTableWidget extends ConsumerWidget {
@@ -20,7 +20,7 @@ class ScheduleTableWidget extends ConsumerWidget {
     const double normalCellWidth = 28;
     const double profileCellWidth = 74;
 
-    final state = ref.watch(calendarViewModelProvider);
+    final state = ref.watch(calendarNotifierProvider);
     final schedules =
         state.filteredStaff.map((staff) => staff.workHours).toList();
 

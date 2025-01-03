@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
-import 'package:staful/feature/schedule_table/presentation/schedule_screen.dart';
+import 'package:staful/feature/schedule/presentation/schedule_screen.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/navigation_helpers.dart';
 
@@ -10,7 +10,7 @@ class FilteredStaffGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(calendarViewModelProvider);
+    final state = ref.watch(calendarNotifierProvider);
 
     return GridView.count(
       crossAxisCount: 4,

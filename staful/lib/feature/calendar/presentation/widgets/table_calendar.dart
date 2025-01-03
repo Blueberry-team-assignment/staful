@@ -9,8 +9,8 @@ class TableCalendarWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(calendarViewModelProvider);
-    final notifier = ref.read(calendarViewModelProvider.notifier);
+    final state = ref.watch(calendarNotifierProvider);
+    final notifier = ref.read(calendarNotifierProvider.notifier);
 
     return TableCalendar(
       onHeaderLongPressed: (_) => notifier.selectDay(DateTime.now()),

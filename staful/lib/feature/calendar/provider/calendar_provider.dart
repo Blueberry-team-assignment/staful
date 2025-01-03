@@ -3,17 +3,17 @@ import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/staff_repository.dart';
 import 'package:staful/feature/calendar/domain/get_filtered_stafflist_usecase.dart';
 
-final calendarViewModelProvider =
-    StateNotifierProvider<CalendarViewModel, CalendarState>((ref) {
+final calendarNotifierProvider =
+    StateNotifierProvider<CalendarNotifier, CalendarState>((ref) {
   final getFilteredStaffUseCase =
       GetFilteredStaffUseCase(ref.watch(staffRepositoryProvider));
-  return CalendarViewModel(getFilteredStaffUseCase);
+  return CalendarNotifier(getFilteredStaffUseCase);
 });
 
-class CalendarViewModel extends StateNotifier<CalendarState> {
+class CalendarNotifier extends StateNotifier<CalendarState> {
   final GetFilteredStaffUseCase getFilteredStaffUseCase;
 
-  CalendarViewModel(this.getFilteredStaffUseCase)
+  CalendarNotifier(this.getFilteredStaffUseCase)
       : super(CalendarState(
           selectedDay: DateTime.now(),
           focusedDay: DateTime.now(),
