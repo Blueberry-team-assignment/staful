@@ -1,0 +1,3 @@
+class PayDetailState {
+  PayDetailState();
+}

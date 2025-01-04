@@ -4,41 +4,25 @@ import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/models/template_model.dart';
 import 'package:staful/data/dto/template/create_template_dto.dart';
 import 'package:staful/data/dto/template/update_template_dto.dart';
+import 'package:staful/feature/auth/log_in/log_in_provider.dart';
+import 'package:staful/feature/template/data/dto/template_dto.dart';
+import 'package:staful/feature/template/domain/interfaces/template_interface.dart';
+import 'package:staful/feature/template/domain/model/template_model.dart';
 
 final templateRepositoryProvider = Provider<TemplateInterface>((ref) {
-  return TemplateRepository(FirebaseFirestore.instance);
+  return TemplateRepository(FirebaseFirestore.instance, ref);
 });
-
-abstract class TemplateInterface {
-  Future<List<Template>> fetchAllTemplates({
-    required String uid,
-  });
-
-  Future<Template> updateTemplate({
-    required String uid,
-    required UpdateTemplateDto updateTemplateDto,
-  });
-
-  Future<void> deleteTemplate({
-    required String uid,
-    required String templateId,
-  });
-
-  Future<Template> createTemplate({
-    required String uid,
-    required CreateTemplateDto createTemplateDto,
-  });
-}
 
 class TemplateRepository implements TemplateInterface {
   final FirebaseFirestore _firestore;
+  final Ref _ref;
 
-  TemplateRepository(this._firestore);
+  TemplateRepository(this._firestore, this._ref);
 
   @override
-  Future<List<Template>> fetchAllTemplates({
-    required String uid,
-  }) async {
+  Future<List<TemplateModel>> fetchAllTemplates() async {
+    final uid = _ref.read(logInProvider).user?.uid;
+
     final templateList = await _firestore
         .collection('users')
         .doc(uid)
@@ -48,29 +32,31 @@ class TemplateRepository implements TemplateInterface {
     return templateList.docs.map((template) {
       // doc id 추가
       final data = template.data();
-      data['templateId'] = template.id;
+      data['id'] = template.id;
 
-      return Template.fromFirestore(data);
+      return TemplateModel.fromJson(data);
     }).toList();
   }
 
   @override
-  Future<Template> updateTemplate({
-    required String uid,
-    required UpdateTemplateDto updateTemplateDto,
+  Future<TemplateModel> updateTemplate({
+    required String templateId,
+    required TemplateDto dto,
   }) async {
     try {
+      final uid = _ref.read(logInProvider).user?.uid;
+
       final templateRef = _firestore
           .collection('users')
           .doc(uid)
           .collection('template')
-          .doc(updateTemplateDto.templateId);
+          .doc(templateId);
 
-      await templateRef.update(updateTemplateDto.toJson());
+      await templateRef.update(dto.toJson());
 
       final updatedDoc = await templateRef.get();
       print('template updated : ${updatedDoc.data()}');
-      return Template.fromFirestore(updatedDoc.data()!);
+      return TemplateModel.fromJson(updatedDoc.data()!);
     } catch (e) {
       throw Exception('Failed to update template: $e');
     }
@@ -78,10 +64,11 @@ class TemplateRepository implements TemplateInterface {
 
   @override
   Future<void> deleteTemplate({
-    required String uid,
     required String templateId,
   }) async {
     try {
+      final uid = _ref.read(logInProvider).user?.uid;
+
       final templateRef = _firestore
           .collection('users')
           .doc(uid)
@@ -95,18 +82,19 @@ class TemplateRepository implements TemplateInterface {
   }
 
   @override
-  Future<Template> createTemplate({
-    required String uid,
-    required CreateTemplateDto createTemplateDto,
+  Future<TemplateModel> createTemplate({
+    required TemplateDto dto,
   }) async {
     try {
+      final uid = _ref.read(logInProvider).user?.uid;
+
       final templateRef =
           _firestore.collection('users').doc(uid).collection('template');
 
-      final newDoc = await templateRef.add(createTemplateDto.toJson());
+      final newDoc = await templateRef.add(dto.toJson());
 
       final createdDoc = await newDoc.get();
-      return Template.fromFirestore(createdDoc.data()!);
+      return TemplateModel.fromJson(createdDoc.data()!);
     } catch (e) {
       throw Exception('Failed to create staff: $e');
     }

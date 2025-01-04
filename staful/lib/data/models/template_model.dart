@@ -72,24 +72,4 @@ class Template {
     this.isSelected = false, // 기본값: 선택되지 않음
     this.isVisible = true, // 기본값: 보임
   });
-
-  // Firestore 데이터를 기반으로 인스턴스를 생성하는 팩토리 메서드
-  factory Template.fromFirestore(Map<String, dynamic> data) {
-    return Template(
-      name: data["name"],
-      payDetails: List<PayDetail>.from(data["payDetails"]),
-      staffIds: List<String>.from(data["staffIds"]),
-      templateId: data["templateId"],
-    );
-  }
-
-  // 인스턴스를 Firestore 형식으로 변환
-  Map<String, dynamic> toFirestore() {
-    return {
-      "name": name,
-      "payDetails": payDetails,
-      "staffIds": staffIds,
-      "templateId": templateId,
-    };
-  }
 }

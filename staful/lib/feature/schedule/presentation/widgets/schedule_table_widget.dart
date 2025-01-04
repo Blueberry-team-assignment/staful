@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
-import 'package:staful/feature/schedule/domain/build_cell_usecase.dart';
-import 'package:staful/feature/schedule/domain/scroll_to_current_time_usecase.dart';
+import 'package:staful/feature/schedule/domain/usecases/build_cell_usecase.dart';
+import 'package:staful/feature/schedule/domain/usecases/scroll_to_current_time_usecase.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
 class ScheduleTableWidget extends ConsumerWidget {
