@@ -5,8 +5,7 @@ import 'package:staful/feature/staff/domain/model/staff_model.dart';
 
 final calendarNotifierProvider =
     StateNotifierProvider<CalendarNotifier, CalendarState>((ref) {
-  final getFilteredStaffUseCase =
-      GetFilteredStaffUseCase(ref.watch(staffRepositoryProvider));
+  final getFilteredStaffUseCase = ref.watch(getFilteredStaffUseCaseProvider);
   return CalendarNotifier(getFilteredStaffUseCase);
 });
 
