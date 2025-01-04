@@ -16,8 +16,8 @@ class StaffCrudUsecase {
 
   StaffCrudUsecase(this._staffInterface, this.ref);
 
-  Future<void> createStaff(StaffModel staff) async {
-    await _staffInterface.createStaff(
+  Future<StaffModel> createStaff(StaffModel staff) async {
+    return await _staffInterface.createStaff(
         uid: ref.read(logInProvider).authUser!.uid,
         dto: StaffDto.fromJson(staff.toJson()));
   }
@@ -29,10 +29,10 @@ class StaffCrudUsecase {
     return staffs;
   }
 
-  Future<void> updateStaff(StaffModel staff) async {
+  Future<StaffModel> updateStaff(StaffModel staff) async {
     // staff.copyWith
 
-    await _staffInterface.updateStaff(
+    return await _staffInterface.updateStaff(
       uid: ref.read(logInProvider).authUser!.uid,
       dto: StaffDto.fromJson(staff.toJson()),
       staffId: staff.id!,

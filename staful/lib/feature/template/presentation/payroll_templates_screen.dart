@@ -46,8 +46,8 @@ class _PayrollTemplatesScreenState
                 SizedBox(
                   height: 30,
                   child: SimpleTextButtonWidget(
-                    onPressed: () =>
-                        openPage(context, const TemplateDetailScreen()),
+                    onPressed: () {},
+                    // openPage(context, const TemplateDetailScreen()),
                     text: "등록",
                   ),
                 ),
@@ -81,8 +81,8 @@ class _PayrollTemplatesScreenState
                   return Container(
                     margin: const EdgeInsets.only(top: 10),
                     child: GestureDetector(
-                      onTap: () =>
-                          openPage(context, const TemplateDetailScreen()),
+                      onTap: () {},
+                      // openPage(context, const TemplateDetailScreen()),
                       child: buildTemplateCards(
                         context: context,
                         template: template,

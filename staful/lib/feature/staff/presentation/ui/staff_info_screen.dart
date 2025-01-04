@@ -344,7 +344,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                 Theme.of(context).disabledColor),
                           ),
                           onPressed: () {
-                            notifier.resetChanges();
+                            notifier.resetChange(state.selectedStaff.id!);
                           },
                           child: const Text(
                             "수정 취소",
@@ -370,7 +370,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                 Theme.of(context).primaryColor),
                           ),
                           onPressed: () {
-                            notifier.updateStaff();
+                            notifier.updateStaff(state.selectedStaff);
                             Navigator.of(context).pop();
                           },
                           child: const Text(
@@ -402,7 +402,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                               context: context,
                               message: "직원 정보를 삭제하시겠습니까?",
                               onConfirm: () {
-                                notifier.deleteStaff();
+                                notifier.deleteStaff(state.selectedStaff.id!);
                                 Navigator.of(context).pop();
                               },
                               showCancelButton: true,

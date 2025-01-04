@@ -42,8 +42,42 @@ class StaffNotifier extends StateNotifier<StaffState> {
   Future<void> createStaff(StaffModel staff) async {
     setLoading(true);
 
-    await _staffCrudUsecase.createStaff(staff);
+    final newStaff = await _staffCrudUsecase.createStaff(staff);
+
+    state = state.copyWith(list: [newStaff, ...state.list]);
     setLoading(false);
+  }
+
+  Future<void> updateStaff(StaffModel staff) async {
+    setLoading(true);
+
+    final updatedStaff = await _staffCrudUsecase.updateStaff(staff);
+
+    state = state.copyWith(
+        list: state.list.map((staff) {
+      if (staff.id == updatedStaff.id) {
+        return updatedStaff;
+      }
+      return staff;
+    }).toList());
+    setLoading(false);
+  }
+
+  Future<void> deleteStaff(String staffId) async {
+    setLoading(true);
+
+    await _staffCrudUsecase.deleteStaff(staffId);
+
+    state = state.copyWith(
+        list: state.list.where((staff) {
+      return staff.id != staffId;
+    }).toList());
+    setLoading(false);
+  }
+
+  void resetChange(String staffId) {
+    final originalState = state.list.firstWhere((staff) => staff.id == staffId);
+    state = state.copyWith(selectedStaff: originalState);
   }
 
   Future<void> getFilteredByDateList(DateTime date) async {
@@ -76,8 +110,6 @@ class StaffNotifier extends StateNotifier<StaffState> {
 
   void updateSelectedStaff({required String field, required dynamic value}) {
     final selectedStaff = state.selectedStaff;
-
-    if (selectedStaff == null) return;
 
     final updatedStaff = selectedStaff.copyWith(
       name: field == 'name' ? value : selectedStaff.name,
