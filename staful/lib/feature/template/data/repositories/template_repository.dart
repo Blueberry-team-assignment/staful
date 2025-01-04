@@ -1,9 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/data/models/template_model.dart';
-import 'package:staful/data/dto/template/create_template_dto.dart';
-import 'package:staful/data/dto/template/update_template_dto.dart';
 import 'package:staful/feature/auth/log_in/log_in_provider.dart';
 import 'package:staful/feature/template/data/dto/template_dto.dart';
 import 'package:staful/feature/template/domain/interfaces/template_interface.dart';
@@ -40,12 +36,11 @@ class TemplateRepository implements TemplateInterface {
 
   @override
   Future<TemplateModel> updateTemplate({
+    required String uid,
     required String templateId,
     required TemplateDto dto,
   }) async {
     try {
-      final uid = _ref.read(logInProvider).user?.uid;
-
       final templateRef = _firestore
           .collection('users')
           .doc(uid)
@@ -64,11 +59,10 @@ class TemplateRepository implements TemplateInterface {
 
   @override
   Future<void> deleteTemplate({
+    required String uid,
     required String templateId,
   }) async {
     try {
-      final uid = _ref.read(logInProvider).user?.uid;
-
       final templateRef = _firestore
           .collection('users')
           .doc(uid)
@@ -83,11 +77,10 @@ class TemplateRepository implements TemplateInterface {
 
   @override
   Future<TemplateModel> createTemplate({
+    required String uid,
     required TemplateDto dto,
   }) async {
     try {
-      final uid = _ref.read(logInProvider).user?.uid;
-
       final templateRef =
           _firestore.collection('users').doc(uid).collection('template');
 

@@ -91,10 +91,10 @@ class _PayrollDetailScreenState extends State<PayrollDetailScreen> {
           height: 10,
         ),
         GestureDetector(
-          // onTap: () => openPage(
-          //   context,
-          //   const PayrollTemplatesScreen(),
-          // ),
+          onTap: () => openPage(
+            context,
+            const PayrollTemplatesScreen(),
+          ),
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(color: Theme.of(context).primaryColor),

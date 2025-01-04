@@ -7,6 +7,7 @@ part 'template_state.freezed.dart';
 class TemplateState with _$TemplateState {
   const factory TemplateState({
     @Default([]) List<TemplateModel> list,
+    @Default([]) List<TemplateModel> filteredList,
     TemplateModel? selectedTemplate,
     @Default(false) bool isLoading,
   }) = _TemplateState;

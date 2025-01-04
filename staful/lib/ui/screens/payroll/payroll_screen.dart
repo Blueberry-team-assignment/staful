@@ -64,13 +64,13 @@ class _PayrollScreenState extends State<PayrollScreen> {
                   "급여",
                   style: TextStyleConfig(size: 24).setTextStyle(),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 29,
                   child: SimpleTextButtonWidget(
-                    // onPressed: () => openPage(
-                    //   context,
-                    //   const PayrollTemplatesScreen(),
-                    // ),
+                    onPressed: () => openPage(
+                      context,
+                      const PayrollTemplatesScreen(),
+                    ),
                     text: "템플릿 관리",
                   ),
                 ),

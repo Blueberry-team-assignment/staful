@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/data/staff_repository.dart';
+import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
 import 'package:staful/data/dto/staff/create_staff_dto.dart';
 import 'package:staful/data/dto/staff/update_staff_dto.dart';
 

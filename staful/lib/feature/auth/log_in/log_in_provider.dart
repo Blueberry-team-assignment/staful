@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/auth_repository.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/models/user_model.dart';
-import 'package:staful/data/staff_repository.dart';
+import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
 import 'package:staful/data/user_repository.dart';
 import 'package:staful/data/dto/auth/log_in_dto.dart';
 import 'package:staful/feature/staff/provider/staff_provider.dart';

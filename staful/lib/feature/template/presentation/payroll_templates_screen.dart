@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/feature/template/domain/model/template_model.dart';
+import 'package:staful/feature/template/presentation/provider/template_provider.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/models/template_model.dart';
@@ -9,6 +13,7 @@ import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/app_styles.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 
 final List<PayDetail> defaultList = [
   PayDetail(description: "식대", amount: 0, type: PayType.fixed),
@@ -22,86 +27,23 @@ final emptyTemplate = Template(
   templateId: "99",
 );
 
-class PayrollTemplatesScreen extends StatefulWidget {
+class PayrollTemplatesScreen extends ConsumerStatefulWidget {
   const PayrollTemplatesScreen({super.key});
 
   @override
-  State<PayrollTemplatesScreen> createState() => _PayrollTemplatesScreenState();
+  ConsumerState<PayrollTemplatesScreen> createState() =>
+      _PayrollTemplatesScreenState();
 }
 
-class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
+class _PayrollTemplatesScreenState
+    extends ConsumerState<PayrollTemplatesScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  
-  List<String> searchSuggestions =
-      TEMPLATES.map((template) => template.name).toList();
-
-  late List<Template> searchedTemplates = TEMPLATES;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<void> _navigateAndUpdateTemplate({
-    required BuildContext context,
-    required Widget Function(BuildContext) builder,
-    required void Function(Template) onResult,
-  }) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: builder),
-    );
-
-    if (result != null && result is Template) {
-      onResult(result); // 결과값을 처리하는 콜백
-      searchInputController.clear();
-    }
-  }
-
-  // 검색어 입력 시 필터링
-  void _onSearchInputChanged(String text) {
-    setState(() {
-      if (text.isEmpty) {
-        searchedTemplates = TEMPLATES;
-      }
-      // else {
-      //   searchedTemplates = TEMPLATES
-      //       .where((template) => template.name == searchInputController.text)
-      //       .toList();
-      // }
-    });
-  }
-
-  // 검색 제안 선택 시 처리
-  void _onSuggestionSelected(String suggestion) {
-    searchInputController.text = suggestion;
-
-    setState(() {
-      searchedTemplates = TEMPLATES
-          .where((template) => template.name.startsWith(suggestion))
-          .toList();
-    });
-  }
-
-  // 템플릿 추가 시 로직
-  void _onAddTemplate(Template newTemplate) {
-    setState(() {
-      TEMPLATES.add(newTemplate);
-      searchSuggestions = TEMPLATES.map((template) => template.name).toList();
-    });
-  }
-
-  // 템플릿 수정 시 로직
-  void _onUpdateTemplate(Template updatedTemplate, int index) {
-    setState(() {
-      TEMPLATES[index] = updatedTemplate;
-      searchSuggestions = TEMPLATES.map((template) => template.name).toList();
-      // _onSearchInputChanged(searchInputController.text);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(templateNotifierProvider);
+    final notifier = ref.read(templateNotifierProvider.notifier);
+
     return Scaffold(
       appBar: navigateBackAppBar(context),
       body: Padding(
@@ -119,14 +61,8 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
                 SizedBox(
                   height: 30,
                   child: SimpleTextButtonWidget(
-                    onPressed: () => _navigateAndUpdateTemplate(
-                      context: context,
-                      builder: (context) => TemplateDetailScreen(
-                        template: emptyTemplate,
-                      ),
-                      onResult: (updatedTemplate) =>
-                          _onAddTemplate(updatedTemplate),
-                    ),
+                    onPressed: () =>
+                        openPage(context, const TemplateDetailScreen()),
                     text: "등록",
                   ),
                 ),
@@ -137,14 +73,8 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
               children: [
                 SimpleTextInputWidget(
                   placeHolder: "템플릿명을 검색하세요",
-                  onChanged: _onSearchInputChanged,
+                  onChanged: notifier.getFilteredList,
                   controller: searchInputController,
-                ),
-                OverlaySearchResultsWidget(
-                  staffSearch: false,
-                  suggestions: searchSuggestions,
-                  controller: searchInputController,
-                  onSelect: _onSuggestionSelected,
                 ),
               ],
             ),
@@ -153,28 +83,26 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "총 ${searchedTemplates.length}개",
+                  "총 ${state.filteredList.length}개",
                   style: TextStyleConfig(size: 14).setTextStyle(),
                 ),
               ],
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: searchedTemplates.length, // 템플릿 수에 따라 아이템 수 결정
+                itemCount: state.filteredList.length, // 템플릿 수에 따라 아이템 수 결정
                 itemBuilder: (context, index) {
-                  final Template template = searchedTemplates[index];
+                  final TemplateModel template = state.filteredList[index];
                   return Container(
                     margin: const EdgeInsets.only(top: 10),
                     child: GestureDetector(
-                      onTap: () => _navigateAndUpdateTemplate(
+                      onTap: () =>
+                          openPage(context, const TemplateDetailScreen()),
+                      child: buildTemplateCards(
                         context: context,
-                        builder: (context) => TemplateDetailScreen(
-                          template: template,
-                        ),
-                        onResult: (updatedTemplate) => _onUpdateTemplate(
-                            updatedTemplate, TEMPLATES.indexOf(template)),
+                        template: template,
+                        staffList: [],
                       ),
-                      child: buildTemplateCards(context, template),
                     ),
                   );
                 },
@@ -188,10 +116,11 @@ class _PayrollTemplatesScreenState extends State<PayrollTemplatesScreen> {
 }
 
 // 템플릿 카드 UI 빌드
-ColumnItemContainer buildTemplateCards(
-    BuildContext context, Template template) {
-  final staffList = template.staffList;
-
+ColumnItemContainer buildTemplateCards({
+  required BuildContext context,
+  required TemplateModel template,
+  required List<StaffModel> staffList,
+}) {
   return ColumnItemContainer(
     content: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +136,7 @@ ColumnItemContainer buildTemplateCards(
             scrollDirection: Axis.horizontal,
             itemCount: staffList.length,
             itemBuilder: (context, index) {
-              final Staff staff = staffList[index];
+              final StaffModel staff = staffList[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: StaffProfileWidget(

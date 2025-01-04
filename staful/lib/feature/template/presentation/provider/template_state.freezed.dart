@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$TemplateState {
   List<TemplateModel> get list => throw _privateConstructorUsedError;
+  List<TemplateModel> get filteredList => throw _privateConstructorUsedError;
   TemplateModel? get selectedTemplate => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
 
@@ -35,6 +36,7 @@ abstract class $TemplateStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<TemplateModel> list,
+      List<TemplateModel> filteredList,
       TemplateModel? selectedTemplate,
       bool isLoading});
 
@@ -57,6 +59,7 @@ class _$TemplateStateCopyWithImpl<$Res, $Val extends TemplateState>
   @override
   $Res call({
     Object? list = null,
+    Object? filteredList = null,
     Object? selectedTemplate = freezed,
     Object? isLoading = null,
   }) {
@@ -64,6 +67,10 @@ class _$TemplateStateCopyWithImpl<$Res, $Val extends TemplateState>
       list: null == list
           ? _value.list
           : list // ignore: cast_nullable_to_non_nullable
+              as List<TemplateModel>,
+      filteredList: null == filteredList
+          ? _value.filteredList
+          : filteredList // ignore: cast_nullable_to_non_nullable
               as List<TemplateModel>,
       selectedTemplate: freezed == selectedTemplate
           ? _value.selectedTemplate
@@ -101,6 +108,7 @@ abstract class _$$TemplateStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<TemplateModel> list,
+      List<TemplateModel> filteredList,
       TemplateModel? selectedTemplate,
       bool isLoading});
 
@@ -122,6 +130,7 @@ class __$$TemplateStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? list = null,
+    Object? filteredList = null,
     Object? selectedTemplate = freezed,
     Object? isLoading = null,
   }) {
@@ -129,6 +138,10 @@ class __$$TemplateStateImplCopyWithImpl<$Res>
       list: null == list
           ? _value._list
           : list // ignore: cast_nullable_to_non_nullable
+              as List<TemplateModel>,
+      filteredList: null == filteredList
+          ? _value._filteredList
+          : filteredList // ignore: cast_nullable_to_non_nullable
               as List<TemplateModel>,
       selectedTemplate: freezed == selectedTemplate
           ? _value.selectedTemplate
@@ -147,9 +160,11 @@ class __$$TemplateStateImplCopyWithImpl<$Res>
 class _$TemplateStateImpl implements _TemplateState {
   const _$TemplateStateImpl(
       {final List<TemplateModel> list = const [],
+      final List<TemplateModel> filteredList = const [],
       this.selectedTemplate,
       this.isLoading = false})
-      : _list = list;
+      : _list = list,
+        _filteredList = filteredList;
 
   final List<TemplateModel> _list;
   @override
@@ -160,6 +175,15 @@ class _$TemplateStateImpl implements _TemplateState {
     return EqualUnmodifiableListView(_list);
   }
 
+  final List<TemplateModel> _filteredList;
+  @override
+  @JsonKey()
+  List<TemplateModel> get filteredList {
+    if (_filteredList is EqualUnmodifiableListView) return _filteredList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_filteredList);
+  }
+
   @override
   final TemplateModel? selectedTemplate;
   @override
@@ -168,7 +192,7 @@ class _$TemplateStateImpl implements _TemplateState {
 
   @override
   String toString() {
-    return 'TemplateState(list: $list, selectedTemplate: $selectedTemplate, isLoading: $isLoading)';
+    return 'TemplateState(list: $list, filteredList: $filteredList, selectedTemplate: $selectedTemplate, isLoading: $isLoading)';
   }
 
   @override
@@ -177,6 +201,8 @@ class _$TemplateStateImpl implements _TemplateState {
         (other.runtimeType == runtimeType &&
             other is _$TemplateStateImpl &&
             const DeepCollectionEquality().equals(other._list, _list) &&
+            const DeepCollectionEquality()
+                .equals(other._filteredList, _filteredList) &&
             (identical(other.selectedTemplate, selectedTemplate) ||
                 other.selectedTemplate == selectedTemplate) &&
             (identical(other.isLoading, isLoading) ||
@@ -184,8 +210,12 @@ class _$TemplateStateImpl implements _TemplateState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_list), selectedTemplate, isLoading);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_list),
+      const DeepCollectionEquality().hash(_filteredList),
+      selectedTemplate,
+      isLoading);
 
   /// Create a copy of TemplateState
   /// with the given fields replaced by the non-null parameter values.
@@ -199,11 +229,14 @@ class _$TemplateStateImpl implements _TemplateState {
 abstract class _TemplateState implements TemplateState {
   const factory _TemplateState(
       {final List<TemplateModel> list,
+      final List<TemplateModel> filteredList,
       final TemplateModel? selectedTemplate,
       final bool isLoading}) = _$TemplateStateImpl;
 
   @override
   List<TemplateModel> get list;
+  @override
+  List<TemplateModel> get filteredList;
   @override
   TemplateModel? get selectedTemplate;
   @override
