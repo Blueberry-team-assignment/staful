@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/auth_repository.dart';
-import 'package:staful/data/user_repository.dart';
-import 'package:staful/data/dto/auth/sign_up_dto.dart';
+import 'package:staful/feature/auth/data/repositories/auth_repository.dart';
+import 'package:staful/feature/auth/data/repositories/user_repository.dart';
+import 'package:staful/feature/auth/data/dto/sign_up_dto.dart';
+import 'package:staful/feature/auth/domain/interfaces/auth_interface.dart';
+import 'package:staful/feature/auth/domain/interfaces/user_interface.dart';
 
 final signUpProvider =
     StateNotifierProvider.autoDispose<SignUpNotifier, SignUpState>((ref) {
@@ -12,7 +14,7 @@ final signUpProvider =
 
 class SignUpNotifier extends StateNotifier<SignUpState> {
   final AuthInterface _authInterface;
-  final UserRepository _userInterface;
+  final UserInterface _userInterface;
 
   SignUpNotifier(this._authInterface, this._userInterface)
       : super(SignUpState());

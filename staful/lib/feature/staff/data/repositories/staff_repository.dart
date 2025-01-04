@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/dto/staff/create_staff_dto.dart';
 import 'package:staful/data/dto/staff/update_staff_dto.dart';
-import 'package:staful/feature/auth/log_in/log_in_provider.dart';
+import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
 
 final staffRepositoryProvider = Provider<StaffInterface>((ref) {
   return StaffRepository(FirebaseFirestore.instance, ref);

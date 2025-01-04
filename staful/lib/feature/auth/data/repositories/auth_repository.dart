@@ -1,27 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/auth/data/repositories/user_repository.dart';
+import 'package:staful/feature/auth/domain/interfaces/auth_interface.dart';
+import 'package:staful/feature/auth/domain/interfaces/user_interface.dart';
+import 'package:staful/feature/auth/domain/model/user_model.dart';
 
 final authRepositoryProvider = Provider<AuthInterface>((ref) {
-  return AuthRepository(FirebaseAuth.instance);
+  final userRepository = ref.watch(userRepositoryProvider);
+  return AuthRepository(FirebaseAuth.instance, userRepository);
 });
-
-abstract class AuthInterface {
-  Future<UserCredential> signUp({
-    required String userId,
-    required String password,
-  });
-  Future<UserCredential> logIn({
-    required String userId,
-    required String password,
-  });
-  User checkUser();
-  Future<void> logOut();
-}
 
 class AuthRepository implements AuthInterface {
   final FirebaseAuth _firebaseAuth;
+  final UserInterface _userRepository;
 
-  AuthRepository(this._firebaseAuth);
+  AuthRepository(this._firebaseAuth, this._userRepository);
 
   // 회원가입
   @override
@@ -44,7 +37,7 @@ class AuthRepository implements AuthInterface {
 
   // 로그인
   @override
-  Future<UserCredential> logIn({
+  Future<UserModel> logIn({
     required String userId,
     required String password,
   }) async {
@@ -54,8 +47,12 @@ class AuthRepository implements AuthInterface {
         email: email,
         password: password,
       );
-      print('User logged in: ${userCredential.user?.uid}');
-      return userCredential;
+      print('User logged in: ${userCredential.user!.uid}');
+
+      final authUser = await _userRepository.fetchUserFromFirestore(
+          uid: userCredential.user!.uid);
+
+      return authUser;
     } catch (e) {
       throw Exception(e);
     }
@@ -63,11 +60,13 @@ class AuthRepository implements AuthInterface {
 
   // 로그인된 유저 체크
   @override
-  User checkUser() {
+  Future<UserModel> checkUser() async {
     User? user = _firebaseAuth.currentUser;
 
     if (user == null) throw Exception('User not found');
-    return user;
+
+    final authUser = await _userRepository.fetchUserFromFirestore(uid: user.uid);
+    return authUser;
   }
 
   // 로그아웃

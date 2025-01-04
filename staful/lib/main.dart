@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/firebase_options.dart';
-import 'package:staful/feature/auth/log_in/log_in_screen.dart';
+import 'package:staful/feature/auth/presentation/ui/log_in_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/date_symbol_data_local.dart';
 

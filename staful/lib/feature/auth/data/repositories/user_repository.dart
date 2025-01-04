@@ -2,25 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staful/data/models/user_model.dart';
-import 'package:staful/data/dto/auth/sign_up_dto.dart';
+import 'package:staful/feature/auth/data/dto/sign_up_dto.dart';
+import 'package:staful/feature/auth/domain/interfaces/user_interface.dart';
+import 'package:staful/feature/auth/domain/model/user_model.dart';
 
-final userRepositoryProvider = Provider<UserRepository>((ref) {
+final userRepositoryProvider = Provider<UserInterface>((ref) {
   return UserRepository(FirebaseFirestore.instance);
 });
-
-abstract class UserInterface {
-  Future<void> saveUserToFirestore({
-    required String uid,
-    required SignUpDto signUpDto,
-  });
-  Future<User> fetchUserFromFirestore({
-    required String uid,
-  });
-  Future<void> saveUserToPreferences({
-    required User user,
-  });
-  Future<User> loadUserFromPreferences();
-}
 
 class UserRepository implements UserInterface {
   final FirebaseFirestore _firestore;
@@ -49,7 +37,7 @@ class UserRepository implements UserInterface {
 
   // Firestore에서 유저 데이터 가져오기
   @override
-  Future<User> fetchUserFromFirestore({
+  Future<UserModel> fetchUserFromFirestore({
     required String uid,
   }) async {
     final userDoc = _firestore.collection('users').doc(uid);
@@ -58,12 +46,15 @@ class UserRepository implements UserInterface {
     if (!snapshot.exists) {
       throw Exception('User data not found');
     }
-    return User.fromFirestore(uid, snapshot.data()!);
+
+    final data = snapshot.data()!;
+    data['uid'] = uid;
+    return UserModel.fromJson(data);
   }
 
   // SharedPreferences에 유저 정보 저장
   @override
-  Future<void> saveUserToPreferences({required User user}) async {
+  Future<void> saveUserToPreferences({required UserModel user}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('uid', user.uid);
     await prefs.setString('userId', user.userId);
@@ -73,13 +64,13 @@ class UserRepository implements UserInterface {
       'openingDate',
       user.openingDate.toIso8601String(),
     );
-    await prefs.setString('createdAt', user.createdAt.toIso8601String());
+    
     print("User data saved to SharedPreferences");
   }
 
   // SharedPreferences에서 유저 정보 불러오기
   @override
-  Future<User> loadUserFromPreferences() async {
+  Future<UserModel> loadUserFromPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     final uid = prefs.getString('uid');
     final userId = prefs.getString('userId');
@@ -92,12 +83,12 @@ class UserRepository implements UserInterface {
       throw Exception("No user data found in SharedPreferences");
     }
 
-    return User(
-        uid: uid,
-        userId: userId,
-        name: name!,
-        businessName: businessName!,
-        openingDate: DateTime.parse(openingDate!),
-        createdAt: DateTime.parse(createdAt!));
+    return UserModel(
+      uid: uid,
+      userId: userId,
+      name: name!,
+      businessName: businessName!,
+      openingDate: DateTime.parse(openingDate!),
+    );
   }
 }

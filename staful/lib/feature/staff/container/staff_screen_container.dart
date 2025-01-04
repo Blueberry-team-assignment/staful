@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/feature/auth/sign_up/sign_up_screen.dart';
+import 'package:staful/feature/auth/presentation/ui/sign_up_screen.dart';
 import 'package:staful/feature/staff/provider/staff_provider.dart';
 import 'package:staful/feature/staff/ui/staff_screen.dart';
 import 'package:staful/ui/widgets/overlay_search_results_widget.dart';

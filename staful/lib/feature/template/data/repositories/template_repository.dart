@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/auth/log_in/log_in_provider.dart';
+import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
 import 'package:staful/feature/template/data/dto/template_dto.dart';
 import 'package:staful/feature/template/domain/interfaces/template_interface.dart';
 import 'package:staful/feature/template/domain/model/template_model.dart';

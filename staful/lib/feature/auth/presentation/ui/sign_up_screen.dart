@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/auth/sign_up/sign_up_provider.dart';
+import 'package:staful/feature/auth/presentation/provider/sign_up_provider.dart';
 import 'package:staful/utils/form_validators.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
