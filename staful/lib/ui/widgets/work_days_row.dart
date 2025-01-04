@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/constants.dart';
+
 class WorkDaysRow extends StatelessWidget {
-  final StaffModel staff;
   final bool disabled;
-  final void Function(StaffModel)? onUpdate;
+  final StaffModel staff;
 
   const WorkDaysRow({
     super.key,
     required this.staff,
     required this.disabled,
-    this.onUpdate,
   });
 
   @override
@@ -19,67 +20,52 @@ class WorkDaysRow extends StatelessWidget {
     return Row(
       children: mapOfWorkDays.values
           .map((value) => WorkDaysRowItem(
-                staff: staff,
-                onUpdate: onUpdate,
-                text: value,
-                isSelected: staff.workDays?.contains(value) ?? false,
+                day: value,
                 disabled: disabled,
+                // isSelected: staff.workDays.contains(value),
+                staff: staff,
               ))
           .toList(),
     );
   }
 }
 
-class WorkDaysRowItem extends StatefulWidget {
-  final StaffModel staff;
-  final String text;
-  final bool isSelected;
+class WorkDaysRowItem extends ConsumerWidget {
+  final String day;
   final bool disabled;
-  final void Function(StaffModel)? onUpdate;
+  // final bool isSelected;
+  final StaffModel staff;
 
   const WorkDaysRowItem({
     super.key,
-    required this.staff,
-    this.text = "",
-    this.isSelected = false,
+    required this.day,
     required this.disabled,
-    this.onUpdate,
+    // required this.isSelected,
+    required this.staff,
   });
 
   @override
-  State<WorkDaysRowItem> createState() => WorkDaysRowItemState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(staffNotifierProvider).selectedStaff;
+    final notifier = ref.read(staffNotifierProvider.notifier);
+    final isSelected = staff.workDays.contains(day);
 
-class WorkDaysRowItemState extends State<WorkDaysRowItem> {
-  late bool isSelected;
+    void handleOnPressed() {
+      if (disabled) return;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isSelected = widget.isSelected;
-  }
+      final updatedWorkDays = List<String>.from(staff.workDays);
+      if (isSelected) {
+        updatedWorkDays.remove(day);
+      } else {
+        updatedWorkDays.add(day);
+      }
 
-  void handleOnPressed() {
-    if (widget.disabled) return;
-    setState(() {
-      isSelected = !isSelected;
-    });
-
-    final newWorkDays = List<String>.from(widget.staff.workDays ?? []);
-    if (isSelected) {
-      newWorkDays.add(widget.text);
-    } else {
-      newWorkDays.remove(widget.text);
+      notifier.updateWorkDays(
+        staffId: staff.id!,
+        workDays: updatedWorkDays,
+      );
     }
 
-    if (widget.onUpdate != null) {
-      widget.onUpdate!(widget.staff.copyWith(workDays: newWorkDays));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Expanded(
       child: TextButton(
         onPressed: handleOnPressed,
@@ -89,7 +75,7 @@ class WorkDaysRowItemState extends State<WorkDaysRowItem> {
           ),
         ),
         child: Text(
-          widget.text,
+          day,
           style: TextStyleConfig(
             size: 16,
             color: isSelected

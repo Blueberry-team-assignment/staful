@@ -24,3 +24,23 @@ class StaffModel with _$StaffModel {
   factory StaffModel.fromJson(Map<String, dynamic> json) =>
       _$StaffModelFromJson(json);
 }
+
+extension StaffModelExtensions on StaffModel {
+  Map<String, int> calculateWeeklyWorkingHours() {
+    
+    final workDayCount = workDays.length;
+
+    final dailyWorkDuration = Duration(
+      hours: workHours.endTime.hour - workHours.startTime.hour,
+      minutes: workHours.endTime.minute - workHours.startTime.minute,
+    );
+
+    // Weekly work duration
+    final totalDuration = dailyWorkDuration * workDayCount;
+
+    return {
+      "hour": totalDuration.inHours,
+      "minute": totalDuration.inMinutes % 60,
+    };
+  }
+}

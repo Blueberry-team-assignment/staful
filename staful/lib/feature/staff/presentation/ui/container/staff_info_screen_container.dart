@@ -1,52 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
-import 'package:staful/feature/auth/presentation/ui/sign_up_screen.dart';
-import 'package:staful/feature/staff/presentation/provider/staff_info_provider.dart';
-import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
+// import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
+// import 'package:staful/feature/staff/presentation/ui/staff_register_screen.dart';
 
-class StaffInfoScreenContainer extends ConsumerWidget {
-  final Staff staff;
+// class StaffInfoScreenContainer extends ConsumerWidget {
+//   const StaffInfoScreenContainer({
+//     super.key,
+//   });
 
-  const StaffInfoScreenContainer({
-    super.key,
-    required this.staff,
-  });
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final state = ref.watch(staffNotifierProvider);
+//     final notifier = ref.read(staffNotifierProvider.notifier);
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final uid = ref.read(logInProvider).authUser!.uid;
-    final state = ref.watch(staffInfoNotifierProvider(staff));
+//     if (state.selectedStaff == null) {
+//       return const StaffRegisterScreen();
+//     }
 
-    return Stack(
-      children: [
-        StaffInfoScreen(
-          originalStaff: state.originalStaffInfo!,
-          editableStaff: state.editableStaffInfo!,
-          onUpdate: (updatedStaff) {
-            ref
-                .read(staffInfoNotifierProvider(staff).notifier)
-                .updateEditableStaff(updatedStaff);
-          },
-          onSave: () {
-            ref
-                .read(staffInfoNotifierProvider(staff).notifier)
-                .saveChanges(uid);
-          },
-          onReset: () {
-            ref
-                .read(staffInfoNotifierProvider(staff).notifier)
-                .resetToOriginal();
-          },
-          onDelete: () {
-            ref
-                .read(staffInfoNotifierProvider(staff).notifier)
-                .deleteStaff(uid, state.originalStaffInfo!.staffId);
-          },
-        ),
-        if (state.isLoading) const LoadingIndicator()
-      ],
-    );
-  }
-}
+//     return const StaffInfoScreen();
+//   }
+// }

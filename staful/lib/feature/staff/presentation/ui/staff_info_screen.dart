@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/utils/constants.dart';
 import 'package:staful/utils/time_utils.dart';
@@ -14,21 +13,21 @@ import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
 class StaffInfoScreen extends StatefulWidget {
-  final Staff originalStaff;
-  final Staff editableStaff;
-  final void Function(Staff) onUpdate;
-  final VoidCallback onSave;
-  final VoidCallback onReset;
-  final VoidCallback onDelete;
+  // final Staff originalStaff;
+  // final Staff editableStaff;
+  // final void Function(Staff) onUpdate;
+  // final VoidCallback onSave;
+  // final VoidCallback onReset;
+  // final VoidCallback onDelete;
 
   const StaffInfoScreen({
     super.key,
-    required this.originalStaff,
-    required this.editableStaff,
-    required this.onReset,
-    required this.onSave,
-    required this.onUpdate,
-    required this.onDelete,
+    // required this.originalStaff,
+    // required this.editableStaff,
+    // required this.onReset,
+    // required this.onSave,
+    // required this.onUpdate,
+    // required this.onDelete,
   });
 
   @override
@@ -46,9 +45,6 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
   void initState() {
     super.initState();
 
-    // 컨트롤러 초기화
-    nameController.text = widget.originalStaff.name;
-    memoFieldController.text = widget.originalStaff.desc ?? "";
   }
 
   @override

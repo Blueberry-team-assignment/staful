@@ -3,27 +3,27 @@ import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
 import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
 import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
-import 'package:staful/utils/constants.dart';
+import 'package:staful/ui/widgets/overlay_search_results_widget.dart';
 
-final getFilteredStaffUseCaseProvider = Provider((ref) {
+final filterBySearchInputUsecaseProvider = Provider((ref) {
   final staffInterface = ref.watch(staffRepositoryProvider);
-  return GetFilteredStaffUseCase(staffInterface, ref);
+  return FilterBySearchInputUsecase(staffInterface, ref);
 });
 
-class GetFilteredStaffUseCase {
+class FilterBySearchInputUsecase {
   final StaffInterface _staffInterface;
   final Ref ref;
 
-  GetFilteredStaffUseCase(this._staffInterface, this.ref);
+  FilterBySearchInputUsecase(this._staffInterface, this.ref);
 
-  Future<List<StaffModel>> execute({required DateTime selectedDay}) async {
+  Future<List<StaffModel>> execute({required String text}) async {
     final staffList = await _staffInterface.fetchAllStaffs(
         uid: ref.read(logInProvider).authUser!.uid);
-    final selectedWeekDay = weekDays[selectedDay.weekday - 1];
 
-    // 선택한 날에 근무가 있는 직원들만 필터링.
     return staffList.where((staff) {
-      return staff.workDays.contains(selectedWeekDay);
+      final chosungName = decomposeHangul(staff.name);
+      final chosungInput = decomposeHangul(text);
+      return chosungName.startsWith(chosungInput);
     }).toList();
   }
 }

@@ -1,18 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
-import 'package:staful/feature/calendar/domain/get_filtered_stafflist_usecase.dart';
+import 'package:staful/feature/staff/domain/usecases/filter_by_date_usecase.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 
 final calendarNotifierProvider =
     StateNotifierProvider<CalendarNotifier, CalendarState>((ref) {
-  final getFilteredStaffUseCase = ref.watch(getFilteredStaffUseCaseProvider);
-  return CalendarNotifier(getFilteredStaffUseCase);
+  final filterByDateUsecase = ref.watch(filterByDateUsecaseProvider);
+  return CalendarNotifier(filterByDateUsecase);
 });
 
 class CalendarNotifier extends StateNotifier<CalendarState> {
-  final GetFilteredStaffUseCase getFilteredStaffUseCase;
+  final FilterByDateUsecase filterByDateUsecase;
 
-  CalendarNotifier(this.getFilteredStaffUseCase)
+  CalendarNotifier(this.filterByDateUsecase)
       : super(CalendarState(
           selectedDay: DateTime.now(),
           focusedDay: DateTime.now(),
@@ -22,7 +21,7 @@ class CalendarNotifier extends StateNotifier<CalendarState> {
 
   void selectDay(DateTime selectedDay) async {
     final filteredStaff =
-        getFilteredStaffUseCase.execute(selectedDay: selectedDay);
+        filterByDateUsecase.execute(selectedDay: selectedDay);
     state = state.copyWith(
       selectedDay: selectedDay,
       focusedDay: selectedDay,

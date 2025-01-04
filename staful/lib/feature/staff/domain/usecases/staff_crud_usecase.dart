@@ -1,48 +1,46 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
+import 'package:staful/feature/staff/data/dto/staff_dto.dart';
 import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
 import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
-import 'package:staful/feature/template/data/dto/template_dto.dart';
-import 'package:staful/feature/template/domain/model/template_model.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
 
-final templateCrudUsecaseProvider = Provider((ref) {
+final staffCrudUsecaseProvider = Provider((ref) {
   final staffInterface = ref.watch(staffRepositoryProvider);
   return StaffCrudUsecase(staffInterface, ref);
 });
 
 class StaffCrudUsecase {
-  final StaffInterface _templateInterface;
+  final StaffInterface _staffInterface;
   final Ref ref;
 
-  StaffCrudUsecase(this._templateInterface, this.ref);
+  StaffCrudUsecase(this._staffInterface, this.ref);
 
-  Future<void> createTemplate(TemplateModel template) async {
-    /// fixxx
-    await _templateInterface.createTemplate(
+  Future<void> createStaff(StaffModel staff) async {
+    await _staffInterface.createStaff(
         uid: ref.read(logInProvider).authUser!.uid,
-        dto: TemplateDto.fromJson(template.toJson()));
+        dto: StaffDto.fromJson(staff.toJson()));
   }
 
-  Future<List<TemplateModel>> getAllTemplates() async {
-    final templates = await _templateInterface.fetchAllTemplates(
+  Future<List<StaffModel>> getAllStaffs() async {
+    final staffs = await _staffInterface.fetchAllStaffs(
       uid: ref.read(logInProvider).authUser!.uid,
     );
-    return templates;
+    return staffs;
   }
 
-  Future<void> updateTemplate(TemplateModel template) async {
-    // template.copyWith
-    // fixxxx
-    await _templateInterface.updateTemplate(
+  Future<void> updateStaff(StaffModel staff) async {
+    // staff.copyWith
+
+    await _staffInterface.updateStaff(
       uid: ref.read(logInProvider).authUser!.uid,
-      dto: TemplateDto.fromJson(template.toJson()),
-      templateId: template.id!,
+      dto: StaffDto.fromJson(staff.toJson()),
+      staffId: staff.id!,
     );
   }
 
-  Future<void> deleteTemplate(String templateId) async {
-    // fixxx
-    await _templateInterface.deleteTemplate(
-        templateId: templateId, uid: ref.read(logInProvider).authUser!.uid);
+  Future<void> deleteStaff(String staffId) async {
+    await _staffInterface.deleteStaff(
+        staffId: staffId, uid: ref.read(logInProvider).authUser!.uid);
   }
 }

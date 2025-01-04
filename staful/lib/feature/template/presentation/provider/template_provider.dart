@@ -5,9 +5,9 @@ import 'package:staful/feature/template/presentation/provider/template_state.dar
 
 final templateNotifierProvider =
     StateNotifierProvider.autoDispose<TemplateNotifier, TemplateState>((ref) {
-  final templateCrudProvider = ref.read(templateCrudUsecaseProvider);
-  final filterTemplatesProvider = ref.read(filterTemplatesUsecaseProvider);
-  return TemplateNotifier(filterTemplatesProvider, templateCrudProvider);
+  final templateCrudUsecase = ref.read(templateCrudUsecaseProvider);
+  final filterTemplatesUsecase = ref.read(filterTemplatesUsecaseProvider);
+  return TemplateNotifier(filterTemplatesUsecase, templateCrudUsecase);
 });
 
 class TemplateNotifier extends StateNotifier<TemplateState> {
