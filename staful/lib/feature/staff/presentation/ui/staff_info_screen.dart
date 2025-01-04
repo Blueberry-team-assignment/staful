@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/utils/constants.dart';
 import 'package:staful/utils/time_utils.dart';
@@ -12,40 +15,21 @@ import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
-class StaffInfoScreen extends StatefulWidget {
-  // final Staff originalStaff;
-  // final Staff editableStaff;
-  // final void Function(Staff) onUpdate;
-  // final VoidCallback onSave;
-  // final VoidCallback onReset;
-  // final VoidCallback onDelete;
-
+class StaffInfoScreen extends ConsumerStatefulWidget {
   const StaffInfoScreen({
     super.key,
-    // required this.originalStaff,
-    // required this.editableStaff,
-    // required this.onReset,
-    // required this.onSave,
-    // required this.onUpdate,
-    // required this.onDelete,
   });
 
   @override
-  State<StaffInfoScreen> createState() => _StaffInfoScreenState();
+  ConsumerState<StaffInfoScreen> createState() => _StaffInfoScreenState();
 }
 
-class _StaffInfoScreenState extends State<StaffInfoScreen> {
+class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController memoFieldController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   bool isEditMode = false;
   TimeRange updatedSchedule = defaultTimeRange;
-
-  @override
-  void initState() {
-    super.initState();
-
-  }
 
   @override
   void dispose() {
@@ -62,61 +46,31 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
     });
   }
 
-  // 저장 버튼 클릭
-  void onSave() {
-    widget.onSave();
-    // 저장 완료 후 보기 모드로 전환
-    toggleEditMode();
-  }
-
-  // 변경사항 되돌리고 수정모드 종료하기
-  void onUndo() {
-    widget.onReset();
-    toggleEditMode();
-  }
-
-  void onDelete() {
-    ConfirmationDialog.show(
-      context: context,
-      message: "직원 정보를 삭제하시겠습니까?",
-      onConfirm: () {
-        widget.onDelete();
-        Navigator.of(context).pop();
-      },
-      showCancelButton: true,
-    );
-  }
-
-  // 이미지 변경 버튼 클릭
-  Future<void> onTapImgChangeBtn() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      // widget.onUpdate(widget.editableStaff.copyWith(image: pickedFile))
-    }
-  }
-
-  void handleOnUpdateOpeningHour(DateTime time) {
-    updatedSchedule = TimeRange(
-      startTime: TimeOfDay(hour: time.hour, minute: time.minute),
-      endTime:
-          widget.editableStaff.workHours?.endTime ?? updatedSchedule.endTime,
-    );
-    widget.onUpdate(widget.editableStaff.copyWith(workHours: updatedSchedule));
-  }
-
-  void handleOnUpdateClosingHour(DateTime time) {
-    updatedSchedule = TimeRange(
-      startTime: widget.editableStaff.workHours?.startTime ??
-          updatedSchedule.startTime,
-      endTime: TimeOfDay(hour: time.hour, minute: time.minute),
-    );
-    widget.onUpdate(widget.editableStaff.copyWith(workHours: updatedSchedule));
-  }
-
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(staffNotifierProvider);
+    final notifier = ref.watch(staffNotifierProvider.notifier);
+    final weeklyWorkingHours =
+        state.selectedStaff.calculateWeeklyWorkingHours();
+
+    void handleOnUpdateOpeningHour(DateTime time) {
+      updatedSchedule = TimeRange(
+        startTime: TimeOfDay(hour: time.hour, minute: time.minute),
+        endTime: state.selectedStaff.workHours.endTime,
+      );
+
+      notifier.updateSelectedStaff(field: "workHours", value: updatedSchedule);
+    }
+
+    void handleOnUpdateClosingHour(DateTime time) {
+      updatedSchedule = TimeRange(
+        startTime: state.selectedStaff.workHours.startTime,
+        endTime: TimeOfDay(hour: time.hour, minute: time.minute),
+      );
+
+      notifier.updateSelectedStaff(field: "workHours", value: updatedSchedule);
+    }
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: navigateBackAppBar(context),
@@ -160,8 +114,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                         Column(
                           children: [
                             StaffProfileWidget(
-                                imagePath: widget.editableStaff.image,
-                                size: 64),
+                                imagePath: state.selectedStaff.image, size: 64),
                             const SizedBox(
                               height: 5,
                             ),
@@ -169,7 +122,17 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                               SizedBox(
                                 height: 24,
                                 child: SimpleTextButtonWidget(
-                                  onPressed: onTapImgChangeBtn,
+                                  onPressed: () async {
+                                    final XFile? pickedFile = await _picker
+                                        .pickImage(source: ImageSource.gallery);
+
+                                    if (pickedFile != null) {
+                                      // 수정 필요
+                                      notifier.updateSelectedStaff(
+                                          field: "image",
+                                          value: pickedFile.toString());
+                                    }
+                                  },
                                   text: "사진 변경",
                                 ),
                               ),
@@ -205,16 +168,16 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                               controller: nameController,
                                               onlyBottomBorder: true,
                                               onChanged: (value) {
-                                                widget.onUpdate(widget
-                                                    .editableStaff
-                                                    .copyWith(name: value));
+                                                notifier.updateSelectedStaff(
+                                                    field: "name",
+                                                    value: value);
                                               },
                                             ),
                                           )
                                         ],
                                       )
                                     : Text(
-                                        widget.originalStaff.name,
+                                        state.selectedStaff.name,
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -243,9 +206,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                             height: 10,
                           ),
                           WorkDaysRow(
-                            staff: widget.editableStaff,
+                            staff: state.selectedStaff,
                             disabled: !isEditMode,
-                            onUpdate: widget.onUpdate,
                           )
                         ],
                       ),
@@ -274,9 +236,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                     children: [
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: widget.editableStaff
-                                                  .workHours?.startTime ??
-                                              updatedSchedule.startTime,
+                                          scheduleInfo: state.selectedStaff
+                                              .workHours.startTime,
                                           onDateTimeChanged:
                                               handleOnUpdateOpeningHour,
                                         ),
@@ -286,9 +247,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                       ),
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: widget.editableStaff
-                                                  .workHours?.endTime ??
-                                              updatedSchedule.endTime,
+                                          scheduleInfo: state
+                                              .selectedStaff.workHours.endTime,
                                           onDateTimeChanged:
                                               handleOnUpdateClosingHour,
                                         ),
@@ -297,8 +257,7 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                   )
                                 else
                                   WorkScheduleForDisplay(
-                                    workHours: widget.originalStaff.workHours ??
-                                        updatedSchedule,
+                                    workHours: state.selectedStaff.workHours,
                                   ),
                                 const SizedBox(
                                   height: 15,
@@ -311,23 +270,19 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                                       const TextSpan(text: "해당 직원은"),
                                       TextSpan(
                                           text:
-                                              " 주 ${widget.editableStaff.weeklyWorkingHours["hour"]}",
+                                              " 주 ${weeklyWorkingHours["hour"]}",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColor)),
                                       const TextSpan(text: "시간 "),
-                                      if (widget.editableStaff
-                                              .weeklyWorkingHours["minute"] !=
-                                          0)
+                                      if (weeklyWorkingHours["minute"] != 0)
                                         TextSpan(
                                             text:
-                                                "${widget.editableStaff.weeklyWorkingHours["minute"]}",
+                                                "${weeklyWorkingHours["minute"]}",
                                             style: TextStyle(
                                                 color: Theme.of(context)
                                                     .primaryColor)),
-                                      if (widget.editableStaff
-                                              .weeklyWorkingHours["minute"] !=
-                                          0)
+                                      if (weeklyWorkingHours["minute"] != 0)
                                         const TextSpan(text: "분 "),
                                       const TextSpan(text: "근무입니다"),
                                     ],
@@ -364,8 +319,8 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                           border: InputBorder.none,
                         ),
                         onChanged: (value) => {
-                          widget.onUpdate(
-                              widget.editableStaff.copyWith(desc: value))
+                          notifier.updateSelectedStaff(
+                              field: "desc", value: value)
                         },
                       ),
                     ),
@@ -388,7 +343,9 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                             backgroundColor: WidgetStateProperty.all<Color>(
                                 Theme.of(context).disabledColor),
                           ),
-                          onPressed: onUndo,
+                          onPressed: () {
+                            notifier.resetChanges();
+                          },
                           child: const Text(
                             "수정 취소",
                             style: TextStyle(
@@ -412,7 +369,10 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                             backgroundColor: WidgetStateProperty.all<Color>(
                                 Theme.of(context).primaryColor),
                           ),
-                          onPressed: onSave,
+                          onPressed: () {
+                            notifier.updateStaff();
+                            Navigator.of(context).pop();
+                          },
                           child: const Text(
                             "저장",
                             style: TextStyle(
@@ -437,7 +397,17 @@ class _StaffInfoScreenState extends State<StaffInfoScreen> {
                             backgroundColor: WidgetStateProperty.all<Color>(
                                 Theme.of(context).disabledColor),
                           ),
-                          onPressed: onDelete,
+                          onPressed: () {
+                            ConfirmationDialog.show(
+                              context: context,
+                              message: "직원 정보를 삭제하시겠습니까?",
+                              onConfirm: () {
+                                notifier.deleteStaff();
+                                Navigator.of(context).pop();
+                              },
+                              showCancelButton: true,
+                            );
+                          },
                           child: const Text(
                             "직원 삭제",
                             style: TextStyle(

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 import 'package:staful/utils/time_utils.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/utils/app_styles.dart';
@@ -230,12 +231,12 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                       ),
                                     ],
                                   )
-                                : WorkScheduleForDisplay(
-                                    workHours: TimeRange(
+                                : const WorkScheduleForDisplay(
+                                    workHours: TimeRangeModel(
                                         startTime:
-                                            const TimeOfDay(hour: 9, minute: 0),
-                                        endTime: const TimeOfDay(
-                                            hour: 18, minute: 0)),
+                                            TimeOfDay(hour: 9, minute: 0),
+                                        endTime:
+                                            TimeOfDay(hour: 18, minute: 0)),
                                   )
                             // (workHours: widget.workHours)
                           ],
@@ -381,7 +382,7 @@ class TimePicker extends StatelessWidget {
 }
 
 class WorkScheduleForDisplay extends StatelessWidget {
-  final TimeRange workHours;
+  final TimeRangeModel workHours;
 
   const WorkScheduleForDisplay({
     super.key,
