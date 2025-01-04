@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 
 part 'schedule_model.freezed.dart';
+part 'schedule_model.g.dart';
 
 @freezed
 class ScheduleModel with _$ScheduleModel {
@@ -14,5 +15,7 @@ class ScheduleModel with _$ScheduleModel {
     @Default(true) bool isVisible,
     @Default(false) bool isDeleted,
   }) = _ScheduleModel;
-}
 
+  factory ScheduleModel.fromJson(Map<String, dynamic> json) =>
+      _$ScheduleModelFromJson(json);
+}

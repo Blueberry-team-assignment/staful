@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/constants.dart';
-import 'package:staful/feature/staff/provider/staff_info_provider.dart';
+import 'package:staful/feature/staff/presentation/provider/staff_info_provider.dart';
 
 class WorkDaysRow extends StatelessWidget {
   final Staff staff;

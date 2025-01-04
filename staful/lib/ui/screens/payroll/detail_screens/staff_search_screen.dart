@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/feature/staff/ui/staff_info_screen.dart';
+import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/constants.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';

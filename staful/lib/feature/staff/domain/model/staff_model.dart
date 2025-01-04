@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:staful/feature/pay_detail/domain/model/pay_detail_model.dart';
 import 'package:staful/feature/schedule/domain/model/schedule_model.dart';
 import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 
 part 'staff_model.freezed.dart';
+part 'staff_model.g.dart';
 
 @freezed
 class StaffModel with _$StaffModel {
@@ -20,4 +20,7 @@ class StaffModel with _$StaffModel {
     @Default(true) bool isVisible,
     @Default(false) bool isDeleted,
   }) = _StaffModel;
+
+  factory StaffModel.fromJson(Map<String, dynamic> json) =>
+      _$StaffModelFromJson(json);
 }

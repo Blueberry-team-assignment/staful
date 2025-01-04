@@ -1,5 +1,24 @@
+import 'package:staful/feature/staff/data/dto/staff_dto.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 
-abstract class StaffInterfaces {
-  Future<List<StaffModel>> fetchAllStaffs();
+abstract class StaffInterface {
+  Future<List<StaffModel>> fetchAllStaffs({
+    required String uid,
+  });
+
+  Future<StaffModel> updateStaff({
+    required String uid,
+    required String staffId,
+    required StaffDto dto,
+  });
+
+  Future<void> deleteStaff({
+    required String uid,
+    required String staffId,
+  });
+
+  Future<StaffModel> createStaff({
+    required String uid,
+    required StaffDto dto,
+  });
 }

@@ -14,12 +14,19 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+TimeRangeModel _$TimeRangeModelFromJson(Map<String, dynamic> json) {
+  return _TimeRangeModel.fromJson(json);
+}
+
 /// @nodoc
 mixin _$TimeRangeModel {
   @TimeOfDayConverter()
   TimeOfDay get startTime => throw _privateConstructorUsedError;
   @TimeOfDayConverter()
   TimeOfDay get endTime => throw _privateConstructorUsedError;
+
+  /// Serializes this TimeRangeModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of TimeRangeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -113,11 +120,14 @@ class __$$TimeRangeModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$TimeRangeModelImpl implements _TimeRangeModel {
   const _$TimeRangeModelImpl(
       {@TimeOfDayConverter() required this.startTime,
       @TimeOfDayConverter() required this.endTime});
+
+  factory _$TimeRangeModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TimeRangeModelImplFromJson(json);
 
   @override
   @TimeOfDayConverter()
@@ -141,6 +151,7 @@ class _$TimeRangeModelImpl implements _TimeRangeModel {
             (identical(other.endTime, endTime) || other.endTime == endTime));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, startTime, endTime);
 
@@ -152,6 +163,13 @@ class _$TimeRangeModelImpl implements _TimeRangeModel {
   _$$TimeRangeModelImplCopyWith<_$TimeRangeModelImpl> get copyWith =>
       __$$TimeRangeModelImplCopyWithImpl<_$TimeRangeModelImpl>(
           this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TimeRangeModelImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _TimeRangeModel implements TimeRangeModel {
@@ -159,6 +177,9 @@ abstract class _TimeRangeModel implements TimeRangeModel {
           {@TimeOfDayConverter() required final TimeOfDay startTime,
           @TimeOfDayConverter() required final TimeOfDay endTime}) =
       _$TimeRangeModelImpl;
+
+  factory _TimeRangeModel.fromJson(Map<String, dynamic> json) =
+      _$TimeRangeModelImpl.fromJson;
 
   @override
   @TimeOfDayConverter()

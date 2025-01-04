@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:staful/ui/screens/payroll/payroll_detail_screen.dart';
 import 'package:staful/feature/template/presentation/payroll_templates_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/feature/staff/ui/staff_info_screen.dart';
+import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';

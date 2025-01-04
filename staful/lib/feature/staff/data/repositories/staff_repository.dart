@@ -1,40 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/data/dto/staff/create_staff_dto.dart';
-import 'package:staful/data/dto/staff/update_staff_dto.dart';
-import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
+import 'package:staful/feature/staff/data/dto/staff_dto.dart';
+import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
 
 final staffRepositoryProvider = Provider<StaffInterface>((ref) {
-  return StaffRepository(FirebaseFirestore.instance, ref);
+  return StaffRepository(FirebaseFirestore.instance);
 });
-
-abstract class StaffInterface {
-  Future<List<Staff>> fetchAllStaffs();
-
-  Future<Staff> updateStaff({
-    required String uid,
-    required UpdateStaffDto updateStaffDto,
-  });
-
-  Future<void> deleteStaff({required String uid, required String staffId});
-
-  Future<Staff> createStaff({
-    required String uid,
-    required CreateStaffDto createStaffDto,
-  });
-}
 
 class StaffRepository implements StaffInterface {
   final FirebaseFirestore _firestore;
-  final Ref _ref;
 
-  StaffRepository(this._firestore, this._ref);
+  StaffRepository(this._firestore);
 
   @override
-  Future<List<Staff>> fetchAllStaffs() async {
-    final uid = _ref.read(logInProvider).authUser?.uid;
-
+  Future<List<StaffModel>> fetchAllStaffs({
+    required String uid,
+  }) async {
     final staffList =
         await _firestore.collection('users').doc(uid).collection('staff').get();
 
@@ -43,27 +25,28 @@ class StaffRepository implements StaffInterface {
       final data = staff.data();
       data['staffId'] = staff.id;
 
-      return Staff.fromFirestore(data);
+      return StaffModel.fromJson(data);
     }).toList();
   }
 
   @override
-  Future<Staff> updateStaff({
+  Future<StaffModel> updateStaff({
     required String uid,
-    required UpdateStaffDto updateStaffDto,
+    required String staffId,
+    required StaffDto dto,
   }) async {
     try {
       final staffRef = _firestore
           .collection('users')
           .doc(uid)
           .collection('staff')
-          .doc(updateStaffDto.staffId);
+          .doc(staffId);
 
-      await staffRef.update(updateStaffDto.toJson());
+      await staffRef.update(dto.toJson());
 
       final updatedDoc = await staffRef.get();
-      print('staff updated : ${updatedDoc.data()}');
-      return Staff.fromFirestore(updatedDoc.data()!);
+
+      return StaffModel.fromJson(updatedDoc.data()!);
     } catch (e) {
       throw Exception('Failed to update staff: $e');
     }
@@ -88,18 +71,18 @@ class StaffRepository implements StaffInterface {
   }
 
   @override
-  Future<Staff> createStaff({
+  Future<StaffModel> createStaff({
     required String uid,
-    required CreateStaffDto createStaffDto,
+    required StaffDto dto,
   }) async {
     try {
       final staffRef =
           _firestore.collection('users').doc(uid).collection('staff');
 
-      final newDoc = await staffRef.add(createStaffDto.toJson());
+      final newDoc = await staffRef.add(dto.toJson());
 
       final createdDoc = await newDoc.get();
-      return Staff.fromFirestore(createdDoc.data()!);
+      return StaffModel.fromJson(createdDoc.data()!);
     } catch (e) {
       throw Exception('Failed to create staff: $e');
     }

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:staful/data/models/user_model.dart';
 import 'package:staful/feature/auth/data/dto/sign_up_dto.dart';
 import 'package:staful/feature/auth/domain/interfaces/user_interface.dart';
 import 'package:staful/feature/auth/domain/model/user_model.dart';
@@ -23,15 +22,15 @@ class UserRepository implements UserInterface {
   }) async {
     final userDoc = _firestore.collection('users').doc(uid);
 
-    final User user = User(
-        businessName: signUpDto.businessName,
-        userId: signUpDto.id,
-        name: signUpDto.name,
-        openingDate: signUpDto.openingDate,
-        uid: uid,
-        createdAt: DateTime.now());
+    final UserModel user = UserModel(
+      businessName: signUpDto.businessName,
+      userId: signUpDto.id,
+      name: signUpDto.name,
+      openingDate: signUpDto.openingDate,
+      uid: uid,
+    );
 
-    await userDoc.set(user.toFirestore()); // User 객체를 Map으로 변환 후 저장
+    await userDoc.set(user.toJson()); // User 객체를 Map으로 변환 후 저장
     print('User data saved to Firestore with business info');
   }
 
@@ -64,7 +63,7 @@ class UserRepository implements UserInterface {
       'openingDate',
       user.openingDate.toIso8601String(),
     );
-    
+
     print("User data saved to SharedPreferences");
   }
 

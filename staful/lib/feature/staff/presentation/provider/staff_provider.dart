@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/models/staff_model.dart';
+import 'package:staful/feature/staff/data/dto/staff_dto.dart';
 import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
-import 'package:staful/data/dto/staff/create_staff_dto.dart';
-import 'package:staful/data/dto/staff/update_staff_dto.dart';
+import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
 
 final staffNotifierProvider =
     StateNotifierProvider.autoDispose<StaffNotifier, StaffState>((ref) {
@@ -18,7 +18,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
   Future<void> fetchStaffList(String uid) async {
     try {
       state = state.copyWith(isLoading: true);
-      final staffList = await _staffInterface.fetchAllStaffs();
+      final staffList = await _staffInterface.fetchAllStaffs(uid: );
       state = state.copyWith(staffList: staffList, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
@@ -26,12 +26,12 @@ class StaffNotifier extends StateNotifier<StaffState> {
     }
   }
 
-  Future<void> createStaff(String uid, CreateStaffDto createStaffDto) async {
+  Future<void> createStaff(String uid, StaffDto createStaffDto) async {
     try {
       state = state.copyWith(isLoading: true);
       final newStaff = await _staffInterface.createStaff(
         uid: uid,
-        createStaffDto: createStaffDto,
+        dto: createStaffDto,
       );
       state = state.copyWith(
         staffList: [...state.staffList!, newStaff],
@@ -43,12 +43,12 @@ class StaffNotifier extends StateNotifier<StaffState> {
     }
   }
 
-  Future<void> updateStaff(String uid, UpdateStaffDto updateStaffDto) async {
+  Future<void> updateStaff(String uid, StaffDto updateStaffDto) async {
     try {
       state = state.copyWith(isLoading: true);
       final updatedStaff = await _staffInterface.updateStaff(
         uid: uid,
-        updateStaffDto: updateStaffDto,
+        dto: updateStaffDto,
       );
       state = state.copyWith(
         staffList: state.staffList?.map((staff) {
@@ -64,7 +64,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
 }
 
 class StaffState {
-  final List<Staff>? staffList;
+  final List<StaffModel>? staffList;
   final bool isLoading;
 
   StaffState({
@@ -73,7 +73,7 @@ class StaffState {
   });
 
   StaffState copyWith({
-    List<Staff>? staffList,
+    List<StaffModel>? staffList,
     bool? isLoading,
   }) {
     return StaffState(

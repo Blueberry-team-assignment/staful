@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'time_range_model.freezed.dart';
+part 'time_range_model.g.dart';
 
 class TimeOfDayConverter implements JsonConverter<TimeOfDay, Map<String, int>> {
   const TimeOfDayConverter();
@@ -23,4 +24,7 @@ class TimeRangeModel with _$TimeRangeModel {
     @TimeOfDayConverter() required TimeOfDay startTime,
     @TimeOfDayConverter() required TimeOfDay endTime,
   }) = _TimeRangeModel;
+
+  factory TimeRangeModel.fromJson(Map<String, dynamic> json) =>
+      _$TimeRangeModelFromJson(json);
 }

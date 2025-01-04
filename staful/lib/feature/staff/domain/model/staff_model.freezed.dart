@@ -14,6 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+StaffModel _$StaffModelFromJson(Map<String, dynamic> json) {
+  return _StaffModel.fromJson(json);
+}
+
 /// @nodoc
 mixin _$StaffModel {
   String? get id => throw _privateConstructorUsedError;
@@ -27,6 +31,9 @@ mixin _$StaffModel {
   bool get isSelected => throw _privateConstructorUsedError;
   bool get isVisible => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
+
+  /// Serializes this StaffModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of StaffModel
   /// with the given fields replaced by the non-null parameter values.
@@ -243,7 +250,7 @@ class __$$StaffModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$StaffModelImpl implements _StaffModel {
   const _$StaffModelImpl(
       {this.id,
@@ -259,6 +266,9 @@ class _$StaffModelImpl implements _StaffModel {
       this.isDeleted = false})
       : _workDays = workDays,
         _workSchedules = workSchedules;
+
+  factory _$StaffModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StaffModelImplFromJson(json);
 
   @override
   final String? id;
@@ -329,6 +339,7 @@ class _$StaffModelImpl implements _StaffModel {
                 other.isDeleted == isDeleted));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -351,6 +362,13 @@ class _$StaffModelImpl implements _StaffModel {
   @pragma('vm:prefer-inline')
   _$$StaffModelImplCopyWith<_$StaffModelImpl> get copyWith =>
       __$$StaffModelImplCopyWithImpl<_$StaffModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$StaffModelImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _StaffModel implements StaffModel {
@@ -366,6 +384,9 @@ abstract class _StaffModel implements StaffModel {
       final bool isSelected,
       final bool isVisible,
       final bool isDeleted}) = _$StaffModelImpl;
+
+  factory _StaffModel.fromJson(Map<String, dynamic> json) =
+      _$StaffModelImpl.fromJson;
 
   @override
   String? get id;

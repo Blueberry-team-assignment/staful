@@ -14,6 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+ScheduleModel _$ScheduleModelFromJson(Map<String, dynamic> json) {
+  return _ScheduleModel.fromJson(json);
+}
+
 /// @nodoc
 mixin _$ScheduleModel {
   String? get id => throw _privateConstructorUsedError;
@@ -23,6 +27,9 @@ mixin _$ScheduleModel {
   bool get isSelected => throw _privateConstructorUsedError;
   bool get isVisible => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
+
+  /// Serializes this ScheduleModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ScheduleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -191,7 +198,7 @@ class __$$ScheduleModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$ScheduleModelImpl implements _ScheduleModel {
   const _$ScheduleModelImpl(
       {this.id,
@@ -201,6 +208,9 @@ class _$ScheduleModelImpl implements _ScheduleModel {
       this.isSelected = false,
       this.isVisible = true,
       this.isDeleted = false});
+
+  factory _$ScheduleModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ScheduleModelImplFromJson(json);
 
   @override
   final String? id;
@@ -244,6 +254,7 @@ class _$ScheduleModelImpl implements _ScheduleModel {
                 other.isDeleted == isDeleted));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, date, staffId, workHours,
       isSelected, isVisible, isDeleted);
@@ -255,6 +266,13 @@ class _$ScheduleModelImpl implements _ScheduleModel {
   @pragma('vm:prefer-inline')
   _$$ScheduleModelImplCopyWith<_$ScheduleModelImpl> get copyWith =>
       __$$ScheduleModelImplCopyWithImpl<_$ScheduleModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ScheduleModelImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _ScheduleModel implements ScheduleModel {
@@ -266,6 +284,9 @@ abstract class _ScheduleModel implements ScheduleModel {
       final bool isSelected,
       final bool isVisible,
       final bool isDeleted}) = _$ScheduleModelImpl;
+
+  factory _ScheduleModel.fromJson(Map<String, dynamic> json) =
+      _$ScheduleModelImpl.fromJson;
 
   @override
   String? get id;

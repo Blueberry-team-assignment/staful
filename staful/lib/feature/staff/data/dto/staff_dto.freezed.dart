@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of '../update_staff_dto.dart';
+part of 'staff_dto.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,77 +14,81 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-UpdateStaffDto _$UpdateStaffDtoFromJson(Map<String, dynamic> json) {
-  return _UpdateStaffDto.fromJson(json);
+StaffDto _$StaffDtoFromJson(Map<String, dynamic> json) {
+  return _StaffDto.fromJson(json);
 }
 
 /// @nodoc
-mixin _$UpdateStaffDto {
+mixin _$StaffDto {
   String? get name => throw _privateConstructorUsedError;
+  String? get templateId => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
   List<String>? get workDays => throw _privateConstructorUsedError;
-  Map<String, Map<String, int>>? get workHours =>
-      throw _privateConstructorUsedError;
-  List<String>? get workDate => throw _privateConstructorUsedError;
-  int? get templateId => throw _privateConstructorUsedError;
+  TimeRangeModel? get workHours => throw _privateConstructorUsedError;
+  List<ScheduleModel>? get workSchedules => throw _privateConstructorUsedError;
   String? get desc => throw _privateConstructorUsedError;
-  String get staffId => throw _privateConstructorUsedError;
+  bool? get isDeleted => throw _privateConstructorUsedError;
 
-  /// Serializes this UpdateStaffDto to a JSON map.
+  /// Serializes this StaffDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of UpdateStaffDto
+  /// Create a copy of StaffDto
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $UpdateStaffDtoCopyWith<UpdateStaffDto> get copyWith =>
+  $StaffDtoCopyWith<StaffDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UpdateStaffDtoCopyWith<$Res> {
-  factory $UpdateStaffDtoCopyWith(
-          UpdateStaffDto value, $Res Function(UpdateStaffDto) then) =
-      _$UpdateStaffDtoCopyWithImpl<$Res, UpdateStaffDto>;
+abstract class $StaffDtoCopyWith<$Res> {
+  factory $StaffDtoCopyWith(StaffDto value, $Res Function(StaffDto) then) =
+      _$StaffDtoCopyWithImpl<$Res, StaffDto>;
   @useResult
   $Res call(
       {String? name,
+      String? templateId,
       String? image,
       List<String>? workDays,
-      Map<String, Map<String, int>>? workHours,
-      List<String>? workDate,
-      int? templateId,
+      TimeRangeModel? workHours,
+      List<ScheduleModel>? workSchedules,
       String? desc,
-      String staffId});
+      bool? isDeleted});
+
+  $TimeRangeModelCopyWith<$Res>? get workHours;
 }
 
 /// @nodoc
-class _$UpdateStaffDtoCopyWithImpl<$Res, $Val extends UpdateStaffDto>
-    implements $UpdateStaffDtoCopyWith<$Res> {
-  _$UpdateStaffDtoCopyWithImpl(this._value, this._then);
+class _$StaffDtoCopyWithImpl<$Res, $Val extends StaffDto>
+    implements $StaffDtoCopyWith<$Res> {
+  _$StaffDtoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of UpdateStaffDto
+  /// Create a copy of StaffDto
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? name = freezed,
+    Object? templateId = freezed,
     Object? image = freezed,
     Object? workDays = freezed,
     Object? workHours = freezed,
-    Object? workDate = freezed,
-    Object? templateId = freezed,
+    Object? workSchedules = freezed,
     Object? desc = freezed,
-    Object? staffId = null,
+    Object? isDeleted = freezed,
   }) {
     return _then(_value.copyWith(
       name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      templateId: freezed == templateId
+          ? _value.templateId
+          : templateId // ignore: cast_nullable_to_non_nullable
               as String?,
       image: freezed == image
           ? _value.image
@@ -97,72 +101,89 @@ class _$UpdateStaffDtoCopyWithImpl<$Res, $Val extends UpdateStaffDto>
       workHours: freezed == workHours
           ? _value.workHours
           : workHours // ignore: cast_nullable_to_non_nullable
-              as Map<String, Map<String, int>>?,
-      workDate: freezed == workDate
-          ? _value.workDate
-          : workDate // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      templateId: freezed == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as TimeRangeModel?,
+      workSchedules: freezed == workSchedules
+          ? _value.workSchedules
+          : workSchedules // ignore: cast_nullable_to_non_nullable
+              as List<ScheduleModel>?,
       desc: freezed == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
               as String?,
-      staffId: null == staffId
-          ? _value.staffId
-          : staffId // ignore: cast_nullable_to_non_nullable
-              as String,
+      isDeleted: freezed == isDeleted
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
+  }
+
+  /// Create a copy of StaffDto
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TimeRangeModelCopyWith<$Res>? get workHours {
+    if (_value.workHours == null) {
+      return null;
+    }
+
+    return $TimeRangeModelCopyWith<$Res>(_value.workHours!, (value) {
+      return _then(_value.copyWith(workHours: value) as $Val);
+    });
   }
 }
 
 /// @nodoc
-abstract class _$$UpdateStaffDtoImplCopyWith<$Res>
-    implements $UpdateStaffDtoCopyWith<$Res> {
-  factory _$$UpdateStaffDtoImplCopyWith(_$UpdateStaffDtoImpl value,
-          $Res Function(_$UpdateStaffDtoImpl) then) =
-      __$$UpdateStaffDtoImplCopyWithImpl<$Res>;
+abstract class _$$StaffDtoImplCopyWith<$Res>
+    implements $StaffDtoCopyWith<$Res> {
+  factory _$$StaffDtoImplCopyWith(
+          _$StaffDtoImpl value, $Res Function(_$StaffDtoImpl) then) =
+      __$$StaffDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {String? name,
+      String? templateId,
       String? image,
       List<String>? workDays,
-      Map<String, Map<String, int>>? workHours,
-      List<String>? workDate,
-      int? templateId,
+      TimeRangeModel? workHours,
+      List<ScheduleModel>? workSchedules,
       String? desc,
-      String staffId});
+      bool? isDeleted});
+
+  @override
+  $TimeRangeModelCopyWith<$Res>? get workHours;
 }
 
 /// @nodoc
-class __$$UpdateStaffDtoImplCopyWithImpl<$Res>
-    extends _$UpdateStaffDtoCopyWithImpl<$Res, _$UpdateStaffDtoImpl>
-    implements _$$UpdateStaffDtoImplCopyWith<$Res> {
-  __$$UpdateStaffDtoImplCopyWithImpl(
-      _$UpdateStaffDtoImpl _value, $Res Function(_$UpdateStaffDtoImpl) _then)
+class __$$StaffDtoImplCopyWithImpl<$Res>
+    extends _$StaffDtoCopyWithImpl<$Res, _$StaffDtoImpl>
+    implements _$$StaffDtoImplCopyWith<$Res> {
+  __$$StaffDtoImplCopyWithImpl(
+      _$StaffDtoImpl _value, $Res Function(_$StaffDtoImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of UpdateStaffDto
+  /// Create a copy of StaffDto
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? name = freezed,
+    Object? templateId = freezed,
     Object? image = freezed,
     Object? workDays = freezed,
     Object? workHours = freezed,
-    Object? workDate = freezed,
-    Object? templateId = freezed,
+    Object? workSchedules = freezed,
     Object? desc = freezed,
-    Object? staffId = null,
+    Object? isDeleted = freezed,
   }) {
-    return _then(_$UpdateStaffDtoImpl(
+    return _then(_$StaffDtoImpl(
       name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      templateId: freezed == templateId
+          ? _value.templateId
+          : templateId // ignore: cast_nullable_to_non_nullable
               as String?,
       image: freezed == image
           ? _value.image
@@ -173,50 +194,47 @@ class __$$UpdateStaffDtoImplCopyWithImpl<$Res>
           : workDays // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       workHours: freezed == workHours
-          ? _value._workHours
+          ? _value.workHours
           : workHours // ignore: cast_nullable_to_non_nullable
-              as Map<String, Map<String, int>>?,
-      workDate: freezed == workDate
-          ? _value._workDate
-          : workDate // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      templateId: freezed == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as TimeRangeModel?,
+      workSchedules: freezed == workSchedules
+          ? _value._workSchedules
+          : workSchedules // ignore: cast_nullable_to_non_nullable
+              as List<ScheduleModel>?,
       desc: freezed == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
               as String?,
-      staffId: null == staffId
-          ? _value.staffId
-          : staffId // ignore: cast_nullable_to_non_nullable
-              as String,
+      isDeleted: freezed == isDeleted
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$UpdateStaffDtoImpl implements _UpdateStaffDto {
-  const _$UpdateStaffDtoImpl(
+class _$StaffDtoImpl implements _StaffDto {
+  const _$StaffDtoImpl(
       {this.name,
+      this.templateId,
       this.image,
       final List<String>? workDays,
-      final Map<String, Map<String, int>>? workHours,
-      final List<String>? workDate,
-      this.templateId,
+      this.workHours,
+      final List<ScheduleModel>? workSchedules,
       this.desc,
-      required this.staffId})
+      this.isDeleted})
       : _workDays = workDays,
-        _workHours = workHours,
-        _workDate = workDate;
+        _workSchedules = workSchedules;
 
-  factory _$UpdateStaffDtoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$UpdateStaffDtoImplFromJson(json);
+  factory _$StaffDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StaffDtoImplFromJson(json);
 
   @override
   final String? name;
+  @override
+  final String? templateId;
   @override
   final String? image;
   final List<String>? _workDays;
@@ -229,53 +247,45 @@ class _$UpdateStaffDtoImpl implements _UpdateStaffDto {
     return EqualUnmodifiableListView(value);
   }
 
-  final Map<String, Map<String, int>>? _workHours;
   @override
-  Map<String, Map<String, int>>? get workHours {
-    final value = _workHours;
-    if (value == null) return null;
-    if (_workHours is EqualUnmodifiableMapView) return _workHours;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
-
-  final List<String>? _workDate;
+  final TimeRangeModel? workHours;
+  final List<ScheduleModel>? _workSchedules;
   @override
-  List<String>? get workDate {
-    final value = _workDate;
+  List<ScheduleModel>? get workSchedules {
+    final value = _workSchedules;
     if (value == null) return null;
-    if (_workDate is EqualUnmodifiableListView) return _workDate;
+    if (_workSchedules is EqualUnmodifiableListView) return _workSchedules;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
   @override
-  final int? templateId;
-  @override
   final String? desc;
   @override
-  final String staffId;
+  final bool? isDeleted;
 
   @override
   String toString() {
-    return 'UpdateStaffDto(name: $name, image: $image, workDays: $workDays, workHours: $workHours, workDate: $workDate, templateId: $templateId, desc: $desc, staffId: $staffId)';
+    return 'StaffDto(name: $name, templateId: $templateId, image: $image, workDays: $workDays, workHours: $workHours, workSchedules: $workSchedules, desc: $desc, isDeleted: $isDeleted)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UpdateStaffDtoImpl &&
+            other is _$StaffDtoImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.image, image) || other.image == image) &&
-            const DeepCollectionEquality().equals(other._workDays, _workDays) &&
-            const DeepCollectionEquality()
-                .equals(other._workHours, _workHours) &&
-            const DeepCollectionEquality().equals(other._workDate, _workDate) &&
             (identical(other.templateId, templateId) ||
                 other.templateId == templateId) &&
+            (identical(other.image, image) || other.image == image) &&
+            const DeepCollectionEquality().equals(other._workDays, _workDays) &&
+            (identical(other.workHours, workHours) ||
+                other.workHours == workHours) &&
+            const DeepCollectionEquality()
+                .equals(other._workSchedules, _workSchedules) &&
             (identical(other.desc, desc) || other.desc == desc) &&
-            (identical(other.staffId, staffId) || other.staffId == staffId));
+            (identical(other.isDeleted, isDeleted) ||
+                other.isDeleted == isDeleted));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -283,66 +293,65 @@ class _$UpdateStaffDtoImpl implements _UpdateStaffDto {
   int get hashCode => Object.hash(
       runtimeType,
       name,
+      templateId,
       image,
       const DeepCollectionEquality().hash(_workDays),
-      const DeepCollectionEquality().hash(_workHours),
-      const DeepCollectionEquality().hash(_workDate),
-      templateId,
+      workHours,
+      const DeepCollectionEquality().hash(_workSchedules),
       desc,
-      staffId);
+      isDeleted);
 
-  /// Create a copy of UpdateStaffDto
+  /// Create a copy of StaffDto
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$UpdateStaffDtoImplCopyWith<_$UpdateStaffDtoImpl> get copyWith =>
-      __$$UpdateStaffDtoImplCopyWithImpl<_$UpdateStaffDtoImpl>(
-          this, _$identity);
+  _$$StaffDtoImplCopyWith<_$StaffDtoImpl> get copyWith =>
+      __$$StaffDtoImplCopyWithImpl<_$StaffDtoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UpdateStaffDtoImplToJson(
+    return _$$StaffDtoImplToJson(
       this,
     );
   }
 }
 
-abstract class _UpdateStaffDto implements UpdateStaffDto {
-  const factory _UpdateStaffDto(
+abstract class _StaffDto implements StaffDto {
+  const factory _StaffDto(
       {final String? name,
+      final String? templateId,
       final String? image,
       final List<String>? workDays,
-      final Map<String, Map<String, int>>? workHours,
-      final List<String>? workDate,
-      final int? templateId,
+      final TimeRangeModel? workHours,
+      final List<ScheduleModel>? workSchedules,
       final String? desc,
-      required final String staffId}) = _$UpdateStaffDtoImpl;
+      final bool? isDeleted}) = _$StaffDtoImpl;
 
-  factory _UpdateStaffDto.fromJson(Map<String, dynamic> json) =
-      _$UpdateStaffDtoImpl.fromJson;
+  factory _StaffDto.fromJson(Map<String, dynamic> json) =
+      _$StaffDtoImpl.fromJson;
 
   @override
   String? get name;
+  @override
+  String? get templateId;
   @override
   String? get image;
   @override
   List<String>? get workDays;
   @override
-  Map<String, Map<String, int>>? get workHours;
+  TimeRangeModel? get workHours;
   @override
-  List<String>? get workDate;
-  @override
-  int? get templateId;
+  List<ScheduleModel>? get workSchedules;
   @override
   String? get desc;
   @override
-  String get staffId;
+  bool? get isDeleted;
 
-  /// Create a copy of UpdateStaffDto
+  /// Create a copy of StaffDto
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UpdateStaffDtoImplCopyWith<_$UpdateStaffDtoImpl> get copyWith =>
+  _$$StaffDtoImplCopyWith<_$StaffDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
