@@ -1,6 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
-import 'package:staful/feature/staff/domain/interfaces/staff_interfaces.dart';
+import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 
 // final GetStaffsUsingTemplateUsecaseProvider = Provider((ref) {
@@ -9,7 +7,7 @@ import 'package:staful/feature/staff/domain/model/staff_model.dart';
 // })
 
 class GetStaffsUsingTemplateUsecase {
-  final StaffInterfaces _staffInterface;
+  final StaffInterface _staffInterface;
 
   GetStaffsUsingTemplateUsecase(this._staffInterface);
 

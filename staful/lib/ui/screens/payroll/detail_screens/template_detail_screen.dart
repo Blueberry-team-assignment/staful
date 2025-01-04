@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:staful/feature/pay_detail/domain/model/pay_detail_model.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/ui/layouts/backAppBar_Layout.dart';
-import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/data/models/template_model.dart';
 import 'package:staful/ui/screens/payroll/detail_screens/payroll_search_screen.dart';
 import 'package:staful/ui/screens/payroll/detail_screens/staff_search_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/currency_formatter.dart';
-import 'package:staful/utils/constants.dart';
 import 'package:staful/ui/widgets/save_cancel_footer.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 
 class TemplateDetailScreen extends StatefulWidget {
-  final Template? template;
+  final TemplateModel? template;
   // final VoidCallback onSave;
 
   const TemplateDetailScreen({
@@ -33,8 +31,8 @@ class TemplateDetailScreen extends StatefulWidget {
 class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
   final TextEditingController templateNameController = TextEditingController();
   final List<TextEditingController> payDetailControllers = [];
-  late List<PayDetail> payDetails = [];
-  late List<Staff> staffs = [];
+  late List<PayDetailModel> payDetails = [];
+  late List<StaffModel> staffs = [];
 
   @override
   void initState() {
@@ -85,10 +83,10 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     // Navigator.of(context).pop(newTemplate);
   }
 
-  List<PayDetail> _collectPayDetailsFromInput() {
+  List<PayDetailModel> _collectPayDetailsFromInput() {
     return List.generate(
       payDetails.length,
-      (int i) => PayDetail(
+      (int i) => PayDetailModel(
         type: payDetails[i].type,
         description: payDetails[i].description,
         amount: int.parse(payDetailControllers[i].text.replaceAll(",", "")),
@@ -100,7 +98,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     Navigator.of(context).pop();
   }
 
-  void _onPayDetailListChange(List<PayDetail> updatedPayDetails) {
+  void _onPayDetailListChange(List<PayDetailModel> updatedPayDetails) {
     setState(() {
       payDetails = List.from(updatedPayDetails);
       _resetPayDetailControllers();
@@ -112,7 +110,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     _initializePayDetailControllers();
   }
 
-  void _onStaffListChange(List<Staff> updatedStaffs) {
+  void _onStaffListChange(List<StaffModel> updatedStaffs) {
     setState(() {
       // 새로 추가된 스태프 반영
       for (var staff in updatedStaffs) {
@@ -264,7 +262,7 @@ class _TemplateDetailScreenState extends State<TemplateDetailScreen> {
     );
   }
 
-  Widget _buildPayDetailCard(PayDetail payDetail, int index) {
+  Widget _buildPayDetailCard(PayDetailModel payDetail, int index) {
     return ColumnItemContainer(
       content: Column(
         children: [

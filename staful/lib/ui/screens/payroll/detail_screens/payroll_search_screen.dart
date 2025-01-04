@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:staful/feature/pay_detail/domain/model/pay_detail_model.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/data/models/template_model.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/ui/widgets/overlay_search_results_widget.dart';
@@ -19,7 +18,7 @@ final _items = [
 class PayrollSearchScreen extends StatefulWidget {
   final String text;
   // final void Function(List<PayDetail>) onListChange;
-  final List<PayDetail> payDetails;
+  final List<PayDetailModel> payDetails;
 
   const PayrollSearchScreen({
     super.key,
@@ -36,7 +35,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
   final TextEditingController searchInputController = TextEditingController();
   final List<String> searchSuggestions =
       _items.map((item) => item["description"] as String).toList();
-  late List<SelectablePayDetail> selectablePayDetails = [];
+  late List<PayDetailModel> selectablePayDetails = [];
 
   void onSearchInputChanged(String text) {
     if (text.isEmpty) {
@@ -72,7 +71,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
     // TODO: implement initState
     super.initState();
 
-    final List<SelectablePayDetail> list = [];
+    final List<PayDetailModel> list = [];
     for (var item in _items) {
       int amount = 0;
       bool isSelected = false;
@@ -84,7 +83,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
         }
       }
 
-      final newItem = SelectablePayDetail(
+      final newItem = PayDetailModel(
         payDetail: PayDetail(
           type: item["type"] as PayType,
           description: item["description"] as String,
@@ -109,7 +108,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
   }
 
   void onTapSaveBtn(BuildContext context) {
-    final List<PayDetail> updatedPayDetails = selectablePayDetails
+    final List<PayDetailModel> updatedPayDetails = selectablePayDetails
         .where((detail) => detail.isSelected == true)
         .map((detail) => detail.payDetail)
         .toList();
@@ -173,7 +172,7 @@ class _PayrollSearchScreenState extends State<PayrollSearchScreen> {
                 scrollDirection: Axis.vertical,
                 itemCount: selectablePayDetails.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final SelectablePayDetail payDetail =
+                  final PayDetailModel payDetail =
                       selectablePayDetails[index];
                   if (!payDetail.isVisible) return const SizedBox.shrink();
                   return Container(

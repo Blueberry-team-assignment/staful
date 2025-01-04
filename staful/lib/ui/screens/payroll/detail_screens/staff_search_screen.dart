@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
 import 'package:staful/utils/app_styles.dart';
-import 'package:staful/utils/constants.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
-import 'package:staful/ui/widgets/overlay_search_results_widget.dart';
 import 'package:staful/ui/widgets/save_cancel_footer.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
@@ -15,7 +12,7 @@ import 'package:staful/ui/widgets/staff_profile_widget.dart';
 class StaffSearchScreen extends ConsumerStatefulWidget {
   final String text;
   // final void Function(List<Staff>) onListChange;
-  final List<Staff> staffList;
+  final List<StaffModel> staffList;
 
   const StaffSearchScreen({
     super.key,
@@ -30,7 +27,7 @@ class StaffSearchScreen extends ConsumerStatefulWidget {
 
 class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  late List<Staff> Staffs = [];
+  late List<StaffModel> Staffs = [];
 
   @override
   void initState() {
@@ -90,7 +87,7 @@ class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
   }
 
   void _onTapSaveBtn(BuildContext context) {
-    final List<Staff> selectedStaffs =
+    final List<StaffModel> selectedStaffs =
         Staffs.where((staff) => staff!.isSelected).toList();
 
     // widget.onListChange(selectedStaffs);
@@ -178,7 +175,7 @@ class _StaffSearchScreenState extends ConsumerState<StaffSearchScreen> {
     );
   }
 
-  Widget _buildStaffRow(Staff staff) {
+  Widget _buildStaffRow(StaffModel staff) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

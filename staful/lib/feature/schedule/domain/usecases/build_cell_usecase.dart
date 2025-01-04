@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:staful/data/models/staff_model.dart';
+import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 import 'package:staful/feature/schedule/presentation/edit_schedule_screen.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/utils/time_utils.dart';
@@ -14,8 +15,8 @@ class BuildCellUseCase {
   TableViewCell build(
     BuildContext context,
     TableVicinity vicinity,
-    List<TimeRange?> schedules,
-    List<Staff> staffList,
+    List<TimeRangeModel?> schedules,
+    List<StaffModel> staffList,
     DateTime date,
   ) {
     if (vicinity.row == 0) {
@@ -52,7 +53,7 @@ class BuildCellUseCase {
   }
 
   TableViewCell _buildProfileCell(
-      TableVicinity vicinity, List<Staff> staffList) {
+      TableVicinity vicinity, List<StaffModel> staffList) {
     return TableViewCell(
       child: Container(
         color: Colors.white,
@@ -69,7 +70,7 @@ class BuildCellUseCase {
   TableViewCell _buildScheduleCell(
     BuildContext context,
     TableVicinity vicinity,
-    List<TimeRange?> schedules,
+    List<TimeRangeModel?> schedules,
     DateTime date,
   ) {
     final int start = schedules[vicinity.yIndex - 1]?.startTime.hour ?? 9 + 1;
@@ -127,7 +128,7 @@ class BuildCellUseCase {
     return const TableViewCell(child: SizedBox.shrink());
   }
 
-  bool _isEmployeeOnSchedule(TimeRange schedule) {
+  bool _isEmployeeOnSchedule(TimeRangeModel schedule) {
     final timeInfo = DateTime.now();
     final [start, end] = [schedule.startTime, schedule.endTime];
     final [sHour, sMinute] = [start.hour, start.minute];

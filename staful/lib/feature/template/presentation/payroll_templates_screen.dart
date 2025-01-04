@@ -4,28 +4,13 @@ import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/feature/template/presentation/provider/template_provider.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/data/models/template_model.dart';
 import 'package:staful/ui/screens/payroll/detail_screens/template_detail_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/ui/widgets/overlay_search_results_widget.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/navigation_helpers.dart';
-
-final List<PayDetail> defaultList = [
-  PayDetail(description: "식대", amount: 0, type: PayType.fixed),
-  PayDetail(description: "시급", amount: 0, type: PayType.hourly),
-];
-
-final emptyTemplate = Template(
-  name: "",
-  payDetails: defaultList,
-  staffIds: [],
-  templateId: "99",
-);
 
 class PayrollTemplatesScreen extends ConsumerStatefulWidget {
   const PayrollTemplatesScreen({super.key});

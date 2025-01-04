@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/data/models/staff_model.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/constants.dart';
-import 'package:staful/feature/staff/presentation/provider/staff_info_provider.dart';
-
 class WorkDaysRow extends StatelessWidget {
-  final Staff staff;
+  final StaffModel staff;
   final bool disabled;
-  final void Function(Staff)? onUpdate;
+  final void Function(StaffModel)? onUpdate;
 
   const WorkDaysRow({
     super.key,
@@ -34,11 +31,11 @@ class WorkDaysRow extends StatelessWidget {
 }
 
 class WorkDaysRowItem extends StatefulWidget {
-  final Staff staff;
+  final StaffModel staff;
   final String text;
   final bool isSelected;
   final bool disabled;
-  final void Function(Staff)? onUpdate;
+  final void Function(StaffModel)? onUpdate;
 
   const WorkDaysRowItem({
     super.key,

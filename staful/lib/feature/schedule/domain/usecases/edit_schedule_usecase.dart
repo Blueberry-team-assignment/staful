@@ -1,4 +1,4 @@
-import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
+import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
 
 class EditScheduleUsecase {
   final StaffInterface _staffInterface;
