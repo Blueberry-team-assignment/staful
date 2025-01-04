@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:staful/utils/app_styles.dart';
@@ -36,7 +37,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
   final TextEditingController memoFieldController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   String? imagePath; // 선택된 이미지 경로
-  late TimeRange updatedSchedule = defaultTimeRange;
+  late TimeRangeModel updatedSchedule = defaultTimeRange;
 
   @override
   void dispose() {
@@ -54,18 +55,18 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
         state.selectedStaff.calculateWeeklyWorkingHours();
 
     void handleOnUpdateOpeningHour(DateTime time) {
-      updatedSchedule = TimeRange(
-        startTime: TimeOfDay(hour: time.hour, minute: time.minute),
-        endTime: state.selectedStaff.workHours.endTime,
+      updatedSchedule = TimeRangeModel(
+        start: TimeOfDay(hour: time.hour, minute: time.minute),
+        end: state.selectedStaff.workHours.end,
       );
 
       notifier.updateSelectedStaff(field: "workHours", value: updatedSchedule);
     }
 
     void handleOnUpdateClosingHour(DateTime time) {
-      updatedSchedule = TimeRange(
-        startTime: state.selectedStaff.workHours.startTime,
-        endTime: TimeOfDay(hour: time.hour, minute: time.minute),
+      updatedSchedule = TimeRangeModel(
+        start: state.selectedStaff.workHours.start,
+        end: TimeOfDay(hour: time.hour, minute: time.minute),
       );
 
       notifier.updateSelectedStaff(field: "workHours", value: updatedSchedule);
@@ -212,7 +213,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                                     Expanded(
                                       child: TimePicker(
                                         scheduleInfo: state
-                                            .selectedStaff.workHours.startTime,
+                                            .selectedStaff.workHours.start,
                                         onDateTimeChanged:
                                             handleOnUpdateOpeningHour,
                                       ),
@@ -223,7 +224,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                                     Expanded(
                                       child: TimePicker(
                                         scheduleInfo: state
-                                            .selectedStaff.workHours.endTime,
+                                            .selectedStaff.workHours.end,
                                         onDateTimeChanged:
                                             handleOnUpdateClosingHour,
                                       ),

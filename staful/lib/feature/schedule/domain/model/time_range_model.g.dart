@@ -8,15 +8,14 @@ part of 'time_range_model.dart';
 
 _$TimeRangeModelImpl _$$TimeRangeModelImplFromJson(Map<String, dynamic> json) =>
     _$TimeRangeModelImpl(
-      startTime: const TimeOfDayConverter()
-          .fromJson(json['startTime'] as Map<String, int>),
-      endTime: const TimeOfDayConverter()
-          .fromJson(json['endTime'] as Map<String, int>),
+      start: const TimeOfDayConverter()
+          .fromJson(json['start'] as Map<String, int>),
+      end: const TimeOfDayConverter().fromJson(json['end'] as Map<String, int>),
     );
 
 Map<String, dynamic> _$$TimeRangeModelImplToJson(
         _$TimeRangeModelImpl instance) =>
     <String, dynamic>{
-      'startTime': const TimeOfDayConverter().toJson(instance.startTime),
-      'endTime': const TimeOfDayConverter().toJson(instance.endTime),
+      'start': const TimeOfDayConverter().toJson(instance.start),
+      'end': const TimeOfDayConverter().toJson(instance.end),
     };

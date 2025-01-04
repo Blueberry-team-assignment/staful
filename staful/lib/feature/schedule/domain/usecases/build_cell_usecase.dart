@@ -73,11 +73,11 @@ class BuildCellUseCase {
     List<TimeRangeModel?> schedules,
     DateTime date,
   ) {
-    final int start = schedules[vicinity.yIndex - 1]?.startTime.hour ?? 9 + 1;
-    final int end = schedules[vicinity.yIndex - 1]?.endTime.hour ?? 18 + 1;
+    final int start = schedules[vicinity.yIndex - 1]?.start.hour ?? 9 + 1;
+    final int end = schedules[vicinity.yIndex - 1]?.end.hour ?? 18 + 1;
     final [startMinute, endMinute] = [
-      schedules[vicinity.yIndex - 1]?.startTime.minute ?? 0,
-      schedules[vicinity.yIndex - 1]?.endTime.minute ?? 0,
+      schedules[vicinity.yIndex - 1]?.start.minute ?? 0,
+      schedules[vicinity.yIndex - 1]?.end.minute ?? 0,
     ];
     if (vicinity.column >= start + 1 && vicinity.column <= end) {
       return TableViewCell(
@@ -110,7 +110,7 @@ class BuildCellUseCase {
                     : Theme.of(context).colorScheme.secondary,
                 child: Center(
                   child: Text(
-                    "${formatTimeOfDay(schedules[vicinity.yIndex - 1]!.startTime)} - ${formatTimeOfDay(schedules[vicinity.yIndex - 1]!.endTime)}",
+                    "${formatTimeOfDay(schedules[vicinity.yIndex - 1]!.start)} - ${formatTimeOfDay(schedules[vicinity.yIndex - 1]!.end)}",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -130,7 +130,7 @@ class BuildCellUseCase {
 
   bool _isEmployeeOnSchedule(TimeRangeModel schedule) {
     final timeInfo = DateTime.now();
-    final [start, end] = [schedule.startTime, schedule.endTime];
+    final [start, end] = [schedule.start, schedule.end];
     final [sHour, sMinute] = [start.hour, start.minute];
     final [eHour, eMinute] = [end.hour, end.minute];
 

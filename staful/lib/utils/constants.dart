@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 import 'package:staful/utils/time_utils.dart';
 
 const mapOfWorkDays = {
@@ -13,7 +14,7 @@ const mapOfWorkDays = {
 
 const weekDays = ["월", "화", "수", "목", "금", "토", "일"];
 
-final defaultTimeRange = TimeRange(
-  startTime: const TimeOfDay(hour: 9, minute: 0),
-  endTime: const TimeOfDay(hour: 18, minute: 0),
+final defaultTimeRange = TimeRangeModel(
+  start: const TimeOfDay(hour: 9, minute: 0),
+  end: const TimeOfDay(hour: 18, minute: 0),
 );

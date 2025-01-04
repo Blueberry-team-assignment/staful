@@ -21,8 +21,8 @@ class TimeOfDayConverter implements JsonConverter<TimeOfDay, Map<String, int>> {
 @freezed
 class TimeRangeModel with _$TimeRangeModel {
   const factory TimeRangeModel({
-    @TimeOfDayConverter() required TimeOfDay startTime,
-    @TimeOfDayConverter() required TimeOfDay endTime,
+    @TimeOfDayConverter() required TimeOfDay start,
+    @TimeOfDayConverter() required TimeOfDay end,
   }) = _TimeRangeModel;
 
   factory TimeRangeModel.fromJson(Map<String, dynamic> json) =>

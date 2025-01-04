@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_date_usecase.dart';
-import 'package:staful/feature/staff/domain/model/staff_model.dart';
 
 final calendarNotifierProvider =
     StateNotifierProvider<CalendarNotifier, CalendarState>((ref) {
@@ -20,12 +19,11 @@ class CalendarNotifier extends StateNotifier<CalendarState> {
   }
 
   void selectDay(DateTime selectedDay) async {
-    final filteredStaff =
-        filterByDateUsecase.execute(selectedDay: selectedDay);
+    await filterByDateUsecase.execute(selectedDay: selectedDay);
+
     state = state.copyWith(
       selectedDay: selectedDay,
       focusedDay: selectedDay,
-      filteredStaff: await filteredStaff,
     );
   }
 
@@ -37,23 +35,19 @@ class CalendarNotifier extends StateNotifier<CalendarState> {
 class CalendarState {
   final DateTime selectedDay;
   final DateTime focusedDay;
-  final List<StaffModel> filteredStaff;
 
   CalendarState({
     required this.selectedDay,
     required this.focusedDay,
-    this.filteredStaff = const [],
   });
 
   CalendarState copyWith({
     DateTime? selectedDay,
     DateTime? focusedDay,
-    List<StaffModel>? filteredStaff,
   }) {
     return CalendarState(
       selectedDay: selectedDay ?? this.selectedDay,
       focusedDay: focusedDay ?? this.focusedDay,
-      filteredStaff: filteredStaff ?? this.filteredStaff,
     );
   }
 }

@@ -21,9 +21,9 @@ TimeRangeModel _$TimeRangeModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$TimeRangeModel {
   @TimeOfDayConverter()
-  TimeOfDay get startTime => throw _privateConstructorUsedError;
+  TimeOfDay get start => throw _privateConstructorUsedError;
   @TimeOfDayConverter()
-  TimeOfDay get endTime => throw _privateConstructorUsedError;
+  TimeOfDay get end => throw _privateConstructorUsedError;
 
   /// Serializes this TimeRangeModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,8 +42,8 @@ abstract class $TimeRangeModelCopyWith<$Res> {
       _$TimeRangeModelCopyWithImpl<$Res, TimeRangeModel>;
   @useResult
   $Res call(
-      {@TimeOfDayConverter() TimeOfDay startTime,
-      @TimeOfDayConverter() TimeOfDay endTime});
+      {@TimeOfDayConverter() TimeOfDay start,
+      @TimeOfDayConverter() TimeOfDay end});
 }
 
 /// @nodoc
@@ -61,17 +61,17 @@ class _$TimeRangeModelCopyWithImpl<$Res, $Val extends TimeRangeModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startTime = null,
-    Object? endTime = null,
+    Object? start = null,
+    Object? end = null,
   }) {
     return _then(_value.copyWith(
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
+      start: null == start
+          ? _value.start
+          : start // ignore: cast_nullable_to_non_nullable
               as TimeOfDay,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
+      end: null == end
+          ? _value.end
+          : end // ignore: cast_nullable_to_non_nullable
               as TimeOfDay,
     ) as $Val);
   }
@@ -86,8 +86,8 @@ abstract class _$$TimeRangeModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@TimeOfDayConverter() TimeOfDay startTime,
-      @TimeOfDayConverter() TimeOfDay endTime});
+      {@TimeOfDayConverter() TimeOfDay start,
+      @TimeOfDayConverter() TimeOfDay end});
 }
 
 /// @nodoc
@@ -103,17 +103,17 @@ class __$$TimeRangeModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startTime = null,
-    Object? endTime = null,
+    Object? start = null,
+    Object? end = null,
   }) {
     return _then(_$TimeRangeModelImpl(
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
+      start: null == start
+          ? _value.start
+          : start // ignore: cast_nullable_to_non_nullable
               as TimeOfDay,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
+      end: null == end
+          ? _value.end
+          : end // ignore: cast_nullable_to_non_nullable
               as TimeOfDay,
     ));
   }
@@ -123,22 +123,22 @@ class __$$TimeRangeModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TimeRangeModelImpl implements _TimeRangeModel {
   const _$TimeRangeModelImpl(
-      {@TimeOfDayConverter() required this.startTime,
-      @TimeOfDayConverter() required this.endTime});
+      {@TimeOfDayConverter() required this.start,
+      @TimeOfDayConverter() required this.end});
 
   factory _$TimeRangeModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TimeRangeModelImplFromJson(json);
 
   @override
   @TimeOfDayConverter()
-  final TimeOfDay startTime;
+  final TimeOfDay start;
   @override
   @TimeOfDayConverter()
-  final TimeOfDay endTime;
+  final TimeOfDay end;
 
   @override
   String toString() {
-    return 'TimeRangeModel(startTime: $startTime, endTime: $endTime)';
+    return 'TimeRangeModel(start: $start, end: $end)';
   }
 
   @override
@@ -146,14 +146,13 @@ class _$TimeRangeModelImpl implements _TimeRangeModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TimeRangeModelImpl &&
-            (identical(other.startTime, startTime) ||
-                other.startTime == startTime) &&
-            (identical(other.endTime, endTime) || other.endTime == endTime));
+            (identical(other.start, start) || other.start == start) &&
+            (identical(other.end, end) || other.end == end));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, startTime, endTime);
+  int get hashCode => Object.hash(runtimeType, start, end);
 
   /// Create a copy of TimeRangeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -174,8 +173,8 @@ class _$TimeRangeModelImpl implements _TimeRangeModel {
 
 abstract class _TimeRangeModel implements TimeRangeModel {
   const factory _TimeRangeModel(
-          {@TimeOfDayConverter() required final TimeOfDay startTime,
-          @TimeOfDayConverter() required final TimeOfDay endTime}) =
+          {@TimeOfDayConverter() required final TimeOfDay start,
+          @TimeOfDayConverter() required final TimeOfDay end}) =
       _$TimeRangeModelImpl;
 
   factory _TimeRangeModel.fromJson(Map<String, dynamic> json) =
@@ -183,10 +182,10 @@ abstract class _TimeRangeModel implements TimeRangeModel {
 
   @override
   @TimeOfDayConverter()
-  TimeOfDay get startTime;
+  TimeOfDay get start;
   @override
   @TimeOfDayConverter()
-  TimeOfDay get endTime;
+  TimeOfDay get end;
 
   /// Create a copy of TimeRangeModel
   /// with the given fields replaced by the non-null parameter values.

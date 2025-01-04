@@ -13,8 +13,8 @@ class StaffState with _$StaffState {
     @Default(StaffModel(
         name: "",
         workHours: TimeRangeModel(
-            startTime: TimeOfDay(hour: 9, minute: 0),
-            endTime: TimeOfDay(hour: 18, minute: 0))))
+            start: TimeOfDay(hour: 9, minute: 0),
+            end: TimeOfDay(hour: 18, minute: 0))))
     StaffModel selectedStaff,
     @Default(false) bool isLoading,
   }) = _StaffState;

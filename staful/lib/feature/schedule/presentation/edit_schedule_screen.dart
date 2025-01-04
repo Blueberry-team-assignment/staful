@@ -231,12 +231,12 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                       ),
                                     ],
                                   )
-                                : const WorkScheduleForDisplay(
+                                : WorkScheduleForDisplay(
                                     workHours: TimeRangeModel(
-                                        startTime:
-                                            TimeOfDay(hour: 9, minute: 0),
-                                        endTime:
-                                            TimeOfDay(hour: 18, minute: 0)),
+                                        start:
+                                            const TimeOfDay(hour: 9, minute: 0),
+                                        end: const TimeOfDay(
+                                            hour: 18, minute: 0)),
                                   )
                             // (workHours: widget.workHours)
                           ],
@@ -395,7 +395,7 @@ class WorkScheduleForDisplay extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          formatTimeOfDay(workHours.startTime),
+          formatTimeOfDay(workHours.start),
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -409,7 +409,7 @@ class WorkScheduleForDisplay extends StatelessWidget {
           ),
         ),
         Text(
-          formatTimeOfDay(workHours.endTime),
+          formatTimeOfDay(workHours.end),
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

@@ -30,7 +30,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAutoLogin();
+      // _checkAutoLogin();
     });
   }
 
@@ -44,7 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _checkAutoLogin() async {
     final loginProvider = ref.read(logInProvider.notifier);
-    
+    // loginProvider.checkUser();
     final loginState = ref.read(logInProvider);
 
     if (loginState.isLoggedIn) {

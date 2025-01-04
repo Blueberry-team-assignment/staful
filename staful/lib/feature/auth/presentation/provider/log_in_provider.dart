@@ -38,7 +38,7 @@ class LogInNotifier extends StateNotifier<LogInState> {
       );
       setLoading(false);
 
-      initializeApp();
+      // initializeApp();
     } catch (e) {
       setLoading(false);
       rethrow;
@@ -53,7 +53,7 @@ class LogInNotifier extends StateNotifier<LogInState> {
     state = state.copyWith(authUser: authUser);
     setLoading(false);
 
-    initializeApp();
+    // initializeApp();
   }
 
   Future<void> initializeApp() async {

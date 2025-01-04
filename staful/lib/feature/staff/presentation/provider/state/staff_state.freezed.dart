@@ -160,8 +160,8 @@ class _$StaffStateImpl implements _StaffState {
       this.selectedStaff = const StaffModel(
           name: "",
           workHours: TimeRangeModel(
-              startTime: TimeOfDay(hour: 9, minute: 0),
-              endTime: TimeOfDay(hour: 18, minute: 0))),
+              start: TimeOfDay(hour: 9, minute: 0),
+              end: TimeOfDay(hour: 18, minute: 0))),
       this.isLoading = false})
       : _list = list,
         _filteredList = filteredList;

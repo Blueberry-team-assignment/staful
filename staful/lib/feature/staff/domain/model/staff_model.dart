@@ -31,8 +31,8 @@ extension StaffModelExtensions on StaffModel {
     final workDayCount = workDays.length;
 
     final dailyWorkDuration = Duration(
-      hours: workHours.endTime.hour - workHours.startTime.hour,
-      minutes: workHours.endTime.minute - workHours.startTime.minute,
+      hours: workHours.end.hour - workHours.start.hour,
+      minutes: workHours.end.minute - workHours.start.minute,
     );
 
     // Weekly work duration

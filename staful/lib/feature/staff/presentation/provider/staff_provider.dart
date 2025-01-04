@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_date_usecase.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_search_input_usecase.dart';
@@ -24,7 +26,12 @@ class StaffNotifier extends StateNotifier<StaffState> {
     this._staffCrudUsecase,
     this._filterByDateUsecase,
     this._filterBySearchInputUsecase,
-  ) : super(const StaffState());
+  ) : super(StaffState(
+            selectedStaff: StaffModel(
+                name: "",
+                workHours: TimeRangeModel(
+                    start: const TimeOfDay(hour: 9, minute: 0),
+                    end: const TimeOfDay(hour: 18, minute: 0)))));
 
   Future<void> fetchAllStaffs() async {
     try {
