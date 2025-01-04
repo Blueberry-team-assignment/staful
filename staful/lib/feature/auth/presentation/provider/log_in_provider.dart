@@ -1,16 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/auth/data/repositories/auth_repository.dart';
-import 'package:staful/data/models/staff_model.dart';
-import 'package:staful/data/models/user_model.dart';
-import 'package:staful/feature/auth/domain/interfaces/auth_interface.dart';
-import 'package:staful/feature/auth/domain/interfaces/user_interface.dart';
 import 'package:staful/feature/auth/domain/usecases/check_user_usecase.dart';
 import 'package:staful/feature/auth/domain/usecases/log_in_usecase.dart';
 import 'package:staful/feature/auth/presentation/provider/state/log_in_state.dart';
-import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
-import 'package:staful/feature/auth/data/repositories/user_repository.dart';
-import 'package:staful/feature/auth/data/dto/log_in_dto.dart';
-import 'package:staful/feature/staff/provider/staff_provider.dart';
 import 'package:staful/feature/template/domain/usecases/templates_crud_usecase.dart';
 
 final logInProvider =
