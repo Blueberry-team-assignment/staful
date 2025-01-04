@@ -6,19 +6,18 @@ import 'package:staful/feature/template/domain/interfaces/template_interface.dar
 import 'package:staful/feature/template/domain/model/template_model.dart';
 
 final templateRepositoryProvider = Provider<TemplateInterface>((ref) {
-  return TemplateRepository(FirebaseFirestore.instance, ref);
+  return TemplateRepository(FirebaseFirestore.instance);
 });
 
 class TemplateRepository implements TemplateInterface {
   final FirebaseFirestore _firestore;
-  final Ref _ref;
 
-  TemplateRepository(this._firestore, this._ref);
+  TemplateRepository(this._firestore);
 
   @override
-  Future<List<TemplateModel>> fetchAllTemplates() async {
-    final uid = _ref.read(logInProvider).user?.uid;
-
+  Future<List<TemplateModel>> fetchAllTemplates({
+    required String uid,
+  }) async {
     final templateList = await _firestore
         .collection('users')
         .doc(uid)

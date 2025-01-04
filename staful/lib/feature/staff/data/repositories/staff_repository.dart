@@ -33,7 +33,7 @@ class StaffRepository implements StaffInterface {
 
   @override
   Future<List<Staff>> fetchAllStaffs() async {
-    final uid = _ref.read(logInProvider).user?.uid;
+    final uid = _ref.read(logInProvider).authUser?.uid;
 
     final staffList =
         await _firestore.collection('users').doc(uid).collection('staff').get();

@@ -2,7 +2,9 @@ import 'package:staful/feature/template/data/dto/template_dto.dart';
 import 'package:staful/feature/template/domain/model/template_model.dart';
 
 abstract class TemplateInterface {
-  Future<List<TemplateModel>> fetchAllTemplates();
+  Future<List<TemplateModel>> fetchAllTemplates({
+    required String uid,
+  });
 
   Future<TemplateModel> updateTemplate({
     required String uid,

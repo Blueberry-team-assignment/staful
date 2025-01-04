@@ -29,7 +29,7 @@ class StaffRegisterScreenContainer extends ConsumerWidget {
           },
           onSave: () {
             ref.read(staffInfoNotifierProvider(staff).notifier).createStaff(
-                uid: ref.read(logInProvider).user!.uid,
+                uid: ref.read(logInProvider).authUser!.uid,
                 staff: state.createdStaffInfo!);
           },
         ),

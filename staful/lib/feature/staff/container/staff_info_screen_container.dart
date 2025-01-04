@@ -16,7 +16,7 @@ class StaffInfoScreenContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uid = ref.read(logInProvider).user!.uid;
+    final uid = ref.read(logInProvider).authUser!.uid;
     final state = ref.watch(staffInfoNotifierProvider(staff));
 
     return Stack(

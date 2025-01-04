@@ -19,12 +19,14 @@ class TemplateCrudUsecase {
   Future<void> createTemplate(TemplateModel template) async {
     /// fixxx
     await _templateInterface.createTemplate(
-        uid: ref.read(logInProvider).user!.uid,
+        uid: ref.read(logInProvider).authUser!.uid,
         dto: TemplateDto.fromJson(template.toJson()));
   }
 
   Future<List<TemplateModel>> getAllTemplates() async {
-    final templates = await _templateInterface.fetchAllTemplates();
+    final templates = await _templateInterface.fetchAllTemplates(
+      uid: ref.read(logInProvider).authUser!.uid,
+    );
     return templates;
   }
 
@@ -32,7 +34,7 @@ class TemplateCrudUsecase {
     // template.copyWith
     // fixxxx
     await _templateInterface.updateTemplate(
-      uid: ref.read(logInProvider).user!.uid,
+      uid: ref.read(logInProvider).authUser!.uid,
       dto: TemplateDto.fromJson(template.toJson()),
       templateId: template.id!,
     );
@@ -41,6 +43,6 @@ class TemplateCrudUsecase {
   Future<void> deleteTemplate(String templateId) async {
     // fixxx
     await _templateInterface.deleteTemplate(
-        templateId: templateId, uid: ref.read(logInProvider).user!.uid);
+        templateId: templateId, uid: ref.read(logInProvider).authUser!.uid);
   }
 }
