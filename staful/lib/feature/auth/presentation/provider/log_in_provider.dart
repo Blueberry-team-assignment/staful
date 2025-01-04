@@ -4,24 +4,32 @@ import 'package:staful/data/models/staff_model.dart';
 import 'package:staful/data/models/user_model.dart';
 import 'package:staful/feature/auth/domain/interfaces/auth_interface.dart';
 import 'package:staful/feature/auth/domain/interfaces/user_interface.dart';
+import 'package:staful/feature/auth/domain/usecases/check_user_usecase.dart';
 import 'package:staful/feature/auth/domain/usecases/log_in_usecase.dart';
 import 'package:staful/feature/auth/presentation/provider/state/log_in_state.dart';
 import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
 import 'package:staful/feature/auth/data/repositories/user_repository.dart';
 import 'package:staful/feature/auth/data/dto/log_in_dto.dart';
 import 'package:staful/feature/staff/provider/staff_provider.dart';
+import 'package:staful/feature/template/domain/usecases/templates_crud_usecase.dart';
 
 final logInProvider =
     StateNotifierProvider.autoDispose<LogInNotifier, LogInState>((ref) {
   final logInUsecase = ref.watch(loginUsecaseProvider);
-  return LogInNotifier(logInUsecase);
+  final checkUserUsecase = ref.watch(checkUserUsecaseProvider);
+  final templateCrudUsecase = ref.watch(templateCrudUsecaseProvider);
+  return LogInNotifier(logInUsecase, checkUserUsecase, templateCrudUsecase);
 });
 
 class LogInNotifier extends StateNotifier<LogInState> {
   final LogInUsecase _logInUsecase;
+  final CheckUserUsecase _checkUserUsecase;
+  final TemplateCrudUsecase _templateCrudUsecase;
 
   LogInNotifier(
     this._logInUsecase,
+    this._checkUserUsecase,
+    this._templateCrudUsecase,
   ) : super(LogInState());
 
   Future<void> logIn({
@@ -37,32 +45,29 @@ class LogInNotifier extends StateNotifier<LogInState> {
       state = state.copyWith(
         authUser: authUser,
       );
-
-      // 스태프, 템플릿 데이터 fetch
-      // await _ref.watch(staffNotifierProvider.notifier).fetchStaffList(uid);
-
-      // _ref.read(templateNotifierProvider.notifier).fetch
       setLoading(false);
+
+      initializeApp();
     } catch (e) {
       setLoading(false);
       rethrow;
     }
   }
 
-  // Future<void> checkAutoLogin() async {
-  //   final user = _authInterface.checkUser();
-  //   final savedUser = await _userInterface.loadUserFromPreferences();
+  Future<void> checkUser() async {
+    setLoading(true);
 
-  //   if (user.uid == savedUser.uid) {
-  //     state = state.copyWith(
-  //         user: await _userInterface.fetchUserFromFirestore(uid: user.uid),
-  //         isLoggedIn: true);
-  //     await _ref.watch(staffNotifierProvider.notifier).fetchStaffList(user.uid);
-  //   } else {
-  //     _authInterface.logOut();
-  //     state = state.copyWith(isLoggedIn: false);
-  //   }
-  // }
+    final authUser = await _checkUserUsecase.execute();
+
+    state = state.copyWith(authUser: authUser);
+    setLoading(false);
+
+    initializeApp();
+  }
+
+  Future<void> initializeApp() async {
+    await _templateCrudUsecase.getAllTemplates();
+  }
 
   void setLoading(bool loading) {
     state = state.copyWith(isLoading: loading);
