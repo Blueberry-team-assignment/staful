@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/feature/template/domain/usecases/filter_templates_usecase.dart';
 import 'package:staful/feature/template/domain/usecases/templates_crud_usecase.dart';
 import 'package:staful/feature/template/presentation/provider/template_state.dart';
@@ -36,6 +37,10 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
     final filteredList = await _filterTemplatesUsecase.execute(text: text);
     state = state.copyWith(filteredList: filteredList);
     setLoading(false);
+  }
+
+  void setList(List<TemplateModel> list) {
+    state = state.copyWith(filteredList: list, list: list);
   }
 
   void setLoading(bool loading) {

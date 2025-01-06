@@ -26,12 +26,12 @@ class StaffNotifier extends StateNotifier<StaffState> {
     this._staffCrudUsecase,
     this._filterByDateUsecase,
     this._filterBySearchInputUsecase,
-  ) : super(StaffState(
+  ) : super(const StaffState(
             selectedStaff: StaffModel(
                 name: "",
                 workHours: TimeRangeModel(
-                    start: const TimeOfDay(hour: 9, minute: 0),
-                    end: const TimeOfDay(hour: 18, minute: 0)))));
+                    start: TimeOfDay(hour: 9, minute: 0),
+                    end: TimeOfDay(hour: 18, minute: 0)))));
 
   Future<void> fetchAllStaffs() async {
     try {
@@ -133,6 +133,10 @@ class StaffNotifier extends StateNotifier<StaffState> {
     );
 
     state = state.copyWith(selectedStaff: updatedStaff);
+  }
+
+  void setList(List<StaffModel> list) {
+    state = state.copyWith(list: list, filteredList: list);
   }
 
   void setLoading(bool loading) {
