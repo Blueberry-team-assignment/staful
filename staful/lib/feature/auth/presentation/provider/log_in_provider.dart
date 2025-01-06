@@ -58,6 +58,9 @@ class LogInNotifier extends StateNotifier<LogInState> {
     setLoading(true);
 
     final authUser = await _checkUserUsecase.execute();
+    final initializedData = await _logInUsecase.initialize(authUser.uid);
+    _templateNotifier.setList(initializedData.templateList);
+    _staffNotifier.setList(initializedData.staffList);
 
     state = state.copyWith(authUser: authUser, isLoggedIn: true);
     setLoading(false);

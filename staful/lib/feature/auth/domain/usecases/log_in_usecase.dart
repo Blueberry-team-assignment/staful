@@ -27,6 +27,12 @@ class LogInUsecase {
     this._templateInterface,
   );
 
+  Future<LoginResult> initialize(String uid) async {
+    final staffList = await _staffInterface.fetchAllStaffs(uid: uid);
+    final templateList = await _templateInterface.fetchAllTemplates(uid: uid);
+    return LoginResult(staffList: staffList, templateList: templateList);
+  }
+
   Future<LoginResult> execute({
     required String userId,
     required String password,
@@ -35,24 +41,23 @@ class LogInUsecase {
         await _authInterface.logIn(userId: userId, password: password);
 
     final uid = authUser.uid;
-    final staffList = await _staffInterface.fetchAllStaffs(uid: uid);
-    final templateList = await _templateInterface.fetchAllTemplates(uid: uid);
+    final initializedData = await initialize(uid);
 
     return LoginResult(
       authUser: authUser,
-      staffList: staffList,
-      templateList: templateList,
+      staffList: initializedData.staffList,
+      templateList: initializedData.templateList,
     );
   }
 }
 
 class LoginResult {
-  final UserModel authUser;
+  final UserModel? authUser;
   final List<StaffModel> staffList;
   final List<TemplateModel> templateList;
 
   LoginResult({
-    required this.authUser,
+    this.authUser,
     required this.staffList,
     required this.templateList,
   });
