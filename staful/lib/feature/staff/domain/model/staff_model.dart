@@ -27,7 +27,6 @@ class StaffModel with _$StaffModel {
 
 extension StaffModelExtensions on StaffModel {
   Map<String, int> calculateWeeklyWorkingHours() {
-    
     final workDayCount = workDays.length;
 
     final dailyWorkDuration = Duration(

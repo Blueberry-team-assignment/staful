@@ -4,27 +4,28 @@ import 'package:staful/feature/template/data/dto/template_dto.dart';
 import 'package:staful/feature/template/data/repositories/template_repository.dart';
 import 'package:staful/feature/template/domain/interfaces/template_interface.dart';
 import 'package:staful/feature/template/domain/model/template_model.dart';
+import 'package:staful/provider/uid_provider.dart';
 
 final templateCrudUsecaseProvider = Provider((ref) {
   final templateInterface = ref.watch(templateRepositoryProvider);
-  return TemplateCrudUsecase(templateInterface, ref);
+  final uid = ref.watch(uidProvider);
+  return TemplateCrudUsecase(templateInterface, uid);
 });
 
 class TemplateCrudUsecase {
   final TemplateInterface _templateInterface;
-  final Ref ref;
+  final String? uid;
 
-  TemplateCrudUsecase(this._templateInterface, this.ref);
+  TemplateCrudUsecase(this._templateInterface, this.uid);
 
   Future<void> createTemplate(TemplateModel template) async {
     await _templateInterface.createTemplate(
-        uid: ref.read(logInProvider).authUser!.uid,
-        dto: TemplateDto.fromJson(template.toJson()));
+        uid: uid!, dto: TemplateDto.fromJson(template.toJson()));
   }
 
   Future<List<TemplateModel>> getAllTemplates() async {
     final templates = await _templateInterface.fetchAllTemplates(
-      uid: ref.read(logInProvider).authUser!.uid,
+      uid: uid!,
     );
     return templates;
   }
@@ -32,14 +33,13 @@ class TemplateCrudUsecase {
   Future<void> updateTemplate(TemplateModel template) async {
     // template.copyWith
     await _templateInterface.updateTemplate(
-      uid: ref.read(logInProvider).authUser!.uid,
+      uid: uid!,
       dto: TemplateDto.fromJson(template.toJson()),
       templateId: template.id!,
     );
   }
 
   Future<void> deleteTemplate(String templateId) async {
-    await _templateInterface.deleteTemplate(
-        templateId: templateId, uid: ref.read(logInProvider).authUser!.uid);
+    await _templateInterface.deleteTemplate(templateId: templateId, uid: uid!);
   }
 }

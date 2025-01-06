@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
+import 'package:staful/provider/uid_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TableCalendarWidget extends ConsumerWidget {
@@ -11,7 +12,7 @@ class TableCalendarWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(calendarNotifierProvider);
     final notifier = ref.read(calendarNotifierProvider.notifier);
-
+    print(ref.read(uidProvider));
     return TableCalendar(
       onHeaderLongPressed: (_) => notifier.selectDay(DateTime.now()),
       onHeaderTapped: (_) => notifier.selectDay(state.focusedDay),

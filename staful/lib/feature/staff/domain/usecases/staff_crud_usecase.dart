@@ -4,27 +4,29 @@ import 'package:staful/feature/staff/data/dto/staff_dto.dart';
 import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
 import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/provider/uid_provider.dart';
 
 final staffCrudUsecaseProvider = Provider((ref) {
   final staffInterface = ref.watch(staffRepositoryProvider);
-  return StaffCrudUsecase(staffInterface, ref);
+  final uid = ref.watch(uidProvider);
+  return StaffCrudUsecase(staffInterface, uid);
 });
 
 class StaffCrudUsecase {
   final StaffInterface _staffInterface;
-  final Ref ref;
+  final String? uid;
 
-  StaffCrudUsecase(this._staffInterface, this.ref);
+  StaffCrudUsecase(this._staffInterface, this.uid);
 
   Future<StaffModel> createStaff(StaffModel staff) async {
     return await _staffInterface.createStaff(
-        uid: ref.read(logInProvider).authUser!.uid,
+        uid: uid!,
         dto: StaffDto.fromJson(staff.toJson()));
   }
 
   Future<List<StaffModel>> getAllStaffs() async {
     final staffs = await _staffInterface.fetchAllStaffs(
-      uid: ref.read(logInProvider).authUser!.uid,
+      uid: uid!,
     );
     return staffs;
   }
@@ -33,7 +35,7 @@ class StaffCrudUsecase {
     // staff.copyWith
 
     return await _staffInterface.updateStaff(
-      uid: ref.read(logInProvider).authUser!.uid,
+      uid: uid!,
       dto: StaffDto.fromJson(staff.toJson()),
       staffId: staff.id!,
     );
@@ -41,6 +43,6 @@ class StaffCrudUsecase {
 
   Future<void> deleteStaff(String staffId) async {
     await _staffInterface.deleteStaff(
-        staffId: staffId, uid: ref.read(logInProvider).authUser!.uid);
+        staffId: staffId, uid: uid!);
   }
 }

@@ -9,8 +9,9 @@ part of 'time_range_model.dart';
 _$TimeRangeModelImpl _$$TimeRangeModelImplFromJson(Map<String, dynamic> json) =>
     _$TimeRangeModelImpl(
       start: const TimeOfDayConverter()
-          .fromJson(json['start'] as Map<String, int>),
-      end: const TimeOfDayConverter().fromJson(json['end'] as Map<String, int>),
+          .fromJson(json['start'] as Map<String, dynamic>),
+      end: const TimeOfDayConverter()
+          .fromJson(json['end'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$TimeRangeModelImplToJson(

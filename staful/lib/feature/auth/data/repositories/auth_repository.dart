@@ -4,17 +4,20 @@ import 'package:staful/feature/auth/data/repositories/user_repository.dart';
 import 'package:staful/feature/auth/domain/interfaces/auth_interface.dart';
 import 'package:staful/feature/auth/domain/interfaces/user_interface.dart';
 import 'package:staful/feature/auth/domain/model/user_model.dart';
+import 'package:staful/provider/uid_provider.dart';
 
 final authRepositoryProvider = Provider<AuthInterface>((ref) {
   final userRepository = ref.watch(userRepositoryProvider);
-  return AuthRepository(FirebaseAuth.instance, userRepository);
+  final uidNotifier = ref.read(uidProvider.notifier);
+  return AuthRepository(FirebaseAuth.instance, userRepository, uidNotifier);
 });
 
 class AuthRepository implements AuthInterface {
   final FirebaseAuth _firebaseAuth;
   final UserInterface _userRepository;
+  final StateController<String?> _uidState;
 
-  AuthRepository(this._firebaseAuth, this._userRepository);
+  AuthRepository(this._firebaseAuth, this._userRepository, this._uidState);
 
   // 회원가입
   @override
@@ -51,7 +54,8 @@ class AuthRepository implements AuthInterface {
 
       final authUser = await _userRepository.fetchUserFromFirestore(
           uid: userCredential.user!.uid);
-
+      _uidState.state = authUser.uid; // uid 전역 프로바이더에 저장
+      print('state : ${_uidState.state}');
       return authUser;
     } catch (e) {
       throw Exception(e);
@@ -65,7 +69,9 @@ class AuthRepository implements AuthInterface {
 
     if (user == null) throw Exception('User not found');
 
-    final authUser = await _userRepository.fetchUserFromFirestore(uid: user.uid);
+    final authUser =
+        await _userRepository.fetchUserFromFirestore(uid: user.uid);
+    _uidState.state = authUser.uid; // uid 전역 프로바이더에 저장
     return authUser;
   }
 
