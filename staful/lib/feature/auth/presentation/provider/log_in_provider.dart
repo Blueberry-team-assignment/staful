@@ -43,8 +43,11 @@ class LogInNotifier extends StateNotifier<LogInState> {
         authUser: loginResult.authUser,
         isLoggedIn: true,
       );
-      _templateNotifier.setList(loginResult.templateList);
-      _staffNotifier.setList(loginResult.staffList);
+
+      // if (!mounted) return;
+      // _templateNotifier.setList(loginResult.templateList);
+      // _staffNotifier.setList(loginResult.staffList);
+      // if (!mounted) return;
 
       setLoading(false);
     } catch (e) {
@@ -58,9 +61,11 @@ class LogInNotifier extends StateNotifier<LogInState> {
     setLoading(true);
 
     final authUser = await _checkUserUsecase.execute();
-    final initializedData = await _logInUsecase.initialize(authUser.uid);
-    _templateNotifier.setList(initializedData.templateList);
-    _staffNotifier.setList(initializedData.staffList);
+    // final initializedData = await _logInUsecase.initialize(authUser.uid);
+    // if (!mounted) return;
+    // _templateNotifier.setList(initializedData.templateList);
+    // _staffNotifier.setList(initializedData.staffList);
+    // if (!mounted) return;
 
     state = state.copyWith(authUser: authUser, isLoggedIn: true);
     setLoading(false);
