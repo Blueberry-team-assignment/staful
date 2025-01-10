@@ -1,16 +1,68 @@
-# staful
+# **STAFFul**
 
-A new Flutter project.
+Stafful은 소규모 사업장 점주를 대상으로 직원 근무 관리와 급여 템플릿을 통한 급여 관리를 간편하게 돕는 서비스입니다. Flutter와 Riverpod 상태 관리를 기반으로 한 클린 아키텍처를 실습하고, 실제 비즈니스 환경의 데이터 흐름과 복잡한 상태 관리를 다루는 방법을 배울 수 있는 과제형 프로젝트로 설계되었습니다.
 
-## Getting Started
+# **주요 기능**
 
-This project is a starting point for a Flutter application.
+## 1. 직원 등록 및 관리
 
-A few resources to get you started if this is your first Flutter project:
+기본정보 및 근무 요일, 근무 시간을 포함한 직원 정보 등록 및 수정 기능.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 2. 스케줄 관리
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+일간 근무 직원 목록, 일간 근무 시간표, 개별 근무 스케쥴 조회 및 수정, 삭제 기능.
+
+## 3. 상태 관리
+
+Riverpod의 StateNotifierProvider와 Provider를 사용한 상태 관리 및 비동기 데이터 관리.
+구현.
+
+## 4. 클린 아키텍처 적용
+
+Presentation, Domain, Data 계층으로 분리하고 의존성 주입, 의존성 역전 패턴을 적용하여 코드의 재사용성과 유지보수성 강화.
+
+# **배운 것**
+
+## 1. 모바일 앱 아키텍쳐
+
+앱 개발과 협업을 위해 사용되는 아키텍쳐가 있고, 각각의 계층이 어떤 역할을 하며 어떤 의존관계를 갖는지 배울 수 있었다.
+
+## 2. 아키텍쳐 관점에서 생각하기
+
+프로젝트를 설계하고 개발하는 과정에서 기존에는 단순하게 프론트와 백, 혹은 '화면을 먼저 만들고 api를 연결해서 데이터를 컴포넌트에 연결하는 식'의 좁은 관점을 갖고 있었다면, 교욱과 과제를 통해 아키텍쳐의 관점에서 고민하고 생각하는 방향으로 시야를 넓힐 수 있었다.
+
+## 3. 클래스 문법과 객체지향 개발
+
+클래스 문법과 객체지향 개발에 대해서 실제로 코드를 작성하면서 좀 더 익숙해지고 이해할 수 있게 되었다.
+
+# **아쉬운 것**
+
+## 1. 기초 지식의 부족
+
+repository, 구현체, 모델, 아키텍쳐, 비즈니스 로직, 도메인 등 용어의 정의가 흐릿하고 모호하다보니 교육을 듣고 개발하는데 필요한 개념을 이해하기 어려웠고, 이해하는 데 시간이 많이 소요되었다.
+기술 블로그를 뒤져보며 모호한 용어의 의미를 명확하게 하려고 했다.
+
+## 2. 프레임워크 동작에 대한 이해 부족
+
+아키텍쳐를 어느정도 구현했지만, 실제로 프레임워크가 실행될 때 어떤 순서와 흐름으로 동작하는지가 매우 헷갈렸다.
+ref.watch(...)가 꼬리를 물고 루프를 만들어서 해결하기 위해 많은 시간을 쓰기도 했다.
+
+## 3. 지저분한 코드
+
+열심히 리팩토링은 했지만, 다른 사람과 협업할 수 있는 수준만큼의 구조와 가독성은 갖추지 못한 것 같다.
+
+# **어려웠던 것**
+
+## 1. 순환 참조
+
+state에 의존하고 있는 ui 내부에서 state를 변경하는 메서드를 호출할 때는 무한랜더링이 생기지 않도록 매우 주의를 기울여야 한다...
+
+## 2. 비동기 처리와 상태 업데이트
+
+로그인을 처리한 후에 최초 필요한 직원과 템플릿 목록을 불러오는 과정에서 StateError가 다수 발생했다.
+로그인 state에 해당 목록들을 먼저 저장하고, 직원과 템플릿 state에는 의존성 주입을 통해 필요한 목록을 넣어서 초기화하는 방식으로 해결할 수 있었다.
+
+## 3. 클린 아키텍쳐의 실제 적용
+
+3개의 계층을 나눠서 필요한 로직과 데이터를 작성한 뒤에, riverpod을 통한 계층 간 데이터 이동을 어떤 방향과 흐름으로 구현해야하는지 그림을 그리기가 어려웠다.
+"presentation은 도메인 계층에 의존하고, data계층은 도메인 계층에 의존한다. 도메인 계층은 어떤 계층에도 의존하지 않는다"는 원칙을 최대한 지키며 로직을 구현하려고 했다.

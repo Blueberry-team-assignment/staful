@@ -10,18 +10,18 @@ class FilteredStaffGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(calendarNotifierProvider);
+    final calendarState = ref.watch(calendarNotifierProvider);
 
     return GridView.count(
       crossAxisCount: 4,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      children: state.filteredStaff.map((staff) {
+      children: calendarState.filteredStaffList.map((staff) {
         return GestureDetector(
           onTap: () => openPage(
             context,
             ScheduleScreen(
-              date: state.selectedDay,
+              date: calendarState.selectedDay!,
             ),
           ),
           child: Padding(

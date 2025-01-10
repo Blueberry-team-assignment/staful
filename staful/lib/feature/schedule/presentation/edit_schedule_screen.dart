@@ -1,45 +1,62 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:staful/utils/time_utils.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/calendar/provider/calendar_provider.dart';
+import 'package:staful/feature/schedule/data/dto/schedule_dto.dart';
+import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
+import 'package:staful/feature/schedule/presentation/widgets/schedule_table_widget.dart';
+import 'package:staful/feature/schedule/presentation/widgets/time_picker.dart';
+import 'package:staful/feature/schedule/presentation/widgets/work_schedule_for_display.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
+import 'package:staful/ui/widgets/column_item_container.dart';
+import 'package:staful/ui/widgets/simple_text_button_widget.dart';
+import 'package:staful/utils/constants.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/utils/app_styles.dart';
-import 'package:staful/ui/widgets/bottom_sheet_widget.dart';
+import 'package:staful/feature/schedule/presentation/widgets/bottom_sheet_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 
-class EditScheduleScreen extends StatefulWidget {
-  final dynamic workDate;
-  final dynamic workHours;
+class EditScheduleScreen extends ConsumerStatefulWidget {
+  final DateTime date;
+  final StaffModel staff;
 
   const EditScheduleScreen({
     super.key,
-    required this.workDate,
-    required this.workHours,
+    required this.date,
+    required this.staff,
   });
 
   @override
-  State<EditScheduleScreen> createState() => _EditScheduleScreenState();
+  ConsumerState<EditScheduleScreen> createState() => _EditScheduleScreenState();
 }
 
-class _EditScheduleScreenState extends State<EditScheduleScreen> {
+class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
   bool isOnEditMode = false;
+  late TimeRangeModel workSchedule;
 
-  List<TimeOfDay> get scheduleInfo => [
-        widget.workHours[0].split(":").map(int.parse).toList(),
-        widget.workHours[1].split(":").map(int.parse).toList()
-      ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
-  late final updatedSchedule = widget.workHours;
+    workSchedule = widget.staff.modifiedWorkSchedule == null
+        ? widget.staff.workHours
+        : widget.staff.modifiedWorkSchedule!.workHours;
+  }
 
   void handleOnUpdateOpeningHour(DateTime time) {
-    setState(() {
-      updatedSchedule[0] = time.toString().split(" ")[1].substring(0, 5);
-    });
+    workSchedule = TimeRangeModel(
+      start: TimeOfDay(hour: time.hour, minute: time.minute),
+      end: workSchedule.end,
+    );
   }
 
   void handleOnUpdateClosingHour(DateTime time) {
-    setState(() {
-      updatedSchedule[1] = time.toString().split(" ")[1].substring(0, 5);
-    });
+    workSchedule = TimeRangeModel(
+      start: workSchedule.start,
+      end: TimeOfDay(hour: time.hour, minute: time.minute),
+    );
   }
 
   void onTabEditBtn() {
@@ -56,6 +73,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final calendarNotifier = ref.read(calendarNotifierProvider.notifier);
+
     return Scaffold(
       appBar: navigateBackAppBar(context),
       body: Padding(
@@ -82,105 +101,73 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                     isOnEditMode
                         ? const SizedBox.shrink()
                         : SizedBox(
-                            width: 43,
                             height: 29,
-                            child: TextButton(
+                            child: SimpleTextButtonWidget(
                               onPressed: onTabEditBtn,
-                              style: ButtonStyle(
-                                // alignment: Alignment.topCenter,
-                                backgroundColor: WidgetStateProperty.all<Color>(
-                                  Theme.of(context).primaryColorLight,
-                                ),
-                                padding:
-                                    WidgetStateProperty.all<EdgeInsetsGeometry>(
-                                  const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 10,
-                                  ),
-                                ),
-                              ),
-                              child: const Text(
-                                "수정",
-                                style: TextStyle(
-                                  textBaseline: TextBaseline.alphabetic,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
+                              text: "수정",
                             ),
-                          )
+                          ),
                   ],
                 ),
                 const SizedBox(
                   height: 30,
                 ),
-                Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: const Row(
+                ColumnItemContainer(
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const Text(
+                        "근무자",
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
                         children: [
-                          Text(
-                            "근무자",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              StaffProfileWidget(
-                                  imagePath: "lib/assets/images/Ellipse 5.png"),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "매니저",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "근무 날짜",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
+                          StaffProfileWidget(imagePath: widget.staff.image),
                           const SizedBox(
-                            height: 10,
+                            width: 10,
                           ),
                           Text(
-                            "${widget.workDate["month"]}.${widget.workDate["day"]} ${widget.workDate["dayOfWeekKorean"]}",
+                            widget.staff.name,
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                ColumnItemContainer(
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "근무 날짜",
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "${widget.date.month}.${widget.date.day} ${weekDays[widget.date.weekday - 1]}",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       )
                     ],
@@ -189,11 +176,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: Row(
+                ColumnItemContainer(
+                  content: Row(
                     children: [
                       Expanded(
                         child: Column(
@@ -213,7 +197,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                     children: [
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: scheduleInfo[0],
+                                          scheduleInfo: workSchedule.start,
                                           onDateTimeChanged:
                                               handleOnUpdateOpeningHour,
                                         ),
@@ -223,7 +207,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                       ),
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: scheduleInfo[1],
+                                          scheduleInfo: workSchedule.end,
                                           onDateTimeChanged:
                                               handleOnUpdateClosingHour,
                                         ),
@@ -231,13 +215,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                     ],
                                   )
                                 : WorkScheduleForDisplay(
-                                    workHours: TimeRange(
-                                        startTime:
-                                            const TimeOfDay(hour: 9, minute: 0),
-                                        endTime: const TimeOfDay(
-                                            hour: 18, minute: 0)),
+                                    workHours: workSchedule,
                                   )
-                            // (workHours: widget.workHours)
                           ],
                         ),
                       )
@@ -287,7 +266,15 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                               backgroundColor: WidgetStateProperty.all<Color>(
                                   Theme.of(context).primaryColor),
                             ),
-                            onPressed: () => {},
+                            onPressed: () {
+                              calendarNotifier.updateWorkSchedule(
+                                dto: ScheduleDto(
+                                    staffId: widget.staff.id!,
+                                    date: widget.date,
+                                    workHours: workSchedule),
+                              );
+                              onTabUndoBtn();
+                            },
                             child: const Text(
                               "저장",
                               style: TextStyle(color: Colors.white),
@@ -303,8 +290,21 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                         child: Container(
                           height: 48,
                           margin: const EdgeInsets.only(bottom: bottomMargin),
-                          child: const DeleteScheduleBtn(
-                            onPressed: showBottomSheetWidget,
+                          child: DeleteScheduleBtn(
+                            onPressed: (context) {
+                              showCustomBottomSheet(
+                                context: context,
+                                subTitle: "삭제되면 다시 복구되지 않습니다",
+                                title: "이 스케줄을 삭제하시겠습니까?",
+                                onSuccess: () {
+                                  calendarNotifier.deleteWorkSchedule(
+                                    staffId: widget.staff.id!,
+                                  );
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -345,76 +345,6 @@ class DeleteScheduleBtn extends StatelessWidget {
           fontSize: 16,
         ),
       ),
-    );
-  }
-}
-
-class TimePicker extends StatelessWidget {
-  final TimeOfDay scheduleInfo;
-  final Function(DateTime) onDateTimeChanged;
-
-  const TimePicker({
-    super.key,
-    required this.scheduleInfo,
-    required this.onDateTimeChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: CupertinoDatePicker(
-        mode: CupertinoDatePickerMode.time,
-        minuteInterval: 10,
-        onDateTimeChanged: onDateTimeChanged,
-        initialDateTime: DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          scheduleInfo.hour,
-          scheduleInfo.minute,
-        ),
-        use24hFormat: true,
-      ),
-    );
-  }
-}
-
-class WorkScheduleForDisplay extends StatelessWidget {
-  final TimeRange workHours;
-
-  const WorkScheduleForDisplay({
-    super.key,
-    required this.workHours,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Text(
-          formatTimeOfDay(workHours.startTime),
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const Text(
-          "-",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          formatTimeOfDay(workHours.endTime),
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
     );
   }
 }
