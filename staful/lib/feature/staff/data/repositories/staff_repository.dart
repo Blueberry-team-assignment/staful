@@ -23,7 +23,7 @@ class StaffRepository implements StaffInterface {
     return staffList.docs.map((staff) {
       // doc id 추가
       final data = staff.data();
-      data['staffId'] = staff.id;
+      data['id'] = staff.id;
 
       return StaffModel.fromJson(data);
     }).toList();
