@@ -122,24 +122,6 @@ class StaffNotifier extends StateNotifier<StaffState> {
     state = state.copyWith(list: updatedList);
   }
 
-  void updateWorkSchedule({required ScheduleDto dto}) async {
-    await _scheduleInterface.updateSchedules(
-      dto: dto,
-      uid: uid,
-    );
-  }
-
-  void deleteWorkSchedule({
-    required String staffId,
-    required DateTime date,
-  }) async {
-    await _scheduleInterface.deleteSchedules(
-      staffId: staffId,
-      date: date,
-      uid: uid,
-    );
-  }
-
   void updateSelectedStaff({required String field, required dynamic value}) {
     final selectedStaff = state.selectedStaff;
 

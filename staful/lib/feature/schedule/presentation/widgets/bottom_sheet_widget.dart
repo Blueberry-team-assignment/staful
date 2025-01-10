@@ -78,7 +78,6 @@ class BottomSheetWidget extends ConsumerWidget {
                     ),
                     onPressed: () {
                       onSuccess();
-                      Navigator.of(context).pop();
                     }, // onSuccess 콜백 호출
                     child: const Text(
                       "삭제",

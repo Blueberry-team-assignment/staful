@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/calendar/provider/calendar_provider.dart';
 import 'package:staful/feature/schedule/data/dto/schedule_dto.dart';
 import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
-import 'package:staful/feature/schedule/presentation/provider/schedule_provider.dart';
+import 'package:staful/feature/schedule/presentation/widgets/schedule_table_widget.dart';
 import 'package:staful/feature/schedule/presentation/widgets/time_picker.dart';
 import 'package:staful/feature/schedule/presentation/widgets/work_schedule_for_display.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
@@ -14,6 +15,7 @@ import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/feature/schedule/presentation/widgets/bottom_sheet_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 
 class EditScheduleScreen extends ConsumerStatefulWidget {
   final DateTime date;
@@ -71,6 +73,8 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final calendarNotifier = ref.read(calendarNotifierProvider.notifier);
+
     return Scaffold(
       appBar: navigateBackAppBar(context),
       body: Padding(
@@ -263,14 +267,12 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                                   Theme.of(context).primaryColor),
                             ),
                             onPressed: () {
-                              ref
-                                  .read(staffNotifierProvider.notifier)
-                                  .updateWorkSchedule(
-                                    dto: ScheduleDto(
-                                        staffId: widget.staff.id!,
-                                        date: widget.date,
-                                        workHours: workSchedule),
-                                  );
+                              calendarNotifier.updateWorkSchedule(
+                                dto: ScheduleDto(
+                                    staffId: widget.staff.id!,
+                                    date: widget.date,
+                                    workHours: workSchedule),
+                              );
                               onTabUndoBtn();
                             },
                             child: const Text(
@@ -295,11 +297,11 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                                 subTitle: "삭제되면 다시 복구되지 않습니다",
                                 title: "이 스케줄을 삭제하시겠습니까?",
                                 onSuccess: () {
-                                  ref
-                                      .read(staffNotifierProvider.notifier)
-                                      .deleteWorkSchedule(
-                                          staffId: widget.staff.id!,
-                                          date: widget.date);
+                                  calendarNotifier.deleteWorkSchedule(
+                                    staffId: widget.staff.id!,
+                                  );
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
                                 },
                               );
                             },

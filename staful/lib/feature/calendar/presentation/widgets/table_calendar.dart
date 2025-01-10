@@ -15,7 +15,7 @@ class TableCalendarWidget extends ConsumerWidget {
     return TableCalendar(
       onHeaderLongPressed: (_) => calendarNotifier.selectDay(DateTime.now()),
       onHeaderTapped: (_) =>
-          calendarNotifier.selectDay(calendarState.focusedDay),
+          calendarNotifier.selectDay(calendarState.focusedDay!),
       onDaySelected: (selectedDay, focusedDay) =>
           calendarNotifier.selectDay(selectedDay),
       calendarStyle: CalendarStyle(
@@ -31,7 +31,7 @@ class TableCalendarWidget extends ConsumerWidget {
       headerStyle: calendarHeaderStyle(),
       locale: Localizations.localeOf(context).toString(),
       currentDay: calendarState.selectedDay,
-      focusedDay: calendarState.focusedDay,
+      focusedDay: calendarState.focusedDay ?? DateTime.now(),
       firstDay: DateTime(1950),
       lastDay: DateTime(2150),
     );

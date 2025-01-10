@@ -21,7 +21,7 @@ class FilteredStaffGrid extends ConsumerWidget {
           onTap: () => openPage(
             context,
             ScheduleScreen(
-              date: calendarState.selectedDay,
+              date: calendarState.selectedDay!,
             ),
           ),
           child: Padding(
