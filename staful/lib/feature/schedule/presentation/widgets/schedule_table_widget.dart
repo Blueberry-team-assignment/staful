@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
 import 'package:staful/feature/schedule/domain/usecases/build_cell_usecase.dart';
 import 'package:staful/feature/schedule/domain/usecases/scroll_to_current_time_usecase.dart';
-import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
 class ScheduleTableWidget extends ConsumerWidget {
@@ -21,9 +20,10 @@ class ScheduleTableWidget extends ConsumerWidget {
     const double normalCellWidth = 28;
     const double profileCellWidth = 74;
 
-    final state = ref.watch(staffNotifierProvider);
-    final schedules =
-        state.filteredList.map((staff) => staff.workHours).toList();
+    final calendarState = ref.watch(calendarNotifierProvider);
+    final schedules = calendarState.filteredStaffList
+        .map((staff) => staff.workHours)
+        .toList();
 
     final buildCellUseCase = BuildCellUseCase(normalCellWidth: normalCellWidth);
 
@@ -44,7 +44,7 @@ class ScheduleTableWidget extends ConsumerWidget {
         direction: AxisDirection.right,
       ),
       cellBuilder: (context, vicinity) => buildCellUseCase.build(
-          context, vicinity, schedules, state.filteredList, date),
+          context, vicinity, schedules, calendarState.filteredStaffList, date),
       columnCount: 27,
       pinnedColumnCount: 1,
       columnBuilder: _buildColumnSpan,

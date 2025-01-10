@@ -29,6 +29,7 @@ class BuildCellUseCase {
       context,
       vicinity,
       schedules,
+      staffList[vicinity.yIndex - 1],
       date,
     );
   }
@@ -71,6 +72,7 @@ class BuildCellUseCase {
     BuildContext context,
     TableVicinity vicinity,
     List<TimeRangeModel?> schedules,
+    StaffModel staff,
     DateTime date,
   ) {
     final int start = schedules[vicinity.yIndex - 1]?.start.hour ?? 9 + 1;
@@ -88,12 +90,8 @@ class BuildCellUseCase {
             context,
             // 선택한 일정의 시간으로 수정해야함.
             EditScheduleScreen(
-              workDate: {
-                "month": date.month,
-                "day": date.day,
-                "dayOfWeekKorean": date.weekday,
-              },
-              workHours: schedules[vicinity.yIndex - 1],
+              date: date,
+              staff: staff,
             ),
           ),
           child: Padding(

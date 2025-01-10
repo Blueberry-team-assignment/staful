@@ -1,46 +1,47 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
-import 'package:staful/utils/time_utils.dart';
+import 'package:staful/feature/schedule/presentation/widgets/time_picker.dart';
+import 'package:staful/feature/schedule/presentation/widgets/work_schedule_for_display.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/ui/widgets/column_item_container.dart';
+import 'package:staful/ui/widgets/simple_text_button_widget.dart';
+import 'package:staful/utils/constants.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/ui/widgets/bottom_sheet_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
-class EditScheduleScreen extends StatefulWidget {
-  final dynamic workDate;
-  final dynamic workHours;
+class EditScheduleScreen extends ConsumerStatefulWidget {
+  final DateTime date;
+  final StaffModel staff;
 
   const EditScheduleScreen({
     super.key,
-    required this.workDate,
-    required this.workHours,
+    required this.date,
+    required this.staff,
   });
 
   @override
-  State<EditScheduleScreen> createState() => _EditScheduleScreenState();
+  ConsumerState<EditScheduleScreen> createState() => _EditScheduleScreenState();
 }
 
-class _EditScheduleScreenState extends State<EditScheduleScreen> {
+class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
   bool isOnEditMode = false;
-
-  List<TimeOfDay> get scheduleInfo => [
-        widget.workHours[0].split(":").map(int.parse).toList(),
-        widget.workHours[1].split(":").map(int.parse).toList()
-      ];
-
-  late final updatedSchedule = widget.workHours;
+  TimeRangeModel updatedSchedule = defaultTimeRange;
 
   void handleOnUpdateOpeningHour(DateTime time) {
-    setState(() {
-      updatedSchedule[0] = time.toString().split(" ")[1].substring(0, 5);
-    });
+    updatedSchedule = TimeRangeModel(
+      start: TimeOfDay(hour: time.hour, minute: time.minute),
+      end: widget.staff.workHours.end,
+    );
   }
 
   void handleOnUpdateClosingHour(DateTime time) {
-    setState(() {
-      updatedSchedule[1] = time.toString().split(" ")[1].substring(0, 5);
-    });
+    updatedSchedule = TimeRangeModel(
+      start: widget.staff.workHours.start,
+      end: TimeOfDay(hour: time.hour, minute: time.minute),
+    );
   }
 
   void onTabEditBtn() {
@@ -83,105 +84,73 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                     isOnEditMode
                         ? const SizedBox.shrink()
                         : SizedBox(
-                            width: 43,
                             height: 29,
-                            child: TextButton(
+                            child: SimpleTextButtonWidget(
                               onPressed: onTabEditBtn,
-                              style: ButtonStyle(
-                                // alignment: Alignment.topCenter,
-                                backgroundColor: WidgetStateProperty.all<Color>(
-                                  Theme.of(context).primaryColorLight,
-                                ),
-                                padding:
-                                    WidgetStateProperty.all<EdgeInsetsGeometry>(
-                                  const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 10,
-                                  ),
-                                ),
-                              ),
-                              child: const Text(
-                                "수정",
-                                style: TextStyle(
-                                  textBaseline: TextBaseline.alphabetic,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
+                              text: "수정",
                             ),
-                          )
+                          ),
                   ],
                 ),
                 const SizedBox(
                   height: 30,
                 ),
-                Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: const Row(
+                ColumnItemContainer(
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const Text(
+                        "근무자",
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
                         children: [
-                          Text(
-                            "근무자",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              StaffProfileWidget(
-                                  imagePath: "lib/assets/images/Ellipse 5.png"),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "매니저",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "근무 날짜",
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
+                          StaffProfileWidget(imagePath: widget.staff.image),
                           const SizedBox(
-                            height: 10,
+                            width: 10,
                           ),
                           Text(
-                            "${widget.workDate["month"]}.${widget.workDate["day"]} ${widget.workDate["dayOfWeekKorean"]}",
+                            widget.staff.name,
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                ColumnItemContainer(
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "근무 날짜",
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "${widget.date.month}.${widget.date.day} ${weekDays[widget.date.weekday - 1]}",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       )
                     ],
@@ -190,11 +159,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: Row(
+                ColumnItemContainer(
+                  content: Row(
                     children: [
                       Expanded(
                         child: Column(
@@ -214,7 +180,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                     children: [
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: scheduleInfo[0],
+                                          scheduleInfo:
+                                              widget.staff.workHours.start,
                                           onDateTimeChanged:
                                               handleOnUpdateOpeningHour,
                                         ),
@@ -224,7 +191,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                       ),
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: scheduleInfo[1],
+                                          scheduleInfo:
+                                              widget.staff.workHours.end,
                                           onDateTimeChanged:
                                               handleOnUpdateClosingHour,
                                         ),
@@ -232,13 +200,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                                     ],
                                   )
                                 : WorkScheduleForDisplay(
-                                    workHours: TimeRangeModel(
-                                        start:
-                                            const TimeOfDay(hour: 9, minute: 0),
-                                        end: const TimeOfDay(
-                                            hour: 18, minute: 0)),
+                                    workHours: widget.staff.workHours,
                                   )
-                            // (workHours: widget.workHours)
                           ],
                         ),
                       )
@@ -346,76 +309,6 @@ class DeleteScheduleBtn extends StatelessWidget {
           fontSize: 16,
         ),
       ),
-    );
-  }
-}
-
-class TimePicker extends StatelessWidget {
-  final TimeOfDay scheduleInfo;
-  final Function(DateTime) onDateTimeChanged;
-
-  const TimePicker({
-    super.key,
-    required this.scheduleInfo,
-    required this.onDateTimeChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: CupertinoDatePicker(
-        mode: CupertinoDatePickerMode.time,
-        minuteInterval: 10,
-        onDateTimeChanged: onDateTimeChanged,
-        initialDateTime: DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          scheduleInfo.hour,
-          scheduleInfo.minute,
-        ),
-        use24hFormat: true,
-      ),
-    );
-  }
-}
-
-class WorkScheduleForDisplay extends StatelessWidget {
-  final TimeRangeModel workHours;
-
-  const WorkScheduleForDisplay({
-    super.key,
-    required this.workHours,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Text(
-          formatTimeOfDay(workHours.start),
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const Text(
-          "-",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          formatTimeOfDay(workHours.end),
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
     );
   }
 }

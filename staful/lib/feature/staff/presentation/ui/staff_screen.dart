@@ -7,7 +7,7 @@ import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/feature/staff/presentation/ui/staff_register_screen.dart';
-import 'package:staful/ui/widgets/work_days_row.dart';
+import 'package:staful/feature/schedule/presentation/widgets/work_days_row.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
