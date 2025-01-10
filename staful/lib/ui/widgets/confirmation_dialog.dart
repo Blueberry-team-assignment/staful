@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:staful/domain/utils/app_styles.dart';
+import 'package:staful/utils/app_styles.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/submit_button_widget.dart';
 
@@ -16,7 +16,7 @@ class ConfirmationDialog extends StatelessWidget {
     required this.message,
     required this.onConfirm,
     this.onCancel,
-    this.showCancelButton = true,
+    this.showCancelButton = false,
   });
 
   @override
@@ -27,7 +27,7 @@ class ConfirmationDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(30),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -44,21 +44,25 @@ class ConfirmationDialog extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // if (showCancelButton)
-                //   Expanded(
-                //     child: GestureDetector(
-                //       onTap: onCancel ?? () => Navigator.of(context).pop(),
-                //       child: SubmitButtonWidget(
-                //         color: Theme.of(context).disabledColor,
-                //         textColor: Colors.black,
-                //         text: "취소",
-                //       ),
-                //     ),
-                //   ),
+                if (showCancelButton)
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: onCancel ?? () => Navigator.of(context).pop(),
+                      child: SubmitButtonWidget(
+                        color: Theme.of(context).disabledColor,
+                        textColor: Colors.black,
+                        text: "취소",
+                      ),
+                    ),
+                  ),
+                if (showCancelButton)
+                  const SizedBox(
+                    width: 10,
+                  ),
                 Expanded(
                   child: GestureDetector(
                     onTap: onConfirm,
@@ -90,9 +94,8 @@ class ConfirmationDialog extends StatelessWidget {
           title: title,
           message: message,
           onConfirm: () {
-            print('on Confirm');
-            Navigator.of(context).pop(); // 팝업 닫기
             onConfirm();
+            Navigator.of(context).pop(); // 팝업 닫기
           },
           onCancel: () {
             Navigator.of(context).pop(); // 팝업 닫기

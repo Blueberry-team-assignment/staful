@@ -16,7 +16,7 @@ class StaffProfileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: name != null
-          ? MainAxisAlignment.spaceAround
+          ? MainAxisAlignment.spaceEvenly
           : MainAxisAlignment.center,
       children: [
         Container(
@@ -34,8 +34,10 @@ class StaffProfileWidget extends StatelessWidget {
         ),
         if (name != null)
           Text(
-            name!.length > 4 ? "${name!.substring(0, 4)}..." : name!,
+            // name!.length > 4 ? "${name!.substring(0, 4)}..." :
+            name!,
             style: const TextStyle(
+              overflow: TextOverflow.ellipsis,
               fontWeight: FontWeight.w400,
               fontSize: 13,
             ),

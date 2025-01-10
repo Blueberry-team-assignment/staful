@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:staful/ui/screens/setting/language_settings_screen.dart';
 import 'package:staful/ui/screens/setting/store_detail_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/ui/screens/staff/staff_info_screen.dart';
-import 'package:staful/domain/utils/app_styles.dart';
-import 'package:staful/domain/utils/navigation_helpers.dart';
+import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
+import 'package:staful/utils/app_styles.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
 class SettingScreen extends StatefulWidget {

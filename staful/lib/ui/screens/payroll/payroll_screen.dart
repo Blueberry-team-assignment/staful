@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:staful/ui/screens/payroll/payroll_detail_screen.dart';
-import 'package:staful/ui/screens/payroll/payroll_templates_screen.dart';
+import 'package:staful/feature/template/presentation/payroll_templates_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/ui/screens/staff/staff_info_screen.dart';
-import 'package:staful/domain/utils/app_styles.dart';
-import 'package:staful/domain/utils/navigation_helpers.dart';
+import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
+import 'package:staful/utils/app_styles.dart';
+import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
@@ -64,13 +64,13 @@ class _PayrollScreenState extends State<PayrollScreen> {
                   "급여",
                   style: TextStyleConfig(size: 24).setTextStyle(),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 29,
                   child: SimpleTextButtonWidget(
-                    // onPressed: () => openPage(
-                    //   context,
-                    //   const PayrollTemplatesScreen(),
-                    // ),
+                    onPressed: () => openPage(
+                      context,
+                      const PayrollTemplatesScreen(),
+                    ),
                     text: "템플릿 관리",
                   ),
                 ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
-import 'package:staful/ui/screens/staff/staff_info_screen.dart';
-import 'package:staful/domain/utils/app_styles.dart';
+import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';
+import 'package:staful/utils/app_styles.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 
 class StoreDetailScreen extends StatefulWidget {

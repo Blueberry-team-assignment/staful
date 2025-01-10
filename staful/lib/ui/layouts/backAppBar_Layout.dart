@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/domain/utils/app_styles.dart';
+import 'package:staful/utils/app_styles.dart';
 
 class BackAppBarLayout extends StatelessWidget {
   final Widget scrollableArea;
