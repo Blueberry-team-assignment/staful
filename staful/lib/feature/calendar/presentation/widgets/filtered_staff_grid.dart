@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
 import 'package:staful/feature/schedule/presentation/schedule_screen.dart';
-import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/navigation_helpers.dart';
 
@@ -11,14 +10,13 @@ class FilteredStaffGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final staffState = ref.watch(staffNotifierProvider);
     final calendarState = ref.watch(calendarNotifierProvider);
 
     return GridView.count(
       crossAxisCount: 4,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      children: staffState.filteredList.map((staff) {
+      children: calendarState.filteredStaffList.map((staff) {
         return GestureDetector(
           onTap: () => openPage(
             context,

@@ -87,12 +87,12 @@ class StaffNotifier extends StateNotifier<StaffState> {
     state = state.copyWith(selectedStaff: originalState);
   }
 
-  Future<void> getFilteredByDateList(DateTime date) async {
-    setLoading(true);
-    final filteredList = await _filterByDateUsecase.execute(selectedDay: date);
-    state = state.copyWith(filteredList: filteredList);
-    setLoading(false);
-  }
+  // Future<void> getFilteredByDateList(DateTime date) async {
+  //   setLoading(true);
+  //   final filteredList = await _filterByDateUsecase.execute(selectedDay: date);
+  //   state = state.copyWith(filteredList: filteredList);
+  //   setLoading(false);
+  // }
 
   Future<void> getFilteredBySearchInputList(String text) async {
     setLoading(true);

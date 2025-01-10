@@ -2,31 +2,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/auth/domain/usecases/check_user_usecase.dart';
 import 'package:staful/feature/auth/domain/usecases/log_in_usecase.dart';
 import 'package:staful/feature/auth/presentation/provider/state/log_in_state.dart';
-import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
-import 'package:staful/feature/template/presentation/provider/template_provider.dart';
+import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
+import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
 
 final logInProvider =
     StateNotifierProvider.autoDispose<LogInNotifier, LogInState>((ref) {
   final logInUsecase = ref.watch(loginUsecaseProvider);
   final checkUserUsecase = ref.watch(checkUserUsecaseProvider);
-  final templateNotifier = ref.watch(templateNotifierProvider.notifier);
-  final staffNotifier = ref.watch(staffNotifierProvider.notifier);
+  final staffInterface = ref.watch(staffRepositoryProvider);
 
-  return LogInNotifier(
-      logInUsecase, checkUserUsecase, templateNotifier, staffNotifier);
+  return LogInNotifier(logInUsecase, checkUserUsecase, staffInterface);
 });
 
 class LogInNotifier extends StateNotifier<LogInState> {
   final LogInUsecase _logInUsecase;
   final CheckUserUsecase _checkUserUsecase;
-  final TemplateNotifier _templateNotifier;
-  final StaffNotifier _staffNotifier;
+  final StaffInterface _staffInterface;
 
   LogInNotifier(
     this._logInUsecase,
     this._checkUserUsecase,
-    this._templateNotifier,
-    this._staffNotifier,
+    this._staffInterface,
   ) : super(LogInState());
 
   Future<void> logIn({
@@ -36,11 +32,14 @@ class LogInNotifier extends StateNotifier<LogInState> {
     try {
       setLoading(true);
 
-      final loginResult =
+      final authUser =
           await _logInUsecase.execute(userId: id, password: password);
 
+      final staffList = await _staffInterface.fetchAllStaffs(uid: authUser.uid);
+
       state = state.copyWith(
-        authUser: loginResult.authUser,
+        staffList: staffList,
+        authUser: authUser,
         isLoggedIn: true,
       );
 
@@ -67,7 +66,13 @@ class LogInNotifier extends StateNotifier<LogInState> {
     // _staffNotifier.setList(initializedData.staffList);
     // if (!mounted) return;
 
-    state = state.copyWith(authUser: authUser, isLoggedIn: true);
+    final staffList = await _staffInterface.fetchAllStaffs(uid: authUser.uid);
+
+    state = state.copyWith(
+      staffList: staffList,
+      authUser: authUser,
+      isLoggedIn: true,
+    );
     setLoading(false);
   }
 

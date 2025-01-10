@@ -1,27 +1,36 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
+import 'package:staful/feature/calendar/provider/state/calendar_state.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_date_usecase.dart';
 
 final calendarNotifierProvider =
     StateNotifierProvider<CalendarNotifier, CalendarState>((ref) {
   final filterByDateUsecase = ref.watch(filterByDateUsecaseProvider);
-  return CalendarNotifier(filterByDateUsecase);
+  final staffList = ref.watch(logInProvider).staffList;
+  return CalendarNotifier(filterByDateUsecase, staffList);
 });
 
 class CalendarNotifier extends StateNotifier<CalendarState> {
   final FilterByDateUsecase filterByDateUsecase;
+  final List<StaffModel> staffList;
 
-  CalendarNotifier(this.filterByDateUsecase)
+  CalendarNotifier(this.filterByDateUsecase, this.staffList)
       : super(CalendarState(
           selectedDay: DateTime.now(),
           focusedDay: DateTime.now(),
+          filteredStaffList: [],
         )) {
     selectDay(DateTime.now());
   }
 
   void selectDay(DateTime selectedDay) async {
-    await filterByDateUsecase.execute(selectedDay: selectedDay);
+    final filteredStaffList = await filterByDateUsecase.execute(
+        selectedDay: selectedDay, staffList: staffList);
 
+    if (!mounted) return;
     state = state.copyWith(
+      filteredStaffList: filteredStaffList,
       selectedDay: selectedDay,
       focusedDay: selectedDay,
     );
@@ -29,25 +38,5 @@ class CalendarNotifier extends StateNotifier<CalendarState> {
 
   void resetDay() {
     selectDay(DateTime.now());
-  }
-}
-
-class CalendarState {
-  final DateTime selectedDay;
-  final DateTime focusedDay;
-
-  CalendarState({
-    required this.selectedDay,
-    required this.focusedDay,
-  });
-
-  CalendarState copyWith({
-    DateTime? selectedDay,
-    DateTime? focusedDay,
-  }) {
-    return CalendarState(
-      selectedDay: selectedDay ?? this.selectedDay,
-      focusedDay: focusedDay ?? this.focusedDay,
-    );
   }
 }
