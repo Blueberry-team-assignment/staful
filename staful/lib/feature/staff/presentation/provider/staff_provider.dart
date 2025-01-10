@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
 import 'package:staful/feature/schedule/data/dto/schedule_dto.dart';
 import 'package:staful/feature/schedule/data/repositories/schedule_repository.dart';
 import 'package:staful/feature/schedule/domain/interfaces/schedule_interface.dart';
@@ -10,6 +11,7 @@ import 'package:staful/feature/staff/domain/usecases/filter_by_search_input_usec
 import 'package:staful/feature/staff/domain/usecases/staff_crud_usecase.dart';
 import 'package:staful/feature/staff/presentation/provider/state/staff_state.dart';
 import 'package:staful/provider/uid_provider.dart';
+import 'package:staful/utils/constants.dart';
 
 final staffNotifierProvider =
     StateNotifierProvider.autoDispose<StaffNotifier, StaffState>((ref) {
@@ -18,8 +20,9 @@ final staffNotifierProvider =
   final filterBySearchInputUsecase =
       ref.watch(filterBySearchInputUsecaseProvider);
   final scheduleInterface = ref.watch(scheduleRepositoryProvider);
-  return StaffNotifier(
-      staffCrudUsecase, filterBySearchInputUsecase, scheduleInterface, uid!);
+  final staffList = ref.watch(logInProvider).staffList;
+  return StaffNotifier(staffCrudUsecase, filterBySearchInputUsecase,
+      scheduleInterface, uid!, staffList);
 });
 
 class StaffNotifier extends StateNotifier<StaffState> {
@@ -27,18 +30,24 @@ class StaffNotifier extends StateNotifier<StaffState> {
   final FilterBySearchInputUsecase _filterBySearchInputUsecase;
   final ScheduleInterface _scheduleInterface;
   final String uid;
+  final List<StaffModel> staffList;
 
   StaffNotifier(
     this._staffCrudUsecase,
     this._filterBySearchInputUsecase,
     this._scheduleInterface,
     this.uid,
-  ) : super(const StaffState(
-            selectedStaff: StaffModel(
-                name: "",
-                workHours: TimeRangeModel(
-                    start: TimeOfDay(hour: 9, minute: 0),
-                    end: TimeOfDay(hour: 18, minute: 0)))));
+    this.staffList,
+  ) : super(const StaffState()) {
+    initialize();
+  }
+
+  void initialize() {
+    state = state.copyWith(
+        filteredList: staffList,
+        list: staffList,
+        selectedStaff: StaffModel(name: "", workHours: defaultTimeRange));
+  }
 
   Future<void> fetchAllStaffs() async {
     try {
