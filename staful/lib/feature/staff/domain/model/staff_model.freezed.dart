@@ -26,7 +26,7 @@ mixin _$StaffModel {
   String? get image => throw _privateConstructorUsedError;
   List<String> get workDays => throw _privateConstructorUsedError;
   TimeRangeModel get workHours => throw _privateConstructorUsedError;
-  List<ScheduleModel> get workSchedules => throw _privateConstructorUsedError;
+  ScheduleModel? get modifiedWorkSchedule => throw _privateConstructorUsedError;
   String? get desc => throw _privateConstructorUsedError;
   bool get isSelected => throw _privateConstructorUsedError;
   bool get isVisible => throw _privateConstructorUsedError;
@@ -55,13 +55,14 @@ abstract class $StaffModelCopyWith<$Res> {
       String? image,
       List<String> workDays,
       TimeRangeModel workHours,
-      List<ScheduleModel> workSchedules,
+      ScheduleModel? modifiedWorkSchedule,
       String? desc,
       bool isSelected,
       bool isVisible,
       bool isDeleted});
 
   $TimeRangeModelCopyWith<$Res> get workHours;
+  $ScheduleModelCopyWith<$Res>? get modifiedWorkSchedule;
 }
 
 /// @nodoc
@@ -85,7 +86,7 @@ class _$StaffModelCopyWithImpl<$Res, $Val extends StaffModel>
     Object? image = freezed,
     Object? workDays = null,
     Object? workHours = null,
-    Object? workSchedules = null,
+    Object? modifiedWorkSchedule = freezed,
     Object? desc = freezed,
     Object? isSelected = null,
     Object? isVisible = null,
@@ -116,10 +117,10 @@ class _$StaffModelCopyWithImpl<$Res, $Val extends StaffModel>
           ? _value.workHours
           : workHours // ignore: cast_nullable_to_non_nullable
               as TimeRangeModel,
-      workSchedules: null == workSchedules
-          ? _value.workSchedules
-          : workSchedules // ignore: cast_nullable_to_non_nullable
-              as List<ScheduleModel>,
+      modifiedWorkSchedule: freezed == modifiedWorkSchedule
+          ? _value.modifiedWorkSchedule
+          : modifiedWorkSchedule // ignore: cast_nullable_to_non_nullable
+              as ScheduleModel?,
       desc: freezed == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
@@ -148,6 +149,20 @@ class _$StaffModelCopyWithImpl<$Res, $Val extends StaffModel>
       return _then(_value.copyWith(workHours: value) as $Val);
     });
   }
+
+  /// Create a copy of StaffModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ScheduleModelCopyWith<$Res>? get modifiedWorkSchedule {
+    if (_value.modifiedWorkSchedule == null) {
+      return null;
+    }
+
+    return $ScheduleModelCopyWith<$Res>(_value.modifiedWorkSchedule!, (value) {
+      return _then(_value.copyWith(modifiedWorkSchedule: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -165,7 +180,7 @@ abstract class _$$StaffModelImplCopyWith<$Res>
       String? image,
       List<String> workDays,
       TimeRangeModel workHours,
-      List<ScheduleModel> workSchedules,
+      ScheduleModel? modifiedWorkSchedule,
       String? desc,
       bool isSelected,
       bool isVisible,
@@ -173,6 +188,8 @@ abstract class _$$StaffModelImplCopyWith<$Res>
 
   @override
   $TimeRangeModelCopyWith<$Res> get workHours;
+  @override
+  $ScheduleModelCopyWith<$Res>? get modifiedWorkSchedule;
 }
 
 /// @nodoc
@@ -194,7 +211,7 @@ class __$$StaffModelImplCopyWithImpl<$Res>
     Object? image = freezed,
     Object? workDays = null,
     Object? workHours = null,
-    Object? workSchedules = null,
+    Object? modifiedWorkSchedule = freezed,
     Object? desc = freezed,
     Object? isSelected = null,
     Object? isVisible = null,
@@ -225,10 +242,10 @@ class __$$StaffModelImplCopyWithImpl<$Res>
           ? _value.workHours
           : workHours // ignore: cast_nullable_to_non_nullable
               as TimeRangeModel,
-      workSchedules: null == workSchedules
-          ? _value._workSchedules
-          : workSchedules // ignore: cast_nullable_to_non_nullable
-              as List<ScheduleModel>,
+      modifiedWorkSchedule: freezed == modifiedWorkSchedule
+          ? _value.modifiedWorkSchedule
+          : modifiedWorkSchedule // ignore: cast_nullable_to_non_nullable
+              as ScheduleModel?,
       desc: freezed == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
@@ -259,13 +276,12 @@ class _$StaffModelImpl implements _StaffModel {
       this.image,
       final List<String> workDays = const [],
       required this.workHours,
-      final List<ScheduleModel> workSchedules = const [],
+      this.modifiedWorkSchedule,
       this.desc,
       this.isSelected = false,
       this.isVisible = true,
       this.isDeleted = false})
-      : _workDays = workDays,
-        _workSchedules = workSchedules;
+      : _workDays = workDays;
 
   factory _$StaffModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$StaffModelImplFromJson(json);
@@ -289,15 +305,8 @@ class _$StaffModelImpl implements _StaffModel {
 
   @override
   final TimeRangeModel workHours;
-  final List<ScheduleModel> _workSchedules;
   @override
-  @JsonKey()
-  List<ScheduleModel> get workSchedules {
-    if (_workSchedules is EqualUnmodifiableListView) return _workSchedules;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_workSchedules);
-  }
-
+  final ScheduleModel? modifiedWorkSchedule;
   @override
   final String? desc;
   @override
@@ -312,7 +321,7 @@ class _$StaffModelImpl implements _StaffModel {
 
   @override
   String toString() {
-    return 'StaffModel(id: $id, templateId: $templateId, name: $name, image: $image, workDays: $workDays, workHours: $workHours, workSchedules: $workSchedules, desc: $desc, isSelected: $isSelected, isVisible: $isVisible, isDeleted: $isDeleted)';
+    return 'StaffModel(id: $id, templateId: $templateId, name: $name, image: $image, workDays: $workDays, workHours: $workHours, modifiedWorkSchedule: $modifiedWorkSchedule, desc: $desc, isSelected: $isSelected, isVisible: $isVisible, isDeleted: $isDeleted)';
   }
 
   @override
@@ -328,8 +337,8 @@ class _$StaffModelImpl implements _StaffModel {
             const DeepCollectionEquality().equals(other._workDays, _workDays) &&
             (identical(other.workHours, workHours) ||
                 other.workHours == workHours) &&
-            const DeepCollectionEquality()
-                .equals(other._workSchedules, _workSchedules) &&
+            (identical(other.modifiedWorkSchedule, modifiedWorkSchedule) ||
+                other.modifiedWorkSchedule == modifiedWorkSchedule) &&
             (identical(other.desc, desc) || other.desc == desc) &&
             (identical(other.isSelected, isSelected) ||
                 other.isSelected == isSelected) &&
@@ -349,7 +358,7 @@ class _$StaffModelImpl implements _StaffModel {
       image,
       const DeepCollectionEquality().hash(_workDays),
       workHours,
-      const DeepCollectionEquality().hash(_workSchedules),
+      modifiedWorkSchedule,
       desc,
       isSelected,
       isVisible,
@@ -379,7 +388,7 @@ abstract class _StaffModel implements StaffModel {
       final String? image,
       final List<String> workDays,
       required final TimeRangeModel workHours,
-      final List<ScheduleModel> workSchedules,
+      final ScheduleModel? modifiedWorkSchedule,
       final String? desc,
       final bool isSelected,
       final bool isVisible,
@@ -401,7 +410,7 @@ abstract class _StaffModel implements StaffModel {
   @override
   TimeRangeModel get workHours;
   @override
-  List<ScheduleModel> get workSchedules;
+  ScheduleModel? get modifiedWorkSchedule;
   @override
   String? get desc;
   @override

@@ -18,10 +18,10 @@ _$StaffModelImpl _$$StaffModelImplFromJson(Map<String, dynamic> json) =>
           const [],
       workHours:
           TimeRangeModel.fromJson(json['workHours'] as Map<String, dynamic>),
-      workSchedules: (json['workSchedules'] as List<dynamic>?)
-              ?.map((e) => ScheduleModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+      modifiedWorkSchedule: json['modifiedWorkSchedule'] == null
+          ? null
+          : ScheduleModel.fromJson(
+              json['modifiedWorkSchedule'] as Map<String, dynamic>),
       desc: json['desc'] as String?,
       isSelected: json['isSelected'] as bool? ?? false,
       isVisible: json['isVisible'] as bool? ?? true,
@@ -36,7 +36,7 @@ Map<String, dynamic> _$$StaffModelImplToJson(_$StaffModelImpl instance) =>
       'image': instance.image,
       'workDays': instance.workDays,
       'workHours': instance.workHours,
-      'workSchedules': instance.workSchedules,
+      'modifiedWorkSchedule': instance.modifiedWorkSchedule,
       'desc': instance.desc,
       'isSelected': instance.isSelected,
       'isVisible': instance.isVisible,

@@ -2,9 +2,9 @@ import 'package:staful/feature/schedule/data/dto/schedule_dto.dart';
 import 'package:staful/feature/schedule/domain/model/schedule_model.dart';
 
 abstract class ScheduleInterface {
-  Future<List<ScheduleModel>> fetchModifiedSchedulesMonthly({
+  Future<ScheduleModel?> fetchModifiedSchedule({
     required String staffId,
-    required DateTime date,
+    required DateTime selectedDay,
   });
 
   Future<void> updateSchedules({

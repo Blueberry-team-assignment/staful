@@ -21,9 +21,12 @@ class ScheduleTableWidget extends ConsumerWidget {
     const double profileCellWidth = 74;
 
     final calendarState = ref.watch(calendarNotifierProvider);
-    final schedules = calendarState.filteredStaffList
-        .map((staff) => staff.workHours)
-        .toList();
+    final schedules = calendarState.filteredStaffList.map((staff) {
+      if (staff.modifiedWorkSchedule != null) {
+        return staff.modifiedWorkSchedule!.workHours;
+      }
+      return staff.workHours;
+    }).toList();
 
     final buildCellUseCase = BuildCellUseCase(normalCellWidth: normalCellWidth);
 

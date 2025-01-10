@@ -180,8 +180,15 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                                     children: [
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo:
-                                              widget.staff.workHours.start,
+                                          scheduleInfo: widget.staff
+                                                      .modifiedWorkSchedule ==
+                                                  null
+                                              ? widget.staff.workHours.start
+                                              : widget
+                                                  .staff
+                                                  .modifiedWorkSchedule!
+                                                  .workHours
+                                                  .start,
                                           onDateTimeChanged:
                                               handleOnUpdateOpeningHour,
                                         ),
@@ -191,8 +198,15 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                                       ),
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo:
-                                              widget.staff.workHours.end,
+                                          scheduleInfo: widget.staff
+                                                      .modifiedWorkSchedule ==
+                                                  null
+                                              ? widget.staff.workHours.end
+                                              : widget
+                                                  .staff
+                                                  .modifiedWorkSchedule!
+                                                  .workHours
+                                                  .end,
                                           onDateTimeChanged:
                                               handleOnUpdateClosingHour,
                                         ),
@@ -200,7 +214,12 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                                     ],
                                   )
                                 : WorkScheduleForDisplay(
-                                    workHours: widget.staff.workHours,
+                                    workHours:
+                                        widget.staff.modifiedWorkSchedule ==
+                                                null
+                                            ? widget.staff.workHours
+                                            : widget.staff.modifiedWorkSchedule!
+                                                .workHours,
                                   )
                           ],
                         ),

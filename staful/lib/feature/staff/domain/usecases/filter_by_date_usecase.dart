@@ -1,28 +1,50 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/schedule/data/repositories/schedule_repository.dart';
+import 'package:staful/feature/schedule/domain/interfaces/schedule_interface.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/provider/uid_provider.dart';
 import 'package:staful/utils/constants.dart';
 
 final filterByDateUsecaseProvider = Provider((ref) {
   final uid = ref.watch(uidProvider);
-  return FilterByDateUsecase(uid);
+  final scheduleInterface = ref.watch(scheduleRepositoryProvider);
+  return FilterByDateUsecase(uid, scheduleInterface);
 });
 
 class FilterByDateUsecase {
   final String? uid;
+  final ScheduleInterface _scheduleInterface;
 
-  FilterByDateUsecase(this.uid);
+  FilterByDateUsecase(this.uid, this._scheduleInterface);
 
-  Future<List<StaffModel>> execute(
-      {required DateTime selectedDay,
-      required List<StaffModel> staffList}) async {
-    print('uid in calendarProvider : $uid');
+  Future<List<StaffModel>> execute({
+    required DateTime selectedDay,
+    required List<StaffModel> staffList,
+  }) async {
+    final weekDay = weekDays[selectedDay.weekday - 1];
+    final filteredStaffList = <StaffModel>[];
 
-    final selectedWeekDay = weekDays[selectedDay.weekday - 1];
+    for (final staff in staffList) {
+      // 해당 날짜의 조정스케쥴
+      final modifiedSchedule = await _scheduleInterface.fetchModifiedSchedule(
+          staffId: staff.id!, selectedDay: selectedDay);
 
-    // 선택한 날에 근무가 있는 직원들만 필터링.
-    return staffList.where((staff) {
-      return staff.workDays.contains(selectedWeekDay);
-    }).toList();
+      // [1]. 해당 일에 조정스케쥴이 없다면, 기본 근무요일 적용
+      if (modifiedSchedule == null) {
+        if (staff.workDays.contains(weekDay)) {
+          filteredStaffList.add(staff);
+        }
+        // [2-1]. 조정스케쥴 있는데 삭제된 스케쥴이라면 제외.
+      } else if (modifiedSchedule.isDeleted == true) {
+        filteredStaffList.remove(staff);
+        // [2-2]. 조정스케쥴 저장.
+      } else {
+        final updatedStaff =
+            staff.copyWith(modifiedWorkSchedule: modifiedSchedule);
+        filteredStaffList.add(updatedStaff);
+      }
+    }
+
+    return filteredStaffList;
   }
 }

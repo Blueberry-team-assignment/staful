@@ -124,8 +124,9 @@ class StaffNotifier extends StateNotifier<StaffState> {
       image: field == 'image' ? value : selectedStaff.image,
       workDays: field == 'workDays' ? value : selectedStaff.workDays,
       workHours: field == 'workHours' ? value : selectedStaff.workHours,
-      workSchedules:
-          field == 'workSchedules' ? value : selectedStaff.workSchedules,
+      modifiedWorkSchedule: field == 'modifiedWorkSchedule'
+          ? value
+          : selectedStaff.modifiedWorkSchedule,
       desc: field == 'desc' ? value : selectedStaff.desc,
       isSelected: field == 'isSelected' ? value : selectedStaff.isSelected,
       isVisible: field == 'isVisible' ? value : selectedStaff.isVisible,

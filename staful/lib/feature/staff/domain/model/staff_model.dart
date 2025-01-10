@@ -14,7 +14,7 @@ class StaffModel with _$StaffModel {
     String? image,
     @Default([]) List<String> workDays,
     required TimeRangeModel workHours,
-    @Default([]) List<ScheduleModel> workSchedules,
+    ScheduleModel? modifiedWorkSchedule,
     String? desc,
     @Default(false) bool isSelected,
     @Default(true) bool isVisible,
