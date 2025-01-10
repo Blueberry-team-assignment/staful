@@ -10,7 +10,6 @@ _$ScheduleModelImpl _$$ScheduleModelImplFromJson(Map<String, dynamic> json) =>
     _$ScheduleModelImpl(
       id: json['id'] as String?,
       date: DateTime.parse(json['date'] as String),
-      staffId: json['staffId'] as String,
       workHours:
           TimeRangeModel.fromJson(json['workHours'] as Map<String, dynamic>),
       isSelected: json['isSelected'] as bool? ?? false,
@@ -22,7 +21,6 @@ Map<String, dynamic> _$$ScheduleModelImplToJson(_$ScheduleModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'date': instance.date.toIso8601String(),
-      'staffId': instance.staffId,
       'workHours': instance.workHours,
       'isSelected': instance.isSelected,
       'isVisible': instance.isVisible,

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/schedule/data/dto/schedule_dto.dart';
 import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
+import 'package:staful/feature/schedule/presentation/provider/schedule_provider.dart';
 import 'package:staful/feature/schedule/presentation/widgets/time_picker.dart';
 import 'package:staful/feature/schedule/presentation/widgets/work_schedule_for_display.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/utils/constants.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/utils/app_styles.dart';
-import 'package:staful/ui/widgets/bottom_sheet_widget.dart';
+import 'package:staful/feature/schedule/presentation/widgets/bottom_sheet_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
 class EditScheduleScreen extends ConsumerStatefulWidget {
@@ -41,14 +44,14 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
   }
 
   void handleOnUpdateOpeningHour(DateTime time) {
-    final updatedSchedule = TimeRangeModel(
+    workSchedule = TimeRangeModel(
       start: TimeOfDay(hour: time.hour, minute: time.minute),
       end: workSchedule.end,
     );
   }
 
   void handleOnUpdateClosingHour(DateTime time) {
-    final updatedSchedule = TimeRangeModel(
+    workSchedule = TimeRangeModel(
       start: workSchedule.start,
       end: TimeOfDay(hour: time.hour, minute: time.minute),
     );
@@ -259,7 +262,17 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                               backgroundColor: WidgetStateProperty.all<Color>(
                                   Theme.of(context).primaryColor),
                             ),
-                            onPressed: () => {},
+                            onPressed: () {
+                              ref
+                                  .read(staffNotifierProvider.notifier)
+                                  .updateWorkSchedule(
+                                    dto: ScheduleDto(
+                                        staffId: widget.staff.id!,
+                                        date: widget.date,
+                                        workHours: workSchedule),
+                                  );
+                              onTabUndoBtn();
+                            },
                             child: const Text(
                               "저장",
                               style: TextStyle(color: Colors.white),
@@ -275,8 +288,21 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                         child: Container(
                           height: 48,
                           margin: const EdgeInsets.only(bottom: bottomMargin),
-                          child: const DeleteScheduleBtn(
-                            onPressed: showBottomSheetWidget,
+                          child: DeleteScheduleBtn(
+                            onPressed: (context) {
+                              showCustomBottomSheet(
+                                context: context,
+                                subTitle: "삭제되면 다시 복구되지 않습니다",
+                                title: "이 스케줄을 삭제하시겠습니까?",
+                                onSuccess: () {
+                                  ref
+                                      .read(staffNotifierProvider.notifier)
+                                      .deleteWorkSchedule(
+                                          staffId: widget.staff.id!,
+                                          date: widget.date);
+                                },
+                              );
+                            },
                           ),
                         ),
                       ),

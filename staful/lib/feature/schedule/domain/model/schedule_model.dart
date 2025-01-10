@@ -8,8 +8,7 @@ part 'schedule_model.g.dart';
 class ScheduleModel with _$ScheduleModel {
   const factory ScheduleModel({
     String? id,
-    required DateTime date, // y,m,d,wd
-    required String staffId,
+    required DateTime date, // [y-m-d].toIsoString
     required TimeRangeModel workHours,
     @Default(false) bool isSelected,
     @Default(true) bool isVisible,

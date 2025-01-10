@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:staful/feature/calendar/provider/calendar_provider.dart';
-import 'package:staful/provider/uid_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TableCalendarWidget extends ConsumerWidget {
@@ -10,14 +9,15 @@ class TableCalendarWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(calendarNotifierProvider);
-    final notifier = ref.read(calendarNotifierProvider.notifier);
-    print(ref.read(uidProvider));
+    final calendarState = ref.watch(calendarNotifierProvider);
+    final calendarNotifier = ref.read(calendarNotifierProvider.notifier);
+
     return TableCalendar(
-      onHeaderLongPressed: (_) => notifier.selectDay(DateTime.now()),
-      onHeaderTapped: (_) => notifier.selectDay(state.focusedDay),
+      onHeaderLongPressed: (_) => calendarNotifier.selectDay(DateTime.now()),
+      onHeaderTapped: (_) =>
+          calendarNotifier.selectDay(calendarState.focusedDay),
       onDaySelected: (selectedDay, focusedDay) =>
-          notifier.selectDay(selectedDay),
+          calendarNotifier.selectDay(selectedDay),
       calendarStyle: CalendarStyle(
         todayTextStyle: const TextStyle(
           color: Colors.black,
@@ -30,8 +30,8 @@ class TableCalendarWidget extends ConsumerWidget {
       ),
       headerStyle: calendarHeaderStyle(),
       locale: Localizations.localeOf(context).toString(),
-      currentDay: state.selectedDay,
-      focusedDay: state.focusedDay,
+      currentDay: calendarState.selectedDay,
+      focusedDay: calendarState.focusedDay,
       firstDay: DateTime(1950),
       lastDay: DateTime(2150),
     );
@@ -54,14 +54,6 @@ class TableCalendarWidget extends ConsumerWidget {
       titleTextStyle: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
-        // decoration: TextDecoration.underline,
-        // color: Colors.transparent,
-        // shadows: [
-        //   Shadow(
-        //     // color: Colors.transparent,
-        //     offset: Offset(0, -8),
-        //   )
-        // ],
       ),
     );
   }

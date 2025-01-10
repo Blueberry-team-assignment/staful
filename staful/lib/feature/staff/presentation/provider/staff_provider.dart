@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/schedule/data/dto/schedule_dto.dart';
+import 'package:staful/feature/schedule/data/repositories/schedule_repository.dart';
+import 'package:staful/feature/schedule/domain/interfaces/schedule_interface.dart';
 import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_date_usecase.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_search_input_usecase.dart';
 import 'package:staful/feature/staff/domain/usecases/staff_crud_usecase.dart';
 import 'package:staful/feature/staff/presentation/provider/state/staff_state.dart';
+import 'package:staful/provider/uid_provider.dart';
 
 final staffNotifierProvider =
     StateNotifierProvider.autoDispose<StaffNotifier, StaffState>((ref) {
   final staffCrudUsecase = ref.watch(staffCrudUsecaseProvider);
-  final filterByDateUsecase = ref.watch(filterByDateUsecaseProvider);
+  final uid = ref.watch(uidProvider);
   final filterBySearchInputUsecase =
       ref.watch(filterBySearchInputUsecaseProvider);
+  final scheduleInterface = ref.watch(scheduleRepositoryProvider);
   return StaffNotifier(
-      staffCrudUsecase, filterByDateUsecase, filterBySearchInputUsecase);
+      staffCrudUsecase, filterBySearchInputUsecase, scheduleInterface, uid!);
 });
 
 class StaffNotifier extends StateNotifier<StaffState> {
   final StaffCrudUsecase _staffCrudUsecase;
-  final FilterByDateUsecase _filterByDateUsecase;
   final FilterBySearchInputUsecase _filterBySearchInputUsecase;
+  final ScheduleInterface _scheduleInterface;
+  final String uid;
 
   StaffNotifier(
     this._staffCrudUsecase,
-    this._filterByDateUsecase,
     this._filterBySearchInputUsecase,
+    this._scheduleInterface,
+    this.uid,
   ) : super(const StaffState(
             selectedStaff: StaffModel(
                 name: "",
@@ -113,6 +120,24 @@ class StaffNotifier extends StateNotifier<StaffState> {
     }).toList();
 
     state = state.copyWith(list: updatedList);
+  }
+
+  void updateWorkSchedule({required ScheduleDto dto}) async {
+    await _scheduleInterface.updateSchedules(
+      dto: dto,
+      uid: uid,
+    );
+  }
+
+  void deleteWorkSchedule({
+    required String staffId,
+    required DateTime date,
+  }) async {
+    await _scheduleInterface.deleteSchedules(
+      staffId: staffId,
+      date: date,
+      uid: uid,
+    );
   }
 
   void updateSelectedStaff({required String field, required dynamic value}) {

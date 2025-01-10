@@ -5,14 +5,17 @@ abstract class ScheduleInterface {
   Future<ScheduleModel?> fetchModifiedSchedule({
     required String staffId,
     required DateTime selectedDay,
+    required String uid,
   });
 
   Future<void> updateSchedules({
     required ScheduleDto dto,
+    required String uid,
   });
 
   Future<void> deleteSchedules({
     required String staffId,
     required DateTime date,
+    required String uid,
   });
 }

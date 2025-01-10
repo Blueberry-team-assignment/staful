@@ -21,8 +21,8 @@ ScheduleModel _$ScheduleModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ScheduleModel {
   String? get id => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError; // y,m,d,wd
-  String get staffId => throw _privateConstructorUsedError;
+  DateTime get date =>
+      throw _privateConstructorUsedError; // [y-m-d].toIsoString
   TimeRangeModel get workHours => throw _privateConstructorUsedError;
   bool get isSelected => throw _privateConstructorUsedError;
   bool get isVisible => throw _privateConstructorUsedError;
@@ -47,7 +47,6 @@ abstract class $ScheduleModelCopyWith<$Res> {
   $Res call(
       {String? id,
       DateTime date,
-      String staffId,
       TimeRangeModel workHours,
       bool isSelected,
       bool isVisible,
@@ -73,7 +72,6 @@ class _$ScheduleModelCopyWithImpl<$Res, $Val extends ScheduleModel>
   $Res call({
     Object? id = freezed,
     Object? date = null,
-    Object? staffId = null,
     Object? workHours = null,
     Object? isSelected = null,
     Object? isVisible = null,
@@ -88,10 +86,6 @@ class _$ScheduleModelCopyWithImpl<$Res, $Val extends ScheduleModel>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      staffId: null == staffId
-          ? _value.staffId
-          : staffId // ignore: cast_nullable_to_non_nullable
-              as String,
       workHours: null == workHours
           ? _value.workHours
           : workHours // ignore: cast_nullable_to_non_nullable
@@ -133,7 +127,6 @@ abstract class _$$ScheduleModelImplCopyWith<$Res>
   $Res call(
       {String? id,
       DateTime date,
-      String staffId,
       TimeRangeModel workHours,
       bool isSelected,
       bool isVisible,
@@ -158,7 +151,6 @@ class __$$ScheduleModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? date = null,
-    Object? staffId = null,
     Object? workHours = null,
     Object? isSelected = null,
     Object? isVisible = null,
@@ -173,10 +165,6 @@ class __$$ScheduleModelImplCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      staffId: null == staffId
-          ? _value.staffId
-          : staffId // ignore: cast_nullable_to_non_nullable
-              as String,
       workHours: null == workHours
           ? _value.workHours
           : workHours // ignore: cast_nullable_to_non_nullable
@@ -203,7 +191,6 @@ class _$ScheduleModelImpl implements _ScheduleModel {
   const _$ScheduleModelImpl(
       {this.id,
       required this.date,
-      required this.staffId,
       required this.workHours,
       this.isSelected = false,
       this.isVisible = true,
@@ -216,9 +203,7 @@ class _$ScheduleModelImpl implements _ScheduleModel {
   final String? id;
   @override
   final DateTime date;
-// y,m,d,wd
-  @override
-  final String staffId;
+// [y-m-d].toIsoString
   @override
   final TimeRangeModel workHours;
   @override
@@ -233,7 +218,7 @@ class _$ScheduleModelImpl implements _ScheduleModel {
 
   @override
   String toString() {
-    return 'ScheduleModel(id: $id, date: $date, staffId: $staffId, workHours: $workHours, isSelected: $isSelected, isVisible: $isVisible, isDeleted: $isDeleted)';
+    return 'ScheduleModel(id: $id, date: $date, workHours: $workHours, isSelected: $isSelected, isVisible: $isVisible, isDeleted: $isDeleted)';
   }
 
   @override
@@ -243,7 +228,6 @@ class _$ScheduleModelImpl implements _ScheduleModel {
             other is _$ScheduleModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.staffId, staffId) || other.staffId == staffId) &&
             (identical(other.workHours, workHours) ||
                 other.workHours == workHours) &&
             (identical(other.isSelected, isSelected) ||
@@ -256,8 +240,8 @@ class _$ScheduleModelImpl implements _ScheduleModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, date, staffId, workHours,
-      isSelected, isVisible, isDeleted);
+  int get hashCode => Object.hash(
+      runtimeType, id, date, workHours, isSelected, isVisible, isDeleted);
 
   /// Create a copy of ScheduleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -279,7 +263,6 @@ abstract class _ScheduleModel implements ScheduleModel {
   const factory _ScheduleModel(
       {final String? id,
       required final DateTime date,
-      required final String staffId,
       required final TimeRangeModel workHours,
       final bool isSelected,
       final bool isVisible,
@@ -291,9 +274,7 @@ abstract class _ScheduleModel implements ScheduleModel {
   @override
   String? get id;
   @override
-  DateTime get date; // y,m,d,wd
-  @override
-  String get staffId;
+  DateTime get date; // [y-m-d].toIsoString
   @override
   TimeRangeModel get workHours;
   @override

@@ -27,7 +27,7 @@ class FilterByDateUsecase {
     for (final staff in staffList) {
       // 해당 날짜의 조정스케쥴
       final modifiedSchedule = await _scheduleInterface.fetchModifiedSchedule(
-          staffId: staff.id!, selectedDay: selectedDay);
+          staffId: staff.id!, selectedDay: selectedDay, uid: uid!);
 
       // [1]. 해당 일에 조정스케쥴이 없다면, 기본 근무요일 적용
       if (modifiedSchedule == null) {
@@ -37,6 +37,7 @@ class FilterByDateUsecase {
         // [2-1]. 조정스케쥴 있는데 삭제된 스케쥴이라면 제외.
       } else if (modifiedSchedule.isDeleted == true) {
         filteredStaffList.remove(staff);
+        continue;
         // [2-2]. 조정스케쥴 저장.
       } else {
         final updatedStaff =
