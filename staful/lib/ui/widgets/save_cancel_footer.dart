@@ -64,9 +64,6 @@ class SaveCancelFooter extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(
-          height: bottomMargin, // bottomMargin 값 사용
-        ),
       ],
     );
   }

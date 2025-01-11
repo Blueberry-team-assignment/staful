@@ -97,7 +97,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
 
   void initializeSelectedStaff(StaffModel? staff) {
     final selectedStaff =
-        staff ?? StaffModel(name: "", workHours: defaultTimeRange);
+        staff ?? const StaffModel(name: "", workHours: defaultTimeRange);
     state = state.copyWith(selectedStaff: selectedStaff);
   }
 

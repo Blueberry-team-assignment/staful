@@ -18,7 +18,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TemplateState {
   List<TemplateModel> get list => throw _privateConstructorUsedError;
   List<TemplateModel> get filteredList => throw _privateConstructorUsedError;
-  TemplateModel? get selectedTemplate => throw _privateConstructorUsedError;
+  TemplateModel get selectedTemplate => throw _privateConstructorUsedError;
+  List<StaffModel> get staffList => throw _privateConstructorUsedError;
+  List<PayDetailModel> get payDetailList => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
 
   /// Create a copy of TemplateState
@@ -37,10 +39,12 @@ abstract class $TemplateStateCopyWith<$Res> {
   $Res call(
       {List<TemplateModel> list,
       List<TemplateModel> filteredList,
-      TemplateModel? selectedTemplate,
+      TemplateModel selectedTemplate,
+      List<StaffModel> staffList,
+      List<PayDetailModel> payDetailList,
       bool isLoading});
 
-  $TemplateModelCopyWith<$Res>? get selectedTemplate;
+  $TemplateModelCopyWith<$Res> get selectedTemplate;
 }
 
 /// @nodoc
@@ -60,7 +64,9 @@ class _$TemplateStateCopyWithImpl<$Res, $Val extends TemplateState>
   $Res call({
     Object? list = null,
     Object? filteredList = null,
-    Object? selectedTemplate = freezed,
+    Object? selectedTemplate = null,
+    Object? staffList = null,
+    Object? payDetailList = null,
     Object? isLoading = null,
   }) {
     return _then(_value.copyWith(
@@ -72,10 +78,18 @@ class _$TemplateStateCopyWithImpl<$Res, $Val extends TemplateState>
           ? _value.filteredList
           : filteredList // ignore: cast_nullable_to_non_nullable
               as List<TemplateModel>,
-      selectedTemplate: freezed == selectedTemplate
+      selectedTemplate: null == selectedTemplate
           ? _value.selectedTemplate
           : selectedTemplate // ignore: cast_nullable_to_non_nullable
-              as TemplateModel?,
+              as TemplateModel,
+      staffList: null == staffList
+          ? _value.staffList
+          : staffList // ignore: cast_nullable_to_non_nullable
+              as List<StaffModel>,
+      payDetailList: null == payDetailList
+          ? _value.payDetailList
+          : payDetailList // ignore: cast_nullable_to_non_nullable
+              as List<PayDetailModel>,
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -87,12 +101,8 @@ class _$TemplateStateCopyWithImpl<$Res, $Val extends TemplateState>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $TemplateModelCopyWith<$Res>? get selectedTemplate {
-    if (_value.selectedTemplate == null) {
-      return null;
-    }
-
-    return $TemplateModelCopyWith<$Res>(_value.selectedTemplate!, (value) {
+  $TemplateModelCopyWith<$Res> get selectedTemplate {
+    return $TemplateModelCopyWith<$Res>(_value.selectedTemplate, (value) {
       return _then(_value.copyWith(selectedTemplate: value) as $Val);
     });
   }
@@ -109,11 +119,13 @@ abstract class _$$TemplateStateImplCopyWith<$Res>
   $Res call(
       {List<TemplateModel> list,
       List<TemplateModel> filteredList,
-      TemplateModel? selectedTemplate,
+      TemplateModel selectedTemplate,
+      List<StaffModel> staffList,
+      List<PayDetailModel> payDetailList,
       bool isLoading});
 
   @override
-  $TemplateModelCopyWith<$Res>? get selectedTemplate;
+  $TemplateModelCopyWith<$Res> get selectedTemplate;
 }
 
 /// @nodoc
@@ -131,7 +143,9 @@ class __$$TemplateStateImplCopyWithImpl<$Res>
   $Res call({
     Object? list = null,
     Object? filteredList = null,
-    Object? selectedTemplate = freezed,
+    Object? selectedTemplate = null,
+    Object? staffList = null,
+    Object? payDetailList = null,
     Object? isLoading = null,
   }) {
     return _then(_$TemplateStateImpl(
@@ -143,10 +157,18 @@ class __$$TemplateStateImplCopyWithImpl<$Res>
           ? _value._filteredList
           : filteredList // ignore: cast_nullable_to_non_nullable
               as List<TemplateModel>,
-      selectedTemplate: freezed == selectedTemplate
+      selectedTemplate: null == selectedTemplate
           ? _value.selectedTemplate
           : selectedTemplate // ignore: cast_nullable_to_non_nullable
-              as TemplateModel?,
+              as TemplateModel,
+      staffList: null == staffList
+          ? _value._staffList
+          : staffList // ignore: cast_nullable_to_non_nullable
+              as List<StaffModel>,
+      payDetailList: null == payDetailList
+          ? _value._payDetailList
+          : payDetailList // ignore: cast_nullable_to_non_nullable
+              as List<PayDetailModel>,
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -161,10 +183,14 @@ class _$TemplateStateImpl implements _TemplateState {
   const _$TemplateStateImpl(
       {final List<TemplateModel> list = const [],
       final List<TemplateModel> filteredList = const [],
-      this.selectedTemplate,
+      this.selectedTemplate = defaultTemplate,
+      final List<StaffModel> staffList = const [],
+      final List<PayDetailModel> payDetailList = const [],
       this.isLoading = false})
       : _list = list,
-        _filteredList = filteredList;
+        _filteredList = filteredList,
+        _staffList = staffList,
+        _payDetailList = payDetailList;
 
   final List<TemplateModel> _list;
   @override
@@ -185,14 +211,33 @@ class _$TemplateStateImpl implements _TemplateState {
   }
 
   @override
-  final TemplateModel? selectedTemplate;
+  @JsonKey()
+  final TemplateModel selectedTemplate;
+  final List<StaffModel> _staffList;
+  @override
+  @JsonKey()
+  List<StaffModel> get staffList {
+    if (_staffList is EqualUnmodifiableListView) return _staffList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_staffList);
+  }
+
+  final List<PayDetailModel> _payDetailList;
+  @override
+  @JsonKey()
+  List<PayDetailModel> get payDetailList {
+    if (_payDetailList is EqualUnmodifiableListView) return _payDetailList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_payDetailList);
+  }
+
   @override
   @JsonKey()
   final bool isLoading;
 
   @override
   String toString() {
-    return 'TemplateState(list: $list, filteredList: $filteredList, selectedTemplate: $selectedTemplate, isLoading: $isLoading)';
+    return 'TemplateState(list: $list, filteredList: $filteredList, selectedTemplate: $selectedTemplate, staffList: $staffList, payDetailList: $payDetailList, isLoading: $isLoading)';
   }
 
   @override
@@ -205,6 +250,10 @@ class _$TemplateStateImpl implements _TemplateState {
                 .equals(other._filteredList, _filteredList) &&
             (identical(other.selectedTemplate, selectedTemplate) ||
                 other.selectedTemplate == selectedTemplate) &&
+            const DeepCollectionEquality()
+                .equals(other._staffList, _staffList) &&
+            const DeepCollectionEquality()
+                .equals(other._payDetailList, _payDetailList) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading));
   }
@@ -215,6 +264,8 @@ class _$TemplateStateImpl implements _TemplateState {
       const DeepCollectionEquality().hash(_list),
       const DeepCollectionEquality().hash(_filteredList),
       selectedTemplate,
+      const DeepCollectionEquality().hash(_staffList),
+      const DeepCollectionEquality().hash(_payDetailList),
       isLoading);
 
   /// Create a copy of TemplateState
@@ -230,7 +281,9 @@ abstract class _TemplateState implements TemplateState {
   const factory _TemplateState(
       {final List<TemplateModel> list,
       final List<TemplateModel> filteredList,
-      final TemplateModel? selectedTemplate,
+      final TemplateModel selectedTemplate,
+      final List<StaffModel> staffList,
+      final List<PayDetailModel> payDetailList,
       final bool isLoading}) = _$TemplateStateImpl;
 
   @override
@@ -238,7 +291,11 @@ abstract class _TemplateState implements TemplateState {
   @override
   List<TemplateModel> get filteredList;
   @override
-  TemplateModel? get selectedTemplate;
+  TemplateModel get selectedTemplate;
+  @override
+  List<StaffModel> get staffList;
+  @override
+  List<PayDetailModel> get payDetailList;
   @override
   bool get isLoading;
 

@@ -35,7 +35,7 @@ Map<String, dynamic> _$$StaffModelImplToJson(_$StaffModelImpl instance) =>
       'name': instance.name,
       'image': instance.image,
       'workDays': instance.workDays,
-      'workHours': instance.workHours.toJson(),
+      'workHours': instance.workHours,
       'modifiedWorkSchedule': instance.modifiedWorkSchedule,
       'desc': instance.desc,
       'isSelected': instance.isSelected,

@@ -3,13 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/feature/template/presentation/provider/template_provider.dart';
-import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/feature/template/presentation/ui/template_detail_screen.dart';
+import 'package:staful/ui/layouts/app_layout.dart';
+import 'package:staful/feature/template/presentation/ui/template_register_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/app_styles.dart';
+import 'package:staful/utils/constants.dart';
 import 'package:staful/utils/navigation_helpers.dart';
 
 class PayrollTemplatesScreen extends ConsumerStatefulWidget {
@@ -46,8 +48,13 @@ class _PayrollTemplatesScreenState
                 SizedBox(
                   height: 30,
                   child: SimpleTextButtonWidget(
-                    onPressed: () {},
-                    // openPage(context, const TemplateDetailScreen()),
+                    onPressed: () {
+                      openPage(
+                          context,
+                          const TemplateDetailScreen(
+                            template: defaultTemplate,
+                          ));
+                    },
                     text: "등록",
                   ),
                 ),
