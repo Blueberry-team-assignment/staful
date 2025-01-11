@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staful/ui/layouts/backAppBar_Layout.dart';
-import 'package:staful/feature/template/presentation/payroll_templates_screen.dart';
+import 'package:staful/feature/template/presentation/ui/templates_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/navigation_helpers.dart';

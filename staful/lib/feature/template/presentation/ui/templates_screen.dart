@@ -4,7 +4,7 @@ import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/feature/template/presentation/provider/template_provider.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/ui/screens/payroll/detail_screens/template_detail_screen.dart';
+import 'package:staful/feature/template/presentation/ui/template_detail_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';

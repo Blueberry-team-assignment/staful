@@ -2,10 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/feature/template/domain/usecases/filter_templates_usecase.dart';
 import 'package:staful/feature/template/domain/usecases/templates_crud_usecase.dart';
-import 'package:staful/feature/template/presentation/provider/template_state.dart';
+import 'package:staful/feature/template/presentation/provider/state/template_state.dart';
 
 final templateNotifierProvider =
-    StateNotifierProvider.autoDispose<TemplateNotifier, TemplateState>((ref) {
+    StateNotifierProvider<TemplateNotifier, TemplateState>((ref) {
   final templateCrudUsecase = ref.watch(templateCrudUsecaseProvider);
   final filterTemplatesUsecase = ref.watch(filterTemplatesUsecaseProvider);
   return TemplateNotifier(filterTemplatesUsecase, templateCrudUsecase);
