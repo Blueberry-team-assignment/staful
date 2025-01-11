@@ -6,8 +6,8 @@ import 'package:staful/feature/template/presentation/provider/template_state.dar
 
 final templateNotifierProvider =
     StateNotifierProvider.autoDispose<TemplateNotifier, TemplateState>((ref) {
-  final templateCrudUsecase = ref.read(templateCrudUsecaseProvider);
-  final filterTemplatesUsecase = ref.read(filterTemplatesUsecaseProvider);
+  final templateCrudUsecase = ref.watch(templateCrudUsecaseProvider);
+  final filterTemplatesUsecase = ref.watch(filterTemplatesUsecaseProvider);
   return TemplateNotifier(filterTemplatesUsecase, templateCrudUsecase);
 });
 
@@ -24,7 +24,7 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
     try {
       setLoading(true);
       final templates = await _templateCrudUsecase.getAllTemplates();
-      state = state.copyWith(list: templates);
+      state = state.copyWith(list: templates, filteredList: templates);
       setLoading(false);
     } catch (e) {
       setLoading(false);
@@ -32,15 +32,59 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
     }
   }
 
+  Future<void> createTemplate(TemplateModel template) async {
+    setLoading(true);
+
+    final newTemplate = await _templateCrudUsecase.createTemplate(template);
+
+    state = state.copyWith(
+        list: [newTemplate, ...state.list],
+        filteredList: [newTemplate, ...state.filteredList]);
+    setLoading(false);
+  }
+
+  Future<void> updateTemplate(TemplateModel template) async {
+    setLoading(true);
+
+    final updatedTemplate = await _templateCrudUsecase.updateTemplate(template);
+
+    TemplateModel callback(TemplateModel template) {
+      if (template.id == updatedTemplate.id) {
+        return updatedTemplate;
+      }
+      return template;
+    }
+
+    state = state.copyWith(
+        list: state.list.map(callback).toList(),
+        filteredList: state.filteredList.map(callback).toList());
+
+    setLoading(false);
+  }
+
+  Future<void> deleteTemplate(String templateId) async {
+    setLoading(true);
+
+    await _templateCrudUsecase.deleteTemplate(templateId);
+
+    bool callback(TemplateModel template) {
+      if (template.id == templateId) {
+        return false;
+      }
+      return true;
+    }
+
+    state = state.copyWith(
+        list: state.list.where(callback).toList(),
+        filteredList: state.filteredList.where(callback).toList());
+    setLoading(false);
+  }
+
   Future<void> getFilteredList(String text) async {
     setLoading(true);
     final filteredList = await _filterTemplatesUsecase.execute(text: text);
     state = state.copyWith(filteredList: filteredList);
     setLoading(false);
-  }
-
-  void setList(List<TemplateModel> list) {
-    state = state.copyWith(filteredList: list, list: list);
   }
 
   void setLoading(bool loading) {
