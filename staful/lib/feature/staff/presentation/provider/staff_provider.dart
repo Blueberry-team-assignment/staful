@@ -19,23 +19,19 @@ final staffNotifierProvider =
   final uid = ref.watch(uidProvider);
   final filterBySearchInputUsecase =
       ref.watch(filterBySearchInputUsecaseProvider);
-  final scheduleInterface = ref.watch(scheduleRepositoryProvider);
   final staffList = ref.watch(logInProvider).staffList;
-  return StaffNotifier(staffCrudUsecase, filterBySearchInputUsecase,
-      scheduleInterface, uid!, staffList);
+  return StaffNotifier(staffCrudUsecase, filterBySearchInputUsecase, uid!, staffList);
 });
 
 class StaffNotifier extends StateNotifier<StaffState> {
   final StaffCrudUsecase _staffCrudUsecase;
   final FilterBySearchInputUsecase _filterBySearchInputUsecase;
-  final ScheduleInterface _scheduleInterface;
   final String uid;
   final List<StaffModel> staffList;
 
   StaffNotifier(
     this._staffCrudUsecase,
     this._filterBySearchInputUsecase,
-    this._scheduleInterface,
     this.uid,
     this.staffList,
   ) : super(const StaffState()) {
@@ -98,9 +94,8 @@ class StaffNotifier extends StateNotifier<StaffState> {
     setLoading(false);
   }
 
-  void resetChange(String staffId) {
-    final originalState = state.list.firstWhere((staff) => staff.id == staffId);
-    state = state.copyWith(selectedStaff: originalState);
+  void resetChange(StaffModel staff) {
+    state = state.copyWith(selectedStaff: staff);
   }
 
   // Future<void> getFilteredByDateList(DateTime date) async {
@@ -129,6 +124,10 @@ class StaffNotifier extends StateNotifier<StaffState> {
     }).toList();
 
     state = state.copyWith(list: updatedList);
+  }
+
+  void initializeSelectedStaff(StaffModel staff) {
+    state = state.copyWith(selectedStaff: staff);
   }
 
   void updateSelectedStaff({required String field, required dynamic value}) {

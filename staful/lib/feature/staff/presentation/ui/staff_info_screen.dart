@@ -7,11 +7,9 @@ import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:staful/ui/widgets/confirmation_dialog.dart';
 import 'package:staful/utils/constants.dart';
-import 'package:staful/utils/time_utils.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/feature/schedule/presentation/edit_schedule_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/feature/schedule/presentation/widgets/work_days_row.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
@@ -19,8 +17,11 @@ import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
 class StaffInfoScreen extends ConsumerStatefulWidget {
+  final StaffModel staff;
+
   const StaffInfoScreen({
     super.key,
+    required this.staff,
   });
 
   @override
@@ -33,6 +34,14 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
   final ImagePicker _picker = ImagePicker();
   bool isEditMode = false;
   TimeRangeModel updatedSchedule = defaultTimeRange;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    nameController.text = widget.staff.name;
+    memoFieldController.text = widget.staff.desc ?? "";
+  }
 
   @override
   void dispose() {
@@ -51,27 +60,29 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(staffNotifierProvider);
-    final notifier = ref.watch(staffNotifierProvider.notifier);
+    final staffState = ref.watch(staffNotifierProvider);
+    final staffNotifier = ref.watch(staffNotifierProvider.notifier);
     final weeklyWorkingHours =
-        state.selectedStaff.calculateWeeklyWorkingHours();
+        staffState.selectedStaff.calculateWeeklyWorkingHours();
 
     void handleOnUpdateOpeningHour(DateTime time) {
       updatedSchedule = TimeRangeModel(
         start: TimeOfDay(hour: time.hour, minute: time.minute),
-        end: state.selectedStaff.workHours.end,
+        end: staffState.selectedStaff.workHours.end,
       );
 
-      notifier.updateSelectedStaff(field: "workHours", value: updatedSchedule);
+      staffNotifier.updateSelectedStaff(
+          field: "workHours", value: updatedSchedule);
     }
 
     void handleOnUpdateClosingHour(DateTime time) {
       updatedSchedule = TimeRangeModel(
-        start: state.selectedStaff.workHours.start,
+        start: staffState.selectedStaff.workHours.start,
         end: TimeOfDay(hour: time.hour, minute: time.minute),
       );
 
-      notifier.updateSelectedStaff(field: "workHours", value: updatedSchedule);
+      staffNotifier.updateSelectedStaff(
+          field: "workHours", value: updatedSchedule);
     }
 
     return Scaffold(
@@ -117,7 +128,8 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                         Column(
                           children: [
                             StaffProfileWidget(
-                                imagePath: state.selectedStaff.image, size: 64),
+                                imagePath: staffState.selectedStaff.image,
+                                size: 64),
                             const SizedBox(
                               height: 5,
                             ),
@@ -131,7 +143,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
 
                                     if (pickedFile != null) {
                                       // 수정 필요
-                                      notifier.updateSelectedStaff(
+                                      staffNotifier.updateSelectedStaff(
                                           field: "image",
                                           value: pickedFile.toString());
                                     }
@@ -171,16 +183,17 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                               controller: nameController,
                                               onlyBottomBorder: true,
                                               onChanged: (value) {
-                                                notifier.updateSelectedStaff(
-                                                    field: "name",
-                                                    value: value);
+                                                staffNotifier
+                                                    .updateSelectedStaff(
+                                                        field: "name",
+                                                        value: value);
                                               },
                                             ),
                                           )
                                         ],
                                       )
                                     : Text(
-                                        state.selectedStaff.name,
+                                        staffState.selectedStaff.name,
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -209,7 +222,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                             height: 10,
                           ),
                           WorkDaysRow(
-                            staff: state.selectedStaff,
+                            staff: staffState.selectedStaff,
                             disabled: !isEditMode,
                           )
                         ],
@@ -239,8 +252,8 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                     children: [
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: state.selectedStaff
-                                              .workHours.start,
+                                          scheduleInfo: staffState
+                                              .selectedStaff.workHours.start,
                                           onDateTimeChanged:
                                               handleOnUpdateOpeningHour,
                                         ),
@@ -250,7 +263,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                       ),
                                       Expanded(
                                         child: TimePicker(
-                                          scheduleInfo: state
+                                          scheduleInfo: staffState
                                               .selectedStaff.workHours.end,
                                           onDateTimeChanged:
                                               handleOnUpdateClosingHour,
@@ -260,7 +273,8 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                   )
                                 else
                                   WorkScheduleForDisplay(
-                                    workHours: state.selectedStaff.workHours,
+                                    workHours:
+                                        staffState.selectedStaff.workHours,
                                   ),
                                 const SizedBox(
                                   height: 15,
@@ -322,7 +336,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                           border: InputBorder.none,
                         ),
                         onChanged: (value) => {
-                          notifier.updateSelectedStaff(
+                          staffNotifier.updateSelectedStaff(
                               field: "desc", value: value)
                         },
                       ),
@@ -347,7 +361,10 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                 Theme.of(context).disabledColor),
                           ),
                           onPressed: () {
-                            notifier.resetChange(state.selectedStaff.id!);
+                            nameController.text = widget.staff.name;
+                            memoFieldController.text = widget.staff.desc ?? "";
+                            toggleEditMode();
+                            staffNotifier.resetChange(widget.staff);
                           },
                           child: const Text(
                             "수정 취소",
@@ -373,7 +390,7 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                 Theme.of(context).primaryColor),
                           ),
                           onPressed: () {
-                            notifier.updateStaff(state.selectedStaff);
+                            staffNotifier.updateStaff(staffState.selectedStaff);
                             Navigator.of(context).pop();
                           },
                           child: const Text(
@@ -405,7 +422,8 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                               context: context,
                               message: "직원 정보를 삭제하시겠습니까?",
                               onConfirm: () {
-                                notifier.deleteStaff(state.selectedStaff.id!);
+                                staffNotifier
+                                    .deleteStaff(staffState.selectedStaff.id!);
                                 Navigator.of(context).pop();
                               },
                               showCancelButton: true,
