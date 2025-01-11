@@ -22,10 +22,10 @@ class InitialScreen extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!loginState.isLoggedIn && !loginState.isLoading) {
         await loginNotifier.checkUser();
-        if (uid != null) {
-          staffNotifier.fetchAllStaffs();
-          templateNotifier.fetchAllTemplates();
-        }
+      }
+      if (uid != null && (staffNotifier.mounted || templateNotifier.mounted)) {
+        staffNotifier.fetchAllStaffs();
+        // templateNotifier.fetchAllTemplates();
       }
     });
 

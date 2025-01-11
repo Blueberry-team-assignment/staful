@@ -42,11 +42,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             id: idInputController.text,
             password: pwInputController.text,
           );
+
+      if (!mounted) return;
       ref.read(staffNotifierProvider.notifier).fetchAllStaffs();
       ref.read(templateNotifierProvider.notifier).fetchAllTemplates();
-
-      // UI 업데이트
-      if (!mounted) return;
 
       openPage(
         context,

@@ -1,42 +1,27 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_search_input_usecase.dart';
 import 'package:staful/feature/staff/domain/usecases/staff_crud_usecase.dart';
 import 'package:staful/feature/staff/presentation/provider/state/staff_state.dart';
-import 'package:staful/provider/uid_provider.dart';
 import 'package:staful/utils/constants.dart';
 
 final staffNotifierProvider =
     StateNotifierProvider.autoDispose<StaffNotifier, StaffState>((ref) {
   final staffCrudUsecase = ref.watch(staffCrudUsecaseProvider);
-  // final uid = ref.watch(uidProvider);
   final filterBySearchInputUsecase =
       ref.watch(filterBySearchInputUsecaseProvider);
-  final staffList = ref.watch(logInProvider).staffList;
-  return StaffNotifier(staffCrudUsecase, filterBySearchInputUsecase, staffList);
+
+  return StaffNotifier(staffCrudUsecase, filterBySearchInputUsecase);
 });
 
 class StaffNotifier extends StateNotifier<StaffState> {
   final StaffCrudUsecase _staffCrudUsecase;
   final FilterBySearchInputUsecase _filterBySearchInputUsecase;
 
-  final List<StaffModel> staffList;
-
   StaffNotifier(
     this._staffCrudUsecase,
     this._filterBySearchInputUsecase,
-    this.staffList,
-  ) : super(const StaffState()) {
-    initialize();
-  }
-
-  void initialize() {
-    state = state.copyWith(
-      filteredList: staffList,
-      list: staffList,
-    );
-  }
+  ) : super(const StaffState());
 
   Future<void> fetchAllStaffs() async {
     try {
@@ -56,7 +41,9 @@ class StaffNotifier extends StateNotifier<StaffState> {
 
     final newStaff = await _staffCrudUsecase.createStaff(staff);
 
-    state = state.copyWith(filteredList: [newStaff, ...state.filteredList]);
+    state = state.copyWith(
+        list: [newStaff, ...state.list],
+        filteredList: [newStaff, ...state.filteredList]);
     setLoading(false);
   }
 
@@ -65,13 +52,16 @@ class StaffNotifier extends StateNotifier<StaffState> {
 
     final updatedStaff = await _staffCrudUsecase.updateStaff(staff);
 
-    state = state.copyWith(
-        filteredList: state.filteredList.map((staff) {
+    StaffModel callback(StaffModel staff) {
       if (staff.id == updatedStaff.id) {
         return updatedStaff;
       }
       return staff;
-    }).toList());
+    }
+
+    state = state.copyWith(
+        list: state.list.map(callback).toList(),
+        filteredList: state.filteredList.map(callback).toList());
 
     setLoading(false);
   }
@@ -81,10 +71,16 @@ class StaffNotifier extends StateNotifier<StaffState> {
 
     await _staffCrudUsecase.deleteStaff(staffId);
 
+    bool callback(StaffModel staff) {
+      if (staff.id == staffId) {
+        return false;
+      }
+      return true;
+    }
+
     state = state.copyWith(
-        filteredList: state.filteredList.where((staff) {
-      return staff.id != staffId;
-    }).toList());
+        list: state.list.where(callback).toList(),
+        filteredList: state.filteredList.where(callback).toList());
     setLoading(false);
   }
 
@@ -124,10 +120,6 @@ class StaffNotifier extends StateNotifier<StaffState> {
     );
 
     state = state.copyWith(selectedStaff: updatedStaff);
-  }
-
-  void setList(List<StaffModel> list) {
-    state = state.copyWith(list: list, filteredList: list);
   }
 
   void setLoading(bool loading) {
