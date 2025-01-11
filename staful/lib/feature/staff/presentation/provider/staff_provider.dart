@@ -1,12 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
-import 'package:staful/feature/schedule/data/dto/schedule_dto.dart';
-import 'package:staful/feature/schedule/data/repositories/schedule_repository.dart';
-import 'package:staful/feature/schedule/domain/interfaces/schedule_interface.dart';
-import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
-import 'package:staful/feature/staff/domain/usecases/filter_by_date_usecase.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_search_input_usecase.dart';
 import 'package:staful/feature/staff/domain/usecases/staff_crud_usecase.dart';
 import 'package:staful/feature/staff/presentation/provider/state/staff_state.dart';
@@ -20,7 +14,8 @@ final staffNotifierProvider =
   final filterBySearchInputUsecase =
       ref.watch(filterBySearchInputUsecaseProvider);
   final staffList = ref.watch(logInProvider).staffList;
-  return StaffNotifier(staffCrudUsecase, filterBySearchInputUsecase, uid!, staffList);
+  return StaffNotifier(
+      staffCrudUsecase, filterBySearchInputUsecase, uid!, staffList);
 });
 
 class StaffNotifier extends StateNotifier<StaffState> {
@@ -73,12 +68,13 @@ class StaffNotifier extends StateNotifier<StaffState> {
     final updatedStaff = await _staffCrudUsecase.updateStaff(staff);
 
     state = state.copyWith(
-        list: state.list.map((staff) {
+        filteredList: state.list.map((staff) {
       if (staff.id == updatedStaff.id) {
         return updatedStaff;
       }
       return staff;
     }).toList());
+
     setLoading(false);
   }
 
@@ -97,13 +93,6 @@ class StaffNotifier extends StateNotifier<StaffState> {
   void resetChange(StaffModel staff) {
     state = state.copyWith(selectedStaff: staff);
   }
-
-  // Future<void> getFilteredByDateList(DateTime date) async {
-  //   setLoading(true);
-  //   final filteredList = await _filterByDateUsecase.execute(selectedDay: date);
-  //   state = state.copyWith(filteredList: filteredList);
-  //   setLoading(false);
-  // }
 
   Future<void> getFilteredBySearchInputList(String text) async {
     setLoading(true);

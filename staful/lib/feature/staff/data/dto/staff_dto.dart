@@ -13,7 +13,6 @@ class StaffDto with _$StaffDto {
     String? image,
     List<String>? workDays,
     TimeRangeModel? workHours,
-    List<ScheduleModel>? workSchedules,
     String? desc,
     bool? isDeleted,
   }) = _StaffDto;

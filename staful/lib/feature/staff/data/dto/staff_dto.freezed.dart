@@ -25,7 +25,6 @@ mixin _$StaffDto {
   String? get image => throw _privateConstructorUsedError;
   List<String>? get workDays => throw _privateConstructorUsedError;
   TimeRangeModel? get workHours => throw _privateConstructorUsedError;
-  List<ScheduleModel>? get workSchedules => throw _privateConstructorUsedError;
   String? get desc => throw _privateConstructorUsedError;
   bool? get isDeleted => throw _privateConstructorUsedError;
 
@@ -50,7 +49,6 @@ abstract class $StaffDtoCopyWith<$Res> {
       String? image,
       List<String>? workDays,
       TimeRangeModel? workHours,
-      List<ScheduleModel>? workSchedules,
       String? desc,
       bool? isDeleted});
 
@@ -77,7 +75,6 @@ class _$StaffDtoCopyWithImpl<$Res, $Val extends StaffDto>
     Object? image = freezed,
     Object? workDays = freezed,
     Object? workHours = freezed,
-    Object? workSchedules = freezed,
     Object? desc = freezed,
     Object? isDeleted = freezed,
   }) {
@@ -102,10 +99,6 @@ class _$StaffDtoCopyWithImpl<$Res, $Val extends StaffDto>
           ? _value.workHours
           : workHours // ignore: cast_nullable_to_non_nullable
               as TimeRangeModel?,
-      workSchedules: freezed == workSchedules
-          ? _value.workSchedules
-          : workSchedules // ignore: cast_nullable_to_non_nullable
-              as List<ScheduleModel>?,
       desc: freezed == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
@@ -146,7 +139,6 @@ abstract class _$$StaffDtoImplCopyWith<$Res>
       String? image,
       List<String>? workDays,
       TimeRangeModel? workHours,
-      List<ScheduleModel>? workSchedules,
       String? desc,
       bool? isDeleted});
 
@@ -172,7 +164,6 @@ class __$$StaffDtoImplCopyWithImpl<$Res>
     Object? image = freezed,
     Object? workDays = freezed,
     Object? workHours = freezed,
-    Object? workSchedules = freezed,
     Object? desc = freezed,
     Object? isDeleted = freezed,
   }) {
@@ -197,10 +188,6 @@ class __$$StaffDtoImplCopyWithImpl<$Res>
           ? _value.workHours
           : workHours // ignore: cast_nullable_to_non_nullable
               as TimeRangeModel?,
-      workSchedules: freezed == workSchedules
-          ? _value._workSchedules
-          : workSchedules // ignore: cast_nullable_to_non_nullable
-              as List<ScheduleModel>?,
       desc: freezed == desc
           ? _value.desc
           : desc // ignore: cast_nullable_to_non_nullable
@@ -222,11 +209,9 @@ class _$StaffDtoImpl implements _StaffDto {
       this.image,
       final List<String>? workDays,
       this.workHours,
-      final List<ScheduleModel>? workSchedules,
       this.desc,
       this.isDeleted})
-      : _workDays = workDays,
-        _workSchedules = workSchedules;
+      : _workDays = workDays;
 
   factory _$StaffDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$StaffDtoImplFromJson(json);
@@ -249,16 +234,6 @@ class _$StaffDtoImpl implements _StaffDto {
 
   @override
   final TimeRangeModel? workHours;
-  final List<ScheduleModel>? _workSchedules;
-  @override
-  List<ScheduleModel>? get workSchedules {
-    final value = _workSchedules;
-    if (value == null) return null;
-    if (_workSchedules is EqualUnmodifiableListView) return _workSchedules;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
   @override
   final String? desc;
   @override
@@ -266,7 +241,7 @@ class _$StaffDtoImpl implements _StaffDto {
 
   @override
   String toString() {
-    return 'StaffDto(name: $name, templateId: $templateId, image: $image, workDays: $workDays, workHours: $workHours, workSchedules: $workSchedules, desc: $desc, isDeleted: $isDeleted)';
+    return 'StaffDto(name: $name, templateId: $templateId, image: $image, workDays: $workDays, workHours: $workHours, desc: $desc, isDeleted: $isDeleted)';
   }
 
   @override
@@ -281,8 +256,6 @@ class _$StaffDtoImpl implements _StaffDto {
             const DeepCollectionEquality().equals(other._workDays, _workDays) &&
             (identical(other.workHours, workHours) ||
                 other.workHours == workHours) &&
-            const DeepCollectionEquality()
-                .equals(other._workSchedules, _workSchedules) &&
             (identical(other.desc, desc) || other.desc == desc) &&
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted));
@@ -297,7 +270,6 @@ class _$StaffDtoImpl implements _StaffDto {
       image,
       const DeepCollectionEquality().hash(_workDays),
       workHours,
-      const DeepCollectionEquality().hash(_workSchedules),
       desc,
       isDeleted);
 
@@ -324,7 +296,6 @@ abstract class _StaffDto implements StaffDto {
       final String? image,
       final List<String>? workDays,
       final TimeRangeModel? workHours,
-      final List<ScheduleModel>? workSchedules,
       final String? desc,
       final bool? isDeleted}) = _$StaffDtoImpl;
 
@@ -341,8 +312,6 @@ abstract class _StaffDto implements StaffDto {
   List<String>? get workDays;
   @override
   TimeRangeModel? get workHours;
-  @override
-  List<ScheduleModel>? get workSchedules;
   @override
   String? get desc;
   @override

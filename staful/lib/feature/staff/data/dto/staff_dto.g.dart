@@ -17,9 +17,6 @@ _$StaffDtoImpl _$$StaffDtoImplFromJson(Map<String, dynamic> json) =>
       workHours: json['workHours'] == null
           ? null
           : TimeRangeModel.fromJson(json['workHours'] as Map<String, dynamic>),
-      workSchedules: (json['workSchedules'] as List<dynamic>?)
-          ?.map((e) => ScheduleModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
       desc: json['desc'] as String?,
       isDeleted: json['isDeleted'] as bool?,
     );
@@ -30,8 +27,7 @@ Map<String, dynamic> _$$StaffDtoImplToJson(_$StaffDtoImpl instance) =>
       'templateId': instance.templateId,
       'image': instance.image,
       'workDays': instance.workDays,
-      'workHours': instance.workHours,
-      'workSchedules': instance.workSchedules,
+      'workHours': instance.workHours?.toJson(),
       'desc': instance.desc,
       'isDeleted': instance.isDeleted,
     };
