@@ -3,8 +3,7 @@ import 'package:staful/feature/auth/domain/usecases/check_user_usecase.dart';
 import 'package:staful/feature/auth/domain/usecases/log_in_usecase.dart';
 import 'package:staful/feature/auth/presentation/provider/state/log_in_state.dart';
 
-final logInProvider =
-    StateNotifierProvider.autoDispose<LogInNotifier, LogInState>((ref) {
+final logInProvider = StateNotifierProvider<LogInNotifier, LogInState>((ref) {
   final logInUsecase = ref.watch(loginUsecaseProvider);
   final checkUserUsecase = ref.watch(checkUserUsecaseProvider);
 

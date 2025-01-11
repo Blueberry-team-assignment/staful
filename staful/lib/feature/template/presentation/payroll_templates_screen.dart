@@ -26,8 +26,8 @@ class _PayrollTemplatesScreenState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(templateNotifierProvider);
-    final notifier = ref.read(templateNotifierProvider.notifier);
+    final templateState = ref.watch(templateNotifierProvider);
+    final templateNotifier = ref.read(templateNotifierProvider.notifier);
 
     return Scaffold(
       appBar: navigateBackAppBar(context),
@@ -58,7 +58,7 @@ class _PayrollTemplatesScreenState
               children: [
                 SimpleTextInputWidget(
                   placeHolder: "템플릿명을 검색하세요",
-                  onChanged: notifier.getFilteredList,
+                  onChanged: templateNotifier.getFilteredList,
                   controller: searchInputController,
                 ),
               ],
@@ -68,16 +68,18 @@ class _PayrollTemplatesScreenState
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "총 ${state.filteredList.length}개",
+                  "총 ${templateState.filteredList.length}개",
                   style: TextStyleConfig(size: 14).setTextStyle(),
                 ),
               ],
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: state.filteredList.length, // 템플릿 수에 따라 아이템 수 결정
+                itemCount:
+                    templateState.filteredList.length, // 템플릿 수에 따라 아이템 수 결정
                 itemBuilder: (context, index) {
-                  final TemplateModel template = state.filteredList[index];
+                  final TemplateModel template =
+                      templateState.filteredList[index];
                   return Container(
                     margin: const EdgeInsets.only(top: 10),
                     child: GestureDetector(

@@ -18,8 +18,8 @@ class TemplateCrudUsecase {
 
   TemplateCrudUsecase(this._templateInterface, this.uid);
 
-  Future<void> createTemplate(TemplateModel template) async {
-    await _templateInterface.createTemplate(
+  Future<TemplateModel> createTemplate(TemplateModel template) async {
+    return await _templateInterface.createTemplate(
         uid: uid!, dto: TemplateDto.fromJson(template.toJson()));
   }
 
@@ -30,9 +30,9 @@ class TemplateCrudUsecase {
     return templates;
   }
 
-  Future<void> updateTemplate(TemplateModel template) async {
+  Future<TemplateModel> updateTemplate(TemplateModel template) async {
     // template.copyWith
-    await _templateInterface.updateTemplate(
+    return await _templateInterface.updateTemplate(
       uid: uid!,
       dto: TemplateDto.fromJson(template.toJson()),
       templateId: template.id!,

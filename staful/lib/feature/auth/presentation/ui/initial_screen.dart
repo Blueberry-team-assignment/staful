@@ -23,9 +23,9 @@ class InitialScreen extends ConsumerWidget {
       if (!loginState.isLoggedIn && !loginState.isLoading) {
         await loginNotifier.checkUser();
       }
-      if (uid != null && (staffNotifier.mounted || templateNotifier.mounted)) {
+      if (uid != null && staffNotifier.mounted && templateNotifier.mounted) {
         staffNotifier.fetchAllStaffs();
-        // templateNotifier.fetchAllTemplates();
+        templateNotifier.fetchAllTemplates();
       }
     });
 
