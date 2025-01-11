@@ -22,7 +22,6 @@ class WorkDaysRow extends StatelessWidget {
           .map((value) => WorkDaysRowItem(
                 day: value,
                 disabled: disabled,
-                // isSelected: staff.workDays.contains(value),
                 staff: staff,
               ))
           .toList(),
@@ -33,21 +32,18 @@ class WorkDaysRow extends StatelessWidget {
 class WorkDaysRowItem extends ConsumerWidget {
   final String day;
   final bool disabled;
-  // final bool isSelected;
   final StaffModel staff;
 
   const WorkDaysRowItem({
     super.key,
     required this.day,
     required this.disabled,
-    // required this.isSelected,
     required this.staff,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(staffNotifierProvider).selectedStaff;
-    final notifier = ref.read(staffNotifierProvider.notifier);
+    final staffNotifier = ref.read(staffNotifierProvider.notifier);
     final isSelected = staff.workDays.contains(day);
 
     void handleOnPressed() {
@@ -60,9 +56,9 @@ class WorkDaysRowItem extends ConsumerWidget {
         updatedWorkDays.add(day);
       }
 
-      notifier.updateWorkDays(
-        staffId: staff.id!,
-        workDays: updatedWorkDays,
+      staffNotifier.updateSelectedStaff(
+        field: 'workDays',
+        value: updatedWorkDays,
       );
     }
 

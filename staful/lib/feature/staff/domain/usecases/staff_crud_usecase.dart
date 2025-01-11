@@ -20,8 +20,7 @@ class StaffCrudUsecase {
 
   Future<StaffModel> createStaff(StaffModel staff) async {
     return await _staffInterface.createStaff(
-        uid: uid!,
-        dto: StaffDto.fromJson(staff.toJson()));
+        uid: uid!, dto: StaffDto.fromJson(staff.toJson()));
   }
 
   Future<List<StaffModel>> getAllStaffs() async {
@@ -32,17 +31,16 @@ class StaffCrudUsecase {
   }
 
   Future<StaffModel> updateStaff(StaffModel staff) async {
-    // staff.copyWith
-
-    return await _staffInterface.updateStaff(
+    final updatedStaff = await _staffInterface.updateStaff(
       uid: uid!,
       dto: StaffDto.fromJson(staff.toJson()),
       staffId: staff.id!,
     );
+
+    return updatedStaff;
   }
 
   Future<void> deleteStaff(String staffId) async {
-    await _staffInterface.deleteStaff(
-        staffId: staffId, uid: uid!);
+    await _staffInterface.deleteStaff(staffId: staffId, uid: uid!);
   }
 }

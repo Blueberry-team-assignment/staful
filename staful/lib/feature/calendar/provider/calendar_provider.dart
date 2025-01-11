@@ -7,15 +7,17 @@ import 'package:staful/feature/schedule/domain/interfaces/schedule_interface.dar
 import 'package:staful/feature/schedule/domain/model/schedule_model.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/domain/usecases/filter_by_date_usecase.dart';
+import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
+import 'package:staful/provider/uid_provider.dart';
 
 final calendarNotifierProvider =
-    StateNotifierProvider<CalendarNotifier, CalendarState>((ref) {
+    StateNotifierProvider.autoDispose<CalendarNotifier, CalendarState>((ref) {
   final filterByDateUsecase = ref.watch(filterByDateUsecaseProvider);
-  final staffList = ref.watch(logInProvider).staffList;
+  final staffList = ref.watch(staffNotifierProvider).list;
   final scheduleInterface = ref.watch(scheduleRepositoryProvider);
-  final uid = ref.watch(logInProvider).authUser!.uid;
+  final uid = ref.watch(uidProvider);
   return CalendarNotifier(
-      filterByDateUsecase, staffList, scheduleInterface, uid);
+      filterByDateUsecase, staffList, scheduleInterface, uid!);
 });
 
 class CalendarNotifier extends StateNotifier<CalendarState> {
@@ -30,7 +32,7 @@ class CalendarNotifier extends StateNotifier<CalendarState> {
     this._scheduleInterface,
     this.uid,
   ) : super(CalendarState()) {
-    selectDay(DateTime.now());
+    selectDay(state.selectedDay ?? DateTime.now());
   }
 
   void updateWorkSchedule({required ScheduleDto dto}) async {

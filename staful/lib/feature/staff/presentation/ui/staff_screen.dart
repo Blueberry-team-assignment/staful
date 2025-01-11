@@ -33,8 +33,8 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(staffNotifierProvider);
-    final notifier = ref.read(staffNotifierProvider.notifier);
+    final staffState = ref.watch(staffNotifierProvider);
+    final staffNotifier = ref.read(staffNotifierProvider.notifier);
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -55,7 +55,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
             children: [
               SimpleTextInputWidget(
                 placeHolder: "이름으로 검색하세요",
-                onChanged: notifier.getFilteredBySearchInputList,
+                onChanged: staffNotifier.getFilteredBySearchInputList,
                 controller: controller,
               ),
             ],
@@ -64,7 +64,10 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
             height: 10,
           ),
           GestureDetector(
-            onTap: () => openPage(context, const StaffRegisterScreen()),
+            onTap: () {
+              staffNotifier.initializeSelectedStaff(null);
+              openPage(context, const StaffRegisterScreen());
+            },
             child: const SubmitButtonWidget(
               text: "직원 등록",
             ),
@@ -76,22 +79,23 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                "총 ${state.filteredList.length}명",
+                "총 ${staffState.filteredList.length}명",
                 style: TextStyleConfig(size: 14).setTextStyle(),
               )
             ],
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: state.filteredList.length, // 스태프 수에 따라 아이템 수 결정
+              itemCount: staffState.filteredList.length, // 스태프 수에 따라 아이템 수 결정
               itemBuilder: (context, index) {
-                final StaffModel staff = state.filteredList[index];
+                final StaffModel staff = staffState.filteredList[index];
                 return Container(
                     key: ValueKey(staff.id),
                     margin: const EdgeInsets.only(
                       top: 10,
                     ),
-                    child: buildStaffCards(context, staff)); // 개별 스태프 카드 생성
+                    child: buildStaffCards(
+                        context, staff, staffNotifier)); // 개별 스태프 카드 생성
               },
             ),
           ),
@@ -100,17 +104,18 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
     );
   }
 
-  ColumnItemContainer buildStaffCards(BuildContext context, StaffModel staff) {
+  ColumnItemContainer buildStaffCards(
+      BuildContext context, StaffModel staff, StaffNotifier staffNotifier) {
     return ColumnItemContainer(
       content: Column(
         children: [
           GestureDetector(
             onTap: () {
+              staffNotifier.initializeSelectedStaff(staff);
               openPage(
                 context,
-                // 상태를 로컬 범위에서 분리하고 독립적으로 관리하기 위해. 상태 초기화를 보장하기 위해. 프로바이더를 재정의하거나 테스트에서 활용하기 위해.
-                const ProviderScope(
-                  child: StaffInfoScreen(),
+                StaffInfoScreen(
+                  staff: staff,
                 ),
               );
             },
