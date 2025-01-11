@@ -58,7 +58,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
 
     final newStaff = await _staffCrudUsecase.createStaff(staff);
 
-    state = state.copyWith(list: [newStaff, ...state.list]);
+    state = state.copyWith(filteredList: [newStaff, ...state.filteredList]);
     setLoading(false);
   }
 
@@ -68,7 +68,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
     final updatedStaff = await _staffCrudUsecase.updateStaff(staff);
 
     state = state.copyWith(
-        filteredList: state.list.map((staff) {
+        filteredList: state.filteredList.map((staff) {
       if (staff.id == updatedStaff.id) {
         return updatedStaff;
       }
@@ -84,7 +84,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
     await _staffCrudUsecase.deleteStaff(staffId);
 
     state = state.copyWith(
-        list: state.list.where((staff) {
+        filteredList: state.filteredList.where((staff) {
       return staff.id != staffId;
     }).toList());
     setLoading(false);
@@ -99,20 +99,6 @@ class StaffNotifier extends StateNotifier<StaffState> {
     final filteredList = await _filterBySearchInputUsecase.execute(text: text);
     state = state.copyWith(filteredList: filteredList);
     setLoading(false);
-  }
-
-  void updateWorkDays({
-    required String staffId,
-    required List<String> workDays,
-  }) {
-    final updatedList = state.list.map((staff) {
-      if (staff.id == staffId) {
-        return staff.copyWith(workDays: workDays);
-      }
-      return staff;
-    }).toList();
-
-    state = state.copyWith(list: updatedList);
   }
 
   void initializeSelectedStaff(StaffModel staff) {

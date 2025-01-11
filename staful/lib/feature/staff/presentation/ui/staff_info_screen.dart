@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
+import 'package:staful/feature/schedule/presentation/widgets/bottom_sheet_widget.dart';
 import 'package:staful/feature/schedule/presentation/widgets/time_picker.dart';
 import 'package:staful/feature/schedule/presentation/widgets/work_schedule_for_display.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
@@ -418,16 +419,15 @@ class _StaffInfoScreenState extends ConsumerState<StaffInfoScreen> {
                                 Theme.of(context).disabledColor),
                           ),
                           onPressed: () {
-                            ConfirmationDialog.show(
-                              context: context,
-                              message: "직원 정보를 삭제하시겠습니까?",
-                              onConfirm: () {
-                                staffNotifier
-                                    .deleteStaff(staffState.selectedStaff.id!);
-                                Navigator.of(context).pop();
-                              },
-                              showCancelButton: true,
-                            );
+                            showCustomBottomSheet(
+                                context: context,
+                                title: "직원 정보를 삭제하시겠습니까?",
+                                subTitle: "",
+                                onSuccess: () {
+                                  staffNotifier.deleteStaff(widget.staff.id!);
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                });
                           },
                           child: const Text(
                             "직원 삭제",
