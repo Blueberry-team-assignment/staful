@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
+import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
+import 'package:staful/feature/template/presentation/provider/template_provider.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/feature/calendar/presentation/calendar_screen.dart';
 import 'package:staful/feature/auth/presentation/ui/sign_up_screen.dart';
@@ -26,37 +28,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       idInputController.text.isNotEmpty && pwInputController.text.isNotEmpty;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // _checkAutoLogin();
-    });
-  }
-
-  @override
   void dispose() {
     // TODO: implement dispose
     idInputController.dispose();
     pwInputController.dispose();
     super.dispose();
-  }
-
-  Future<void> _checkAutoLogin() async {
-    final loginProvider = ref.read(logInProvider.notifier);
-    // loginProvider.checkUser();
-    final loginState = ref.read(logInProvider);
-
-    if (loginState.isLoggedIn) {
-      openPage(
-        context,
-        const AppLayout(
-          appBarType: "logo",
-          showBottomNavigationBar: true,
-          child: CalendarScreen(),
-        ),
-      );
-    }
   }
 
   Future<void> handleLogin() async {
@@ -66,6 +42,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             id: idInputController.text,
             password: pwInputController.text,
           );
+      ref.read(staffNotifierProvider.notifier).fetchAllStaffs();
+      ref.read(templateNotifierProvider.notifier).fetchAllTemplates();
 
       // UI 업데이트
       if (!mounted) return;

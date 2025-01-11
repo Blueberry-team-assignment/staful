@@ -10,24 +10,22 @@ import 'package:staful/utils/constants.dart';
 final staffNotifierProvider =
     StateNotifierProvider.autoDispose<StaffNotifier, StaffState>((ref) {
   final staffCrudUsecase = ref.watch(staffCrudUsecaseProvider);
-  final uid = ref.watch(uidProvider);
+  // final uid = ref.watch(uidProvider);
   final filterBySearchInputUsecase =
       ref.watch(filterBySearchInputUsecaseProvider);
   final staffList = ref.watch(logInProvider).staffList;
-  return StaffNotifier(
-      staffCrudUsecase, filterBySearchInputUsecase, uid!, staffList);
+  return StaffNotifier(staffCrudUsecase, filterBySearchInputUsecase, staffList);
 });
 
 class StaffNotifier extends StateNotifier<StaffState> {
   final StaffCrudUsecase _staffCrudUsecase;
   final FilterBySearchInputUsecase _filterBySearchInputUsecase;
-  final String uid;
+
   final List<StaffModel> staffList;
 
   StaffNotifier(
     this._staffCrudUsecase,
     this._filterBySearchInputUsecase,
-    this.uid,
     this.staffList,
   ) : super(const StaffState()) {
     initialize();
