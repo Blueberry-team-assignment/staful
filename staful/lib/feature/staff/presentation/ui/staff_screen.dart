@@ -64,7 +64,10 @@ class _StaffScreenState extends ConsumerState<StaffScreen> {
             height: 10,
           ),
           GestureDetector(
-            onTap: () => openPage(context, const StaffRegisterScreen()),
+            onTap: () {
+              staffNotifier.initializeSelectedStaff(null);
+              openPage(context, const StaffRegisterScreen());
+            },
             child: const SubmitButtonWidget(
               text: "직원 등록",
             ),

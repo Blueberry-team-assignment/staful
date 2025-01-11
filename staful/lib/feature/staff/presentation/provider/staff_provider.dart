@@ -35,9 +35,9 @@ class StaffNotifier extends StateNotifier<StaffState> {
 
   void initialize() {
     state = state.copyWith(
-        filteredList: staffList,
-        list: staffList,
-        selectedStaff: StaffModel(name: "", workHours: defaultTimeRange));
+      filteredList: staffList,
+      list: staffList,
+    );
   }
 
   Future<void> fetchAllStaffs() async {
@@ -45,7 +45,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
       setLoading(true);
       final staffs = await _staffCrudUsecase.getAllStaffs();
 
-      state = state.copyWith(list: staffs);
+      state = state.copyWith(list: staffs, filteredList: staffs);
       setLoading(false);
     } catch (e) {
       setLoading(false);
@@ -101,8 +101,10 @@ class StaffNotifier extends StateNotifier<StaffState> {
     setLoading(false);
   }
 
-  void initializeSelectedStaff(StaffModel staff) {
-    state = state.copyWith(selectedStaff: staff);
+  void initializeSelectedStaff(StaffModel? staff) {
+    final selectedStaff =
+        staff ?? StaffModel(name: "", workHours: defaultTimeRange);
+    state = state.copyWith(selectedStaff: selectedStaff);
   }
 
   void updateSelectedStaff({required String field, required dynamic value}) {

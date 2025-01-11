@@ -83,7 +83,9 @@ class StaffRepository implements StaffInterface {
       final newDoc = await staffRef.add(dto.toJson());
 
       final createdDoc = await newDoc.get();
-      return StaffModel.fromJson(createdDoc.data()!);
+      final data = createdDoc.data();
+      data!['id'] = createdDoc.id;
+      return StaffModel.fromJson(data);
     } catch (e) {
       throw Exception('Failed to create staff: $e');
     }

@@ -6,10 +6,8 @@ import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/constants.dart';
-import 'package:staful/utils/time_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/feature/schedule/presentation/edit_schedule_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/feature/schedule/presentation/widgets/work_days_row.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
@@ -17,15 +15,8 @@ import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
 class StaffRegisterScreen extends ConsumerStatefulWidget {
-  // final Staff staff;
-  // final VoidCallback onSave;
-  // final void Function(Staff) onUpdate;
-
   const StaffRegisterScreen({
     super.key,
-    // required this.staff,
-    // required this.onSave,
-    // required this.onUpdate,
   });
 
   @override
@@ -50,27 +41,29 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(staffNotifierProvider);
-    final notifier = ref.read(staffNotifierProvider.notifier);
+    final staffState = ref.watch(staffNotifierProvider);
+    final staffNotifier = ref.read(staffNotifierProvider.notifier);
     final weeklyWorkingHours =
-        state.selectedStaff.calculateWeeklyWorkingHours();
+        staffState.selectedStaff.calculateWeeklyWorkingHours();
 
     void handleOnUpdateOpeningHour(DateTime time) {
       updatedSchedule = TimeRangeModel(
         start: TimeOfDay(hour: time.hour, minute: time.minute),
-        end: state.selectedStaff.workHours.end,
+        end: staffState.selectedStaff.workHours.end,
       );
 
-      notifier.updateSelectedStaff(field: "workHours", value: updatedSchedule);
+      staffNotifier.updateSelectedStaff(
+          field: "workHours", value: updatedSchedule);
     }
 
     void handleOnUpdateClosingHour(DateTime time) {
       updatedSchedule = TimeRangeModel(
-        start: state.selectedStaff.workHours.start,
+        start: staffState.selectedStaff.workHours.start,
         end: TimeOfDay(hour: time.hour, minute: time.minute),
       );
 
-      notifier.updateSelectedStaff(field: "workHours", value: updatedSchedule);
+      staffNotifier.updateSelectedStaff(
+          field: "workHours", value: updatedSchedule);
     }
 
     return Scaffold(
@@ -121,7 +114,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
 
                                   if (pickedFile != null) {
                                     // 수정 필요
-                                    notifier.updateSelectedStaff(
+                                    staffNotifier.updateSelectedStaff(
                                         field: "image",
                                         value: pickedFile.toString());
                                   }
@@ -156,7 +149,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                                       child: SimpleTextInputWidget(
                                         placeHolder: "이름을 입력해주세요",
                                         onChanged: (value) => {
-                                          notifier.updateSelectedStaff(
+                                          staffNotifier.updateSelectedStaff(
                                               field: "name", value: value)
                                         },
                                         controller: nameController,
@@ -186,7 +179,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                             height: 10,
                           ),
                           WorkDaysRow(
-                            staff: state.selectedStaff,
+                            staff: staffState.selectedStaff,
                             disabled: false,
                           )
                         ],
@@ -213,7 +206,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                                   children: [
                                     Expanded(
                                       child: TimePicker(
-                                        scheduleInfo: state
+                                        scheduleInfo: staffState
                                             .selectedStaff.workHours.start,
                                         onDateTimeChanged:
                                             handleOnUpdateOpeningHour,
@@ -224,7 +217,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                                     ),
                                     Expanded(
                                       child: TimePicker(
-                                        scheduleInfo: state
+                                        scheduleInfo: staffState
                                             .selectedStaff.workHours.end,
                                         onDateTimeChanged:
                                             handleOnUpdateClosingHour,
@@ -291,7 +284,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                           border: InputBorder.none,
                         ),
                         onChanged: (value) => {
-                          notifier.updateSelectedStaff(
+                          staffNotifier.updateSelectedStaff(
                               field: "desc", value: value)
                         },
                       ),
@@ -317,7 +310,7 @@ class _StaffRegisterScreenState extends ConsumerState<StaffRegisterScreen> {
                           Theme.of(context).primaryColor),
                     ),
                     onPressed: () {
-                      notifier.createStaff(state.selectedStaff);
+                      staffNotifier.createStaff(staffState.selectedStaff);
                       Navigator.of(context).pop();
                     },
                     child: const Text(
