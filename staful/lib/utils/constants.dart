@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:staful/feature/pay_detail/domain/model/pay_detail_model.dart';
-import 'package:staful/feature/schedule/domain/model/time_range_model.dart';
-import 'package:staful/feature/template/domain/model/template_model.dart';
+import 'package:staful/feature/payroll_template/domain/model/pay_detail_model.dart';
+import 'package:staful/feature/work_schedule/domain/model/time_range_model.dart';
+import 'package:staful/feature/payroll_template/domain/model/template_model.dart';
 
 const mapOfWorkDays = {
   "sun": "일",

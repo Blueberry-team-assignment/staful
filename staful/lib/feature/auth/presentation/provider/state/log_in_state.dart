@@ -1,5 +1,5 @@
 import 'package:staful/feature/auth/domain/model/user_model.dart';
-import 'package:staful/feature/staff/domain/model/staff_model.dart';
+import 'package:staful/feature/staff_info/domain/model/staff_model.dart';
 
 class LogInState {
   final bool isLoading;

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/auth/presentation/provider/log_in_provider.dart';
 import 'package:staful/feature/auth/presentation/ui/log_in_screen.dart';
-import 'package:staful/feature/calendar/presentation/calendar_screen.dart';
-import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
-import 'package:staful/feature/template/presentation/provider/template_provider.dart';
+import 'package:staful/feature/work_schedule/presentation/ui/calendar_screen.dart';
+import 'package:staful/feature/staff_info/presentation/provider/staff_provider.dart';
+import 'package:staful/feature/payroll_template/presentation/provider/template_provider.dart';
 import 'package:staful/provider/uid_provider.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 

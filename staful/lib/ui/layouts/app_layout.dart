@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:staful/feature/calendar/presentation/calendar_screen.dart';
-import 'package:staful/feature/payroll/presentation/ui/payroll_screen.dart';
-import 'package:staful/ui/screens/setting/setting_screen.dart';
-import 'package:staful/feature/staff/presentation/ui/staff_screen.dart';
+import 'package:staful/feature/work_schedule/presentation/ui/calendar_screen.dart';
+import 'package:staful/feature/integrated_payroll/presentation/ui/payroll_screen.dart';
+import 'package:staful/feature/user_preference/setting_screen.dart';
+import 'package:staful/feature/staff_info/presentation/ui/staff_screen.dart';
 
 class AppLayout extends StatefulWidget {
   final Widget child;

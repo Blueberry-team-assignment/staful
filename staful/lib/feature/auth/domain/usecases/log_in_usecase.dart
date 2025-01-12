@@ -2,12 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/auth/data/repositories/auth_repository.dart';
 import 'package:staful/feature/auth/domain/interfaces/auth_interface.dart';
 import 'package:staful/feature/auth/domain/model/user_model.dart';
-import 'package:staful/feature/staff/data/repositories/staff_repository.dart';
-import 'package:staful/feature/staff/domain/interface/staff_interface.dart';
-import 'package:staful/feature/staff/domain/model/staff_model.dart';
-import 'package:staful/feature/template/data/repositories/template_repository.dart';
-import 'package:staful/feature/template/domain/interfaces/template_interface.dart';
-import 'package:staful/feature/template/domain/model/template_model.dart';
+import 'package:staful/feature/staff_info/data/repositories/staff_repository.dart';
+import 'package:staful/feature/staff_info/domain/interface/staff_interface.dart';
+import 'package:staful/feature/staff_info/domain/model/staff_model.dart';
+import 'package:staful/feature/payroll_template/data/repositories/template_repository.dart';
+import 'package:staful/feature/payroll_template/domain/interfaces/template_interface.dart';
+import 'package:staful/feature/payroll_template/domain/model/template_model.dart';
 
 final loginUsecaseProvider = Provider((ref) {
   final authInterface = ref.watch(authRepositoryProvider);
