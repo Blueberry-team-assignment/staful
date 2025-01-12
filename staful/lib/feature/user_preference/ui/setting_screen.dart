@@ -24,8 +24,8 @@ class SettingScreen extends ConsumerWidget {
     void onLogoutSuccess() async {
       try {
         await logInNotifier.logout();
+        Navigator.of(context).pop();
         if (loginState.isLoggedIn == false) {
-          Navigator.of(context).pop();
           openPage(context, const LoginScreen());
         }
       } catch (e) {
