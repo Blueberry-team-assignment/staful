@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/pay_detail/domain/model/pay_detail_model.dart';
+import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/template/presentation/provider/template_provider.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
+import 'package:staful/ui/widgets/staff_profile_widget.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/ui/widgets/save_cancel_footer.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
@@ -24,7 +26,6 @@ class PayrollSearchScreen extends ConsumerStatefulWidget {
 
 class _PayrollSearchScreenState extends ConsumerState<PayrollSearchScreen> {
   final TextEditingController searchInputController = TextEditingController();
-  List<PayDetailModel> payDetailList = defaultPayDetailList;
 
   @override
   void dispose() {
@@ -33,16 +34,13 @@ class _PayrollSearchScreenState extends ConsumerState<PayrollSearchScreen> {
     super.dispose();
   }
 
-  void onSave(BuildContext context) {}
-
-  void onUndo(BuildContext context) {
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
     final templateState = ref.watch(templateNotifierProvider);
     final templateNotifier = ref.read(templateNotifierProvider.notifier);
+    final String screenType = widget.title == "직원"
+        ? "staff"
+        : "payDetail"; // 직원 목록 검색 페이지 또는 세부 항목 검색 페이지
 
     return Scaffold(
       appBar: navigateBackAppBar(context),
@@ -55,7 +53,7 @@ class _PayrollSearchScreenState extends ConsumerState<PayrollSearchScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.title,
+                  "${widget.title} 리스트",
                   style: titleStyle,
                 ),
               ],
@@ -66,8 +64,10 @@ class _PayrollSearchScreenState extends ConsumerState<PayrollSearchScreen> {
             Stack(
               children: [
                 SimpleTextInputWidget(
-                  placeHolder: "세부 항목을 검색하세요",
-                  onChanged: templateNotifier.getFilteredPayDetailList,
+                  placeHolder: "${widget.title}을 검색하세요",
+                  onChanged: screenType == "staff"
+                      ? templateNotifier.getFilteredStaffList
+                      : templateNotifier.getFilteredPayDetailList,
                   controller: searchInputController,
                 ),
               ],
@@ -78,38 +78,67 @@ class _PayrollSearchScreenState extends ConsumerState<PayrollSearchScreen> {
             Expanded(
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
-                itemCount: templateState.selectedTemplate!.payDetails.length,
+                itemCount: screenType == "staff"
+                    ? templateState.staffList.length
+                    : templateState.selectedTemplate.payDetails.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final PayDetailModel payDetail =
-                      templateState.selectedTemplate!.payDetails[index];
-                  if (!payDetail.isVisible) return const SizedBox.shrink();
+                  dynamic item;
+
+                  item = screenType == "staff"
+                      ? templateState.staffList[index]
+                      : templateState.selectedTemplate.payDetails[index];
+                  if (!item.isVisible) return const SizedBox.shrink();
                   return Container(
                     margin: const EdgeInsets.only(
                       top: 10,
                     ),
-                    height: 70,
                     child: GestureDetector(
-                      onTap: () =>
-                          templateNotifier.togglePayDetail(payDetail.desc),
+                      onTap: () {
+                        screenType == "staff"
+                            ? templateNotifier.updateSelectedStaff(item.id)
+                            : templateNotifier.togglePayDetail(item.desc);
+                      },
                       child: ColumnItemContainer(
-                        color: payDetail.isSelected
+                        color: item.isSelected
                             ? Theme.of(context).primaryColorLight
                             : Colors.white,
-                        content: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        content: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              payDetail.desc,
-                              style: contentTextStyle.copyWith(fontSize: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    if (screenType == "staff")
+                                      StaffProfileWidget(
+                                        imagePath: item.image != null
+                                            ? "lib/assets/images/${item.image}"
+                                            : null,
+                                      ),
+                                    if (screenType == "staff")
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                    Text(
+                                      screenType == "staff"
+                                          ? item.name
+                                          : item.desc,
+                                      style: contentTextStyle.copyWith(
+                                          fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                Icon(
+                                  item.isSelected
+                                      ? Icons.check_box_outlined
+                                      : Icons.check_box_outline_blank_outlined,
+                                  color: item.isSelected
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.black,
+                                )
+                              ],
                             ),
-                            Icon(
-                              payDetail.isSelected
-                                  ? Icons.check_box_outlined
-                                  : Icons.check_box_outline_blank_outlined,
-                              color: payDetail.isSelected
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.black,
-                            )
                           ],
                         ),
                       ),
@@ -118,14 +147,12 @@ class _PayrollSearchScreenState extends ConsumerState<PayrollSearchScreen> {
                 },
               ),
             ),
-            SaveCancelFooter(
-              onTabUndoBtn: () => {},
-              onTapSaveBtn: () => {},
-              //  ConfirmationDialog.show(
-              //     context: context,
-              //     onConfirm: () => onTapSaveBtn(context),
-              //     showCancelButton: false,
-              //     message: "정상적으로 추가되었습니다"),
+            // SaveCancelFooter(
+            //   onTabUndoBtn: onUndo,
+            //   onTapSaveBtn: onSave,
+            // ),
+            const SizedBox(
+              height: bottomMargin,
             )
           ],
         ),

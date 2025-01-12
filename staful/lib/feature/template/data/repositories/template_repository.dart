@@ -49,8 +49,10 @@ class TemplateRepository implements TemplateInterface {
       await templateRef.update(dto.toJson());
 
       final updatedDoc = await templateRef.get();
-      print('template updated : ${updatedDoc.data()}');
-      return TemplateModel.fromJson(updatedDoc.data()!);
+      final data = updatedDoc.data();
+      data!['id'] = updatedDoc.id;
+      print('template updated : $data');
+      return TemplateModel.fromJson(data);
     } catch (e) {
       throw Exception('Failed to update template: $e');
     }

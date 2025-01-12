@@ -38,7 +38,7 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
     TextEditingController(),
     TextEditingController(),
   ];
-  bool isEditMode = false;
+  bool isOnCreateScreen = true;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
     // template 등록일 경우 id = null, 조회일 경우 id가 존재.
     if (widget.template.id != null) {
       templateNameController.text = widget.template.name;
-      isEditMode = true;
+      isOnCreateScreen = false;
     }
   }
 
@@ -59,10 +59,6 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
     super.dispose();
   }
 
-  void toggleEditMode() {
-    isEditMode = !isEditMode;
-  }
-
   @override
   Widget build(BuildContext context) {
     final templateState = ref.watch(templateNotifierProvider);
@@ -73,18 +69,21 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
     }
 
     void onSave() {
-      templateNotifier.updateTemplate(templateState.selectedTemplate);
+      isOnCreateScreen
+          ? templateNotifier.createTemplate(templateState.selectedTemplate)
+          : templateNotifier.updateTemplate(templateState.selectedTemplate);
       Navigator.of(context).pop();
     }
 
     return BackAppBarLayout(
       scrollableArea: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildTemplateNameInput(templateNotifier, templateState),
-          const SizedBox(height: 15),
+          const SizedBox(height: 25),
           _buildPayDetailSection(templateNotifier, templateState),
-          _buildStaffListSection(templateState.staffList),
+          const SizedBox(height: 25),
+          _buildStaffListSection(templateState.staffList,
+              templateState.selectedTemplate.staffIds, templateNotifier),
         ],
       ),
       nonScrollableArea: SaveCancelFooter(
@@ -96,23 +95,6 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
 
   Widget _buildTemplateNameInput(
       TemplateNotifier templateNotifier, TemplateState templateState) {
-    // if (!isEditMode) {
-    //   return Row(
-    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //     textBaseline: TextBaseline.alphabetic,
-    //     children: [
-    //       Text(templateState.selectedTemplate.name),
-    //       if (widget.template.id != null)
-    //         SizedBox(
-    //           height: 29,
-    //           child: SimpleTextButtonWidget(
-    //             onPressed: toggleEditMode,
-    //             text: "수정",
-    //           ),
-    //         ),
-    //     ],
-    //   );
-    // }
     return TextFormField(
         style: titleStyle,
         decoration: InputDecoration(
@@ -122,9 +104,10 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
             color: Theme.of(context).disabledColor,
           ),
         ),
-        controller: templateNameController,
+        // controller: templateNameController,
+        initialValue: widget.template.name,
         onChanged: (value) {
-          templateNotifier.updateSelectedTemplate(field: "name", value: value);
+          templateNotifier.updateName(name: value);
         });
   }
 
@@ -135,10 +118,11 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
         _buildSectionHeader(
           title: "세부 항목",
           onPressed: () {
+            templateNotifier.setListAllVisible();
             openPage(
                 context,
                 const PayrollSearchScreen(
-                  title: "세부 항목 리스트",
+                  title: "세부 항목",
                 ));
           },
         ),
@@ -163,17 +147,20 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
     );
   }
 
-  Widget _buildStaffListSection(List<StaffModel> staffList) {
+  Widget _buildStaffListSection(List<StaffModel> staffList,
+      List<String> staffIds, TemplateNotifier templateNotifier) {
     return Column(
       children: [
         _buildSectionHeader(
           title: "직원 리스트",
           onPressed: () {
-            // openPage(context,
-            // StaffSearchScreen(
-            //   staffList: staffs,
-            //   text: "직원 리스트",
-            // ))
+            templateNotifier.setListAllVisible();
+            templateNotifier.setStaffSelected(staffIds);
+            openPage(
+                context,
+                const PayrollSearchScreen(
+                  title: "직원",
+                ));
           },
         ),
         const SizedBox(height: 10),
@@ -181,7 +168,9 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
           crossAxisCount: 4,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          children: staffList.map((staff) {
+          children: staffList
+              .where((staff) => staffIds.contains(staff.id))
+              .map((staff) {
             return Container(
               margin: const EdgeInsets.all(5),
               padding: const EdgeInsets.all(5),
@@ -225,6 +214,9 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
             children: [Text(payDetail.desc)],
           ),
           TextFormField(
+            initialValue: payDetail.amount > 0
+                ? formatNumber(payDetail.amount.toString())
+                : null,
             style: contentTextStyle,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.end,
@@ -246,7 +238,7 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
               FilteringTextInputFormatter.digitsOnly,
               CurrencyFormatter(),
             ],
-            controller: controller,
+            // controller: controller,
             onChanged: (value) {
               final parsedValue = int.tryParse(value.replaceAll(',', '')) ?? 0;
               templateNotifier.updateAmount(payDetail.desc, parsedValue);

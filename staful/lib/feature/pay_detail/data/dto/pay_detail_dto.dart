@@ -19,32 +19,9 @@ class PayDetailDto with _$PayDetailDto {
     required PayTypeDto payType,
     required String desc,
     required int amount,
+    required bool isSelected,
   }) = _PayDetailDto;
 
   factory PayDetailDto.fromJson(Map<String, dynamic> json) =>
       _$PayDetailDtoFromJson(json);
-}
-
-extension PayDetailDtoMapper on PayDetailDto {
-  // DTO -> 도메인 모델 변환
-  PayDetailModel toDomain() {
-    return PayDetailModel(
-      id: id,
-      payType: PayType.values[payType.index], // Enum 변환
-      desc: desc,
-      amount: amount,
-    );
-  }
-}
-
-extension PayDetailModelMapper on PayDetailModel {
-  // 도메인 모델 -> DTO 변환
-  PayDetailDto toDto() {
-    return PayDetailDto(
-      id: id,
-      payType: PayTypeDto.values[payType.index], // Enum 변환
-      desc: desc,
-      amount: amount,
-    );
-  }
 }

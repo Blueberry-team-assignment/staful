@@ -27,7 +27,7 @@ Map<String, dynamic> _$$StaffDtoImplToJson(_$StaffDtoImpl instance) =>
       'templateId': instance.templateId,
       'image': instance.image,
       'workDays': instance.workDays,
-      'workHours': instance.workHours,
+      'workHours': instance.workHours?.toJson(),
       'desc': instance.desc,
       'isDeleted': instance.isDeleted,
     };

@@ -24,6 +24,7 @@ mixin _$PayDetailDto {
   PayTypeDto get payType => throw _privateConstructorUsedError;
   String get desc => throw _privateConstructorUsedError;
   int get amount => throw _privateConstructorUsedError;
+  bool get isSelected => throw _privateConstructorUsedError;
 
   /// Serializes this PayDetailDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,7 +42,12 @@ abstract class $PayDetailDtoCopyWith<$Res> {
           PayDetailDto value, $Res Function(PayDetailDto) then) =
       _$PayDetailDtoCopyWithImpl<$Res, PayDetailDto>;
   @useResult
-  $Res call({String? id, PayTypeDto payType, String desc, int amount});
+  $Res call(
+      {String? id,
+      PayTypeDto payType,
+      String desc,
+      int amount,
+      bool isSelected});
 }
 
 /// @nodoc
@@ -63,6 +69,7 @@ class _$PayDetailDtoCopyWithImpl<$Res, $Val extends PayDetailDto>
     Object? payType = null,
     Object? desc = null,
     Object? amount = null,
+    Object? isSelected = null,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -81,6 +88,10 @@ class _$PayDetailDtoCopyWithImpl<$Res, $Val extends PayDetailDto>
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
               as int,
+      isSelected: null == isSelected
+          ? _value.isSelected
+          : isSelected // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -93,7 +104,12 @@ abstract class _$$PayDetailDtoImplCopyWith<$Res>
       __$$PayDetailDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? id, PayTypeDto payType, String desc, int amount});
+  $Res call(
+      {String? id,
+      PayTypeDto payType,
+      String desc,
+      int amount,
+      bool isSelected});
 }
 
 /// @nodoc
@@ -113,6 +129,7 @@ class __$$PayDetailDtoImplCopyWithImpl<$Res>
     Object? payType = null,
     Object? desc = null,
     Object? amount = null,
+    Object? isSelected = null,
   }) {
     return _then(_$PayDetailDtoImpl(
       id: freezed == id
@@ -131,6 +148,10 @@ class __$$PayDetailDtoImplCopyWithImpl<$Res>
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
               as int,
+      isSelected: null == isSelected
+          ? _value.isSelected
+          : isSelected // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -142,7 +163,8 @@ class _$PayDetailDtoImpl implements _PayDetailDto {
       {this.id,
       required this.payType,
       required this.desc,
-      required this.amount});
+      required this.amount,
+      required this.isSelected});
 
   factory _$PayDetailDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$PayDetailDtoImplFromJson(json);
@@ -155,10 +177,12 @@ class _$PayDetailDtoImpl implements _PayDetailDto {
   final String desc;
   @override
   final int amount;
+  @override
+  final bool isSelected;
 
   @override
   String toString() {
-    return 'PayDetailDto(id: $id, payType: $payType, desc: $desc, amount: $amount)';
+    return 'PayDetailDto(id: $id, payType: $payType, desc: $desc, amount: $amount, isSelected: $isSelected)';
   }
 
   @override
@@ -169,12 +193,15 @@ class _$PayDetailDtoImpl implements _PayDetailDto {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.payType, payType) || other.payType == payType) &&
             (identical(other.desc, desc) || other.desc == desc) &&
-            (identical(other.amount, amount) || other.amount == amount));
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.isSelected, isSelected) ||
+                other.isSelected == isSelected));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, payType, desc, amount);
+  int get hashCode =>
+      Object.hash(runtimeType, id, payType, desc, amount, isSelected);
 
   /// Create a copy of PayDetailDto
   /// with the given fields replaced by the non-null parameter values.
@@ -197,7 +224,8 @@ abstract class _PayDetailDto implements PayDetailDto {
       {final String? id,
       required final PayTypeDto payType,
       required final String desc,
-      required final int amount}) = _$PayDetailDtoImpl;
+      required final int amount,
+      required final bool isSelected}) = _$PayDetailDtoImpl;
 
   factory _PayDetailDto.fromJson(Map<String, dynamic> json) =
       _$PayDetailDtoImpl.fromJson;
@@ -210,6 +238,8 @@ abstract class _PayDetailDto implements PayDetailDto {
   String get desc;
   @override
   int get amount;
+  @override
+  bool get isSelected;
 
   /// Create a copy of PayDetailDto
   /// with the given fields replaced by the non-null parameter values.

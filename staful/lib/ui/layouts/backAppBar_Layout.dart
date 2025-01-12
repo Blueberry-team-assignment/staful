@@ -22,7 +22,7 @@ class BackAppBarLayout extends StatelessWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                child: Expanded(child: scrollableArea),
+                child: scrollableArea,
               ),
             ),
             nonScrollableArea,

@@ -6,7 +6,7 @@ import 'package:staful/feature/staff/presentation/provider/state/staff_state.dar
 import 'package:staful/utils/constants.dart';
 
 final staffNotifierProvider =
-    StateNotifierProvider.autoDispose<StaffNotifier, StaffState>((ref) {
+    StateNotifierProvider<StaffNotifier, StaffState>((ref) {
   final staffCrudUsecase = ref.watch(staffCrudUsecaseProvider);
   final filterBySearchInputUsecase =
       ref.watch(filterBySearchInputUsecaseProvider);
@@ -27,7 +27,7 @@ class StaffNotifier extends StateNotifier<StaffState> {
     try {
       setLoading(true);
       final staffs = await _staffCrudUsecase.getAllStaffs();
-
+      
       state = state.copyWith(list: staffs, filteredList: staffs);
       setLoading(false);
     } catch (e) {

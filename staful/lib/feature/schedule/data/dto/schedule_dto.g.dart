@@ -18,5 +18,5 @@ Map<String, dynamic> _$$ScheduleDtoImplToJson(_$ScheduleDtoImpl instance) =>
     <String, dynamic>{
       'staffId': instance.staffId,
       'date': instance.date.toIso8601String(),
-      'workHours': instance.workHours,
+      'workHours': instance.workHours.toJson(),
     };

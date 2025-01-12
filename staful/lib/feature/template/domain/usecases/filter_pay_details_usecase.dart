@@ -9,10 +9,23 @@ final filterPayDetailsUsecaseProvider = Provider((ref) {
 class FilterPayDetailsUsecase {
   List<PayDetailModel> execute(
       {required String text, required List<PayDetailModel> payDetailList}) {
-    return payDetailList.where((payDetail) {
+    if (text == "" || text.isEmpty) {
+      return payDetailList
+          .map((payDetail) => payDetail.copyWith(isVisible: true))
+          .toList();
+    }
+
+    bool callback(payDetail) {
       final chosungName = decomposeHangul(payDetail.desc);
       final chosungInput = decomposeHangul(text);
       return chosungName.startsWith(chosungInput);
+    }
+
+    return payDetailList.map((payDetail) {
+      if (callback(payDetail) == false) {
+        return payDetail.copyWith(isVisible: false);
+      }
+      return payDetail.copyWith(isVisible: true);
     }).toList();
   }
 }

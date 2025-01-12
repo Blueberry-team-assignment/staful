@@ -21,7 +21,7 @@ Map<String, dynamic> _$$ScheduleModelImplToJson(_$ScheduleModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'date': instance.date.toIso8601String(),
-      'workHours': instance.workHours,
+      'workHours': instance.workHours.toJson(),
       'isSelected': instance.isSelected,
       'isVisible': instance.isVisible,
       'isDeleted': instance.isDeleted,

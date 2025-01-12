@@ -5,7 +5,6 @@ import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/feature/template/presentation/provider/template_provider.dart';
 import 'package:staful/feature/template/presentation/ui/template_detail_screen.dart';
 import 'package:staful/ui/layouts/app_layout.dart';
-import 'package:staful/feature/template/presentation/ui/template_register_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
@@ -49,6 +48,7 @@ class _PayrollTemplatesScreenState
                   height: 30,
                   child: SimpleTextButtonWidget(
                     onPressed: () {
+                      templateNotifier.initialize();
                       openPage(
                           context,
                           const TemplateDetailScreen(
@@ -75,27 +75,35 @@ class _PayrollTemplatesScreenState
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "총 ${templateState.filteredList.length}개",
+                  "총 ${templateState.list.length}개",
                   style: TextStyleConfig(size: 14).setTextStyle(),
                 ),
               ],
             ),
             Expanded(
               child: ListView.builder(
-                itemCount:
-                    templateState.filteredList.length, // 템플릿 수에 따라 아이템 수 결정
+                itemCount: templateState.list.length,
                 itemBuilder: (context, index) {
-                  final TemplateModel template =
-                      templateState.filteredList[index];
+                  final TemplateModel template = templateState.list[index];
                   return Container(
+                    key: ValueKey(template.id),
                     margin: const EdgeInsets.only(top: 10),
                     child: GestureDetector(
-                      onTap: () {},
-                      // openPage(context, const TemplateDetailScreen()),
+                      onTap: () {
+                        templateNotifier.setSelectedTemplate(template);
+                        openPage(
+                            context,
+                            TemplateDetailScreen(
+                              template: template,
+                            ));
+                      },
                       child: buildTemplateCards(
                         context: context,
                         template: template,
-                        staffList: [],
+                        staffList: templateState.staffList
+                            .where(
+                                (staff) => template.staffIds.contains(staff.id))
+                            .toList(),
                       ),
                     ),
                   );
@@ -134,7 +142,9 @@ ColumnItemContainer buildTemplateCards({
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: StaffProfileWidget(
-                  imagePath: "lib/assets/images/${staff.image}",
+                  imagePath: staff.image == null
+                      ? null
+                      : "lib/assets/images/${staff.image}",
                   name: staff.name,
                 ),
               );

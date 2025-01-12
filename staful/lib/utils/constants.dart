@@ -22,9 +22,9 @@ const defaultTimeRange = TimeRangeModel(
 
 const defaultPayDetailList = [
   PayDetailModel(
-      payType: PayType.hourly, desc: "시급", amount: 12000, isSelected: true),
+      payType: PayType.hourly, desc: "시급", amount: 0, isSelected: true),
   PayDetailModel(
-      payType: PayType.fixed, desc: "식대", amount: 50000, isSelected: true),
+      payType: PayType.fixed, desc: "식대", amount: 0, isSelected: true),
   PayDetailModel(payType: PayType.fixed, desc: "추가 수당", amount: 0),
   PayDetailModel(payType: PayType.fixed, desc: "기타 수당", amount: 0),
 ];

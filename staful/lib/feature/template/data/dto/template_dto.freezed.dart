@@ -22,7 +22,7 @@ TemplateDto _$TemplateDtoFromJson(Map<String, dynamic> json) {
 mixin _$TemplateDto {
   String? get name => throw _privateConstructorUsedError;
   List<String>? get staffIds => throw _privateConstructorUsedError;
-  List<PayDetailModel>? get payDetails =>
+  List<PayDetailDto>? get payDetails =>
       throw _privateConstructorUsedError; // PayDetailDto 사용
   bool? get isDeleted => throw _privateConstructorUsedError;
 
@@ -45,7 +45,7 @@ abstract class $TemplateDtoCopyWith<$Res> {
   $Res call(
       {String? name,
       List<String>? staffIds,
-      List<PayDetailModel>? payDetails,
+      List<PayDetailDto>? payDetails,
       bool? isDeleted});
 }
 
@@ -81,7 +81,7 @@ class _$TemplateDtoCopyWithImpl<$Res, $Val extends TemplateDto>
       payDetails: freezed == payDetails
           ? _value.payDetails
           : payDetails // ignore: cast_nullable_to_non_nullable
-              as List<PayDetailModel>?,
+              as List<PayDetailDto>?,
       isDeleted: freezed == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -101,7 +101,7 @@ abstract class _$$TemplateDtoImplCopyWith<$Res>
   $Res call(
       {String? name,
       List<String>? staffIds,
-      List<PayDetailModel>? payDetails,
+      List<PayDetailDto>? payDetails,
       bool? isDeleted});
 }
 
@@ -135,7 +135,7 @@ class __$$TemplateDtoImplCopyWithImpl<$Res>
       payDetails: freezed == payDetails
           ? _value._payDetails
           : payDetails // ignore: cast_nullable_to_non_nullable
-              as List<PayDetailModel>?,
+              as List<PayDetailDto>?,
       isDeleted: freezed == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -150,7 +150,7 @@ class _$TemplateDtoImpl implements _TemplateDto {
   const _$TemplateDtoImpl(
       {this.name,
       final List<String>? staffIds,
-      final List<PayDetailModel>? payDetails,
+      final List<PayDetailDto>? payDetails,
       this.isDeleted})
       : _staffIds = staffIds,
         _payDetails = payDetails;
@@ -170,9 +170,9 @@ class _$TemplateDtoImpl implements _TemplateDto {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<PayDetailModel>? _payDetails;
+  final List<PayDetailDto>? _payDetails;
   @override
-  List<PayDetailModel>? get payDetails {
+  List<PayDetailDto>? get payDetails {
     final value = _payDetails;
     if (value == null) return null;
     if (_payDetails is EqualUnmodifiableListView) return _payDetails;
@@ -231,7 +231,7 @@ abstract class _TemplateDto implements TemplateDto {
   const factory _TemplateDto(
       {final String? name,
       final List<String>? staffIds,
-      final List<PayDetailModel>? payDetails,
+      final List<PayDetailDto>? payDetails,
       final bool? isDeleted}) = _$TemplateDtoImpl;
 
   factory _TemplateDto.fromJson(Map<String, dynamic> json) =
@@ -242,7 +242,7 @@ abstract class _TemplateDto implements TemplateDto {
   @override
   List<String>? get staffIds;
   @override
-  List<PayDetailModel>? get payDetails; // PayDetailDto 사용
+  List<PayDetailDto>? get payDetails; // PayDetailDto 사용
   @override
   bool? get isDeleted;
 

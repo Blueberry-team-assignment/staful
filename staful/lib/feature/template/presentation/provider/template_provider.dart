@@ -1,42 +1,45 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:staful/feature/pay_detail/domain/model/pay_detail_model.dart';
 import 'package:staful/feature/staff/domain/model/staff_model.dart';
 import 'package:staful/feature/staff/presentation/provider/staff_provider.dart';
 import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/feature/template/domain/usecases/filter_pay_details_usecase.dart';
+import 'package:staful/feature/template/domain/usecases/filter_staffs_usecase.dart';
 import 'package:staful/feature/template/domain/usecases/filter_templates_usecase.dart';
 import 'package:staful/feature/template/domain/usecases/templates_crud_usecase.dart';
 import 'package:staful/feature/template/presentation/provider/state/template_state.dart';
+import 'package:staful/utils/constants.dart';
 
 final templateNotifierProvider =
-    StateNotifierProvider.autoDispose<TemplateNotifier, TemplateState>((ref) {
+    StateNotifierProvider<TemplateNotifier, TemplateState>((ref) {
   final templateCrudUsecase = ref.watch(templateCrudUsecaseProvider);
   final filterTemplatesUsecase = ref.watch(filterTemplatesUsecaseProvider);
   final filterPayDetailsUsecase = ref.watch(filterPayDetailsUsecaseProvider);
+  final filterStaffsUsecase = ref.watch(filterStaffsUsecaseProvider);
   final staffList = ref.watch(staffNotifierProvider).list;
   return TemplateNotifier(filterTemplatesUsecase, templateCrudUsecase,
-      filterPayDetailsUsecase, staffList);
+      filterPayDetailsUsecase, filterStaffsUsecase, staffList);
 });
 
 class TemplateNotifier extends StateNotifier<TemplateState> {
   final TemplateCrudUsecase _templateCrudUsecase;
   final FilterTemplatesUsecase _filterTemplatesUsecase;
   final FilterPayDetailsUsecase _filterPayDetailsUsecase;
+  final FilterStaffsUsecase _filterStaffsUsecase;
   final List<StaffModel> staffList;
 
   TemplateNotifier(
     this._filterTemplatesUsecase,
     this._templateCrudUsecase,
     this._filterPayDetailsUsecase,
+    this._filterStaffsUsecase,
     this.staffList,
   ) : super(const TemplateState()) {
     initialize();
   }
 
   void initialize() {
-    state = state.copyWith(
-      staffList: staffList,
-    );
+    state =
+        state.copyWith(staffList: staffList, selectedTemplate: defaultTemplate);
   }
 
   Future<void> fetchAllTemplates() async {
@@ -75,8 +78,10 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
     }
 
     state = state.copyWith(
-        list: state.list.map(callback).toList(),
-        filteredList: state.filteredList.map(callback).toList());
+      list: state.list.map(callback).toList(),
+      filteredList: state.filteredList.map(callback).toList(),
+      selectedTemplate: updatedTemplate,
+    );
 
     setLoading(false);
   }
@@ -101,14 +106,21 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
 
   Future<void> getFilteredList(String text) async {
     setLoading(true);
-    final filteredList = await _filterTemplatesUsecase.execute(text: text);
+    final filteredList = await _filterTemplatesUsecase.execute(
+        text: text, templateList: state.list);
     state = state.copyWith(filteredList: filteredList);
     setLoading(false);
   }
 
+  void getFilteredStaffList(String text) {
+    final filteredList =
+        _filterStaffsUsecase.execute(text: text, staffList: staffList);
+    state = state.copyWith(staffList: filteredList);
+  }
+
   void getFilteredPayDetailList(String text) {
     final filteredList = _filterPayDetailsUsecase.execute(
-        text: text, payDetailList: state.payDetailList);
+        text: text, payDetailList: state.selectedTemplate.payDetails);
     state = state.copyWith(
         selectedTemplate:
             state.selectedTemplate.copyWith(payDetails: filteredList));
@@ -131,6 +143,29 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
             state.selectedTemplate.copyWith(payDetails: updatedItem));
   }
 
+  // staff 탭할때
+  void updateSelectedStaff(String staffId) {
+    final updatedStaffList = state.staffList.map((staff) {
+      if (staff.id == staffId) {
+        return staff.copyWith(isSelected: !staff.isSelected);
+      }
+      return staff;
+    }).toList();
+
+    final List<String> updatedStaffIds =
+        List.from(state.selectedTemplate.staffIds);
+    if (updatedStaffIds.contains(staffId)) {
+      updatedStaffIds.remove(staffId);
+    } else {
+      updatedStaffIds.add(staffId);
+    }
+
+    state = state.copyWith(
+        staffList: updatedStaffList,
+        selectedTemplate:
+            state.selectedTemplate.copyWith(staffIds: updatedStaffIds));
+  }
+
   void updateAmount(String name, int amount) {
     final updatedItem = state.selectedTemplate.payDetails.map((payDetail) {
       if (payDetail.desc == name) {
@@ -144,19 +179,32 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
             state.selectedTemplate.copyWith(payDetails: updatedItem));
   }
 
-  void updateSelectedTemplate({required String field, required dynamic value}) {
-    final selectedTemplate = state.selectedTemplate;
-
-    final updateTemplate = selectedTemplate.copyWith(
-      name: field == 'name' ? value : selectedTemplate.name,
-      staffIds: field == 'staffIds' ? value : selectedTemplate.staffIds,
-      payDetails: field == 'payDetails' ? value : selectedTemplate.payDetails,
-      isSelected: field == 'isSelected' ? value : selectedTemplate.isSelected,
-      isVisible: field == 'isVisible' ? value : selectedTemplate.isVisible,
-      isDeleted: field == 'isDeleted' ? value : selectedTemplate.isDeleted,
+  void updateName({required String name}) {
+    state = state.copyWith(
+      selectedTemplate: state.selectedTemplate.copyWith(name: name),
     );
+  }
 
-    state = state.copyWith(selectedTemplate: updateTemplate);
+  void setStaffSelected(List<String> staffIds) {
+    state = state.copyWith(
+        staffList: state.staffList.map((staff) {
+      if (staffIds.contains(staff.id)) {
+        return staff.copyWith(isSelected: true);
+      }
+      return staff.copyWith(isSelected: false);
+    }).toList());
+  }
+
+  // 스태프리스트와 지급항목리스트 올 비지블.
+  void setListAllVisible() {
+    state = state.copyWith(
+        staffList: state.staffList
+            .map((staff) => staff.copyWith(isVisible: true))
+            .toList(),
+        selectedTemplate: state.selectedTemplate.copyWith(
+            payDetails: state.selectedTemplate.payDetails
+                .map((payDetail) => payDetail.copyWith(isVisible: true))
+                .toList()));
   }
 
   void setLoading(bool loading) {

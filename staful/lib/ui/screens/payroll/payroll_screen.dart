@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:staful/feature/template/presentation/provider/template_provider.dart';
 import 'package:staful/ui/screens/payroll/payroll_detail_screen.dart';
 import 'package:staful/feature/template/presentation/ui/templates_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
@@ -9,14 +11,14 @@ import 'package:staful/utils/navigation_helpers.dart';
 import 'package:staful/ui/widgets/simple_text_button_widget.dart';
 import 'package:staful/ui/widgets/staff_profile_widget.dart';
 
-class PayrollScreen extends StatefulWidget {
+class PayrollScreen extends ConsumerStatefulWidget {
   const PayrollScreen({super.key});
 
   @override
-  State<PayrollScreen> createState() => _PayrollScreenState();
+  ConsumerState<PayrollScreen> createState() => _PayrollScreenState();
 }
 
-class _PayrollScreenState extends State<PayrollScreen> {
+class _PayrollScreenState extends ConsumerState<PayrollScreen> {
   final contentTitleStyle =
       TextStyleConfig(size: 14, weight: FontWeight.normal).setTextStyle();
   final contentTextStyle = TextStyleConfig(size: 20).setTextStyle();
@@ -47,6 +49,14 @@ class _PayrollScreenState extends State<PayrollScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final templateNotifier = ref.watch(templateNotifierProvider.notifier);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (templateNotifier.mounted == true) {
+        templateNotifier.fetchAllTemplates();
+      }
+    });
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 30,

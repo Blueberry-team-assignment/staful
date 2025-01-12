@@ -12,6 +12,7 @@ _$PayDetailDtoImpl _$$PayDetailDtoImplFromJson(Map<String, dynamic> json) =>
       payType: $enumDecode(_$PayTypeDtoEnumMap, json['payType']),
       desc: json['desc'] as String,
       amount: (json['amount'] as num).toInt(),
+      isSelected: json['isSelected'] as bool,
     );
 
 Map<String, dynamic> _$$PayDetailDtoImplToJson(_$PayDetailDtoImpl instance) =>
@@ -20,6 +21,7 @@ Map<String, dynamic> _$$PayDetailDtoImplToJson(_$PayDetailDtoImpl instance) =>
       'payType': _$PayTypeDtoEnumMap[instance.payType]!,
       'desc': instance.desc,
       'amount': instance.amount,
+      'isSelected': instance.isSelected,
     };
 
 const _$PayTypeDtoEnumMap = {

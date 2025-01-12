@@ -18,14 +18,11 @@ class FilterTemplatesUsecase {
 
   FilterTemplatesUsecase(this._templateInterface, this.uid);
 
-  Future<List<TemplateModel>> execute({required String text}) async {
-    final templates = await _templateInterface.fetchAllTemplates(
-      uid: uid!,
-    );
+  Future<List<TemplateModel>> execute(
+      {required String text, required List<TemplateModel> templateList}) async {
+    if (text.isEmpty) return templateList;
 
-    if (text.isEmpty) return templates;
-
-    return templates.where((template) {
+    return templateList.where((template) {
       final chosungName = decomposeHangul(template.name);
       final chosungInput = decomposeHangul(text);
       return chosungName.startsWith(chosungInput);
