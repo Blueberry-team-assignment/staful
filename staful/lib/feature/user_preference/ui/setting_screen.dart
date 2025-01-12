@@ -112,7 +112,7 @@ class SettingScreen extends ConsumerWidget {
                 showCustomBottomSheet(
                   context: context,
                   title: "로그아웃 하시겠습니까?",
-                  subTitle: "",
+                  subTitle: "로그인 화면으로 이동합니다",
                   successMessage: "확인",
                   onSuccess: onLogoutSuccess,
                 );
