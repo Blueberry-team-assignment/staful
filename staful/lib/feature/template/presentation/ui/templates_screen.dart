@@ -75,16 +75,17 @@ class _PayrollTemplatesScreenState
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "총 ${templateState.list.length}개",
+                  "총 ${templateState.filteredList.length}개",
                   style: TextStyleConfig(size: 14).setTextStyle(),
                 ),
               ],
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: templateState.list.length,
+                itemCount: templateState.filteredList.length,
                 itemBuilder: (context, index) {
-                  final TemplateModel template = templateState.list[index];
+                  final TemplateModel template =
+                      templateState.filteredList[index];
                   return Container(
                     key: ValueKey(template.id),
                     margin: const EdgeInsets.only(top: 10),
