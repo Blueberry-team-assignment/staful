@@ -11,20 +11,20 @@ import 'package:staful/ui/widgets/save_cancel_footer.dart';
 import 'package:staful/ui/widgets/simple_text_input_widget.dart';
 import 'package:staful/utils/constants.dart';
 
-class PayrollSearchScreen extends ConsumerStatefulWidget {
+class SelectableListSearchScreen extends ConsumerStatefulWidget {
   final String title;
 
-  const PayrollSearchScreen({
+  const SelectableListSearchScreen({
     super.key,
     required this.title,
   });
 
   @override
-  ConsumerState<PayrollSearchScreen> createState() =>
-      _PayrollSearchScreenState();
+  ConsumerState<SelectableListSearchScreen> createState() =>
+      _SelectableListSearchScreenState();
 }
 
-class _PayrollSearchScreenState extends ConsumerState<PayrollSearchScreen> {
+class _SelectableListSearchScreenState extends ConsumerState<SelectableListSearchScreen> {
   final TextEditingController searchInputController = TextEditingController();
 
   @override

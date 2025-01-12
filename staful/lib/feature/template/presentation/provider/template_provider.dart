@@ -113,6 +113,10 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
   }
 
   void getFilteredStaffList(String text) {
+    if (text == "" || text.isEmpty) {
+      setListAllVisible();
+      return;
+    }
     final filteredList =
         _filterStaffsUsecase.execute(text: text, staffList: staffList);
     state = state.copyWith(staffList: filteredList);

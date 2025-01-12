@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:staful/feature/template/presentation/provider/template_provider.dart';
-import 'package:staful/ui/screens/payroll/payroll_detail_screen.dart';
+import 'package:staful/feature/payroll/presentation/ui/payroll_detail_screen.dart';
 import 'package:staful/feature/template/presentation/ui/templates_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/feature/staff/presentation/ui/staff_info_screen.dart';

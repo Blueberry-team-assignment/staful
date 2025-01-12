@@ -8,7 +8,7 @@ import 'package:staful/feature/template/domain/model/template_model.dart';
 import 'package:staful/feature/template/presentation/provider/state/template_state.dart';
 import 'package:staful/feature/template/presentation/provider/template_provider.dart';
 import 'package:staful/ui/layouts/backAppBar_Layout.dart';
-import 'package:staful/ui/screens/payroll/detail_screens/payroll_search_screen.dart';
+import 'package:staful/feature/template/presentation/ui/selectable_list_search_screen.dart';
 import 'package:staful/ui/widgets/column_item_container.dart';
 import 'package:staful/utils/app_styles.dart';
 import 'package:staful/utils/currency_formatter.dart';
@@ -65,7 +65,7 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
     final templateNotifier = ref.read(templateNotifierProvider.notifier);
 
     void onReset() {
-      templateNotifier.setSelectedTemplate(widget.template);
+      // templateNotifier.setSelectedTemplate(widget.template);
     }
 
     void onSave() {
@@ -121,7 +121,7 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
             templateNotifier.setListAllVisible();
             openPage(
                 context,
-                const PayrollSearchScreen(
+                const SelectableListSearchScreen(
                   title: "세부 항목",
                 ));
           },
@@ -158,7 +158,7 @@ class _TemplateDetailScreenState extends ConsumerState<TemplateDetailScreen> {
             templateNotifier.setStaffSelected(staffIds);
             openPage(
                 context,
-                const PayrollSearchScreen(
+                const SelectableListSearchScreen(
                   title: "직원",
                 ));
           },
