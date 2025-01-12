@@ -13,7 +13,7 @@ class CheckUserUsecase {
 
   CheckUserUsecase(this._authInterface);
 
-  Future<UserModel> execute() async {
+  Future<UserModel?> execute() async {
     final authUser = await _authInterface.checkUser();
 
     return authUser;

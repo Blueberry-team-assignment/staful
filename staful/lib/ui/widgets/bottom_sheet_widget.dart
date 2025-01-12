@@ -6,6 +6,7 @@ void showCustomBottomSheet({
   required String title,
   required String subTitle,
   required VoidCallback onSuccess,
+  String successMessage = "삭제",
 }) {
   showModalBottomSheet(
     context: context,
@@ -14,6 +15,7 @@ void showCustomBottomSheet({
         title: title,
         subTitle: subTitle,
         onSuccess: onSuccess,
+        successMessage: successMessage,
       );
     },
   );
@@ -23,12 +25,14 @@ class BottomSheetWidget extends ConsumerWidget {
   final String title;
   final String subTitle;
   final VoidCallback onSuccess;
+  final String successMessage;
 
   const BottomSheetWidget({
     super.key,
     required this.title,
     required this.subTitle,
     required this.onSuccess,
+    this.successMessage = "삭제",
   });
 
   @override
@@ -79,9 +83,9 @@ class BottomSheetWidget extends ConsumerWidget {
                     onPressed: () {
                       onSuccess();
                     }, // onSuccess 콜백 호출
-                    child: const Text(
-                      "삭제",
-                      style: TextStyle(
+                    child: Text(
+                      successMessage,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                       ),

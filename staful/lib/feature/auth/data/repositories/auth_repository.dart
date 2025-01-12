@@ -15,9 +15,9 @@ final authRepositoryProvider = Provider<AuthInterface>((ref) {
 class AuthRepository implements AuthInterface {
   final FirebaseAuth _firebaseAuth;
   final UserInterface _userRepository;
-  final StateController<String?> _uidState;
+  final UidNotifier _uidNotifier;
 
-  AuthRepository(this._firebaseAuth, this._userRepository, this._uidState);
+  AuthRepository(this._firebaseAuth, this._userRepository, this._uidNotifier);
 
   // 회원가입
   @override
@@ -54,8 +54,8 @@ class AuthRepository implements AuthInterface {
 
       final authUser = await _userRepository.fetchUserFromFirestore(
           uid: userCredential.user!.uid);
-      _uidState.state = authUser.uid; // uid 전역 프로바이더에 저장
-      print('state : ${_uidState.state}');
+      _uidNotifier.setUid(authUser.uid); // uid 전역 프로바이더에 저장
+
       return authUser;
     } catch (e) {
       throw Exception(e);
@@ -64,14 +64,14 @@ class AuthRepository implements AuthInterface {
 
   // 로그인된 유저 체크
   @override
-  Future<UserModel> checkUser() async {
+  Future<UserModel?> checkUser() async {
     User? user = _firebaseAuth.currentUser;
 
-    if (user == null) throw Exception('User not found');
+    if (user == null) return null;
 
     final authUser =
         await _userRepository.fetchUserFromFirestore(uid: user.uid);
-    _uidState.state = authUser.uid; // uid 전역 프로바이더에 저장
+    _uidNotifier.setUid(authUser.uid); // uid 전역 프로바이더에 저장
     return authUser;
   }
 

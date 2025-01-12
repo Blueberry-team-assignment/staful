@@ -10,6 +10,6 @@ abstract class AuthInterface {
     required String userId,
     required String password,
   });
-  Future<UserModel> checkUser();
+  Future<UserModel?> checkUser();
   Future<void> logOut();
 }
